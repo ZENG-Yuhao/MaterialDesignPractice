@@ -17,6 +17,8 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="android:colorAccent">@color/colorAccent</item>
 
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+
     </style>
 
 </resources>
