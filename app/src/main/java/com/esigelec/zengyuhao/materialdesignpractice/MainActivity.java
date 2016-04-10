@@ -1,16 +1,21 @@
 package com.esigelec.zengyuhao.materialdesignpractice;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Application;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
+import android.view.ViewParent;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
     private RecyclerView xRecyclerView;
@@ -25,6 +30,7 @@ public class MainActivity extends Activity {
         xRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         // use this announce to improve performance if the layout size of RecyclerView will not be changed.
         xRecyclerView.setHasFixedSize(true);
+        xRecyclerView.setClickable(true);
 
         xLayoutManager = new LinearLayoutManager(this);
         xRecyclerView.setLayoutManager(xLayoutManager);
@@ -43,13 +49,13 @@ public class MainActivity extends Activity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
-            ViewHolder vh = new ViewHolder((TextView) view);
+            ViewHolder vh = new ViewHolder((Button) view);
             return vh;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.xTextView.setText(xDataSet[position]);
+            holder.button.setText(xDataSet[position]);
         }
 
         @Override
@@ -57,13 +63,19 @@ public class MainActivity extends Activity {
             return xDataSet.length;
         }
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-            public TextView xTextView;
+            public Button button;
 
-            public ViewHolder(TextView view) {
+            public ViewHolder(Button view) {
                 super(view);
-                xTextView = view;
+                button = view;
+                button.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                Log.i("Clicked", "---> Clicked: " + getAdapterPosition());
             }
         }
     }
