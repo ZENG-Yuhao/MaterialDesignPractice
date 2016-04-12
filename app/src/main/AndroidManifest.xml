@@ -17,6 +17,8 @@
         </activity>
         <activity android:name=".CardViewActivity">
         </activity>
+        <activity android:name=".ShadowAndClippingActivity">
+        </activity>
     </application>
 
 </manifest>

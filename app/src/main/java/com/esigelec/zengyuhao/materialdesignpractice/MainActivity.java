@@ -21,14 +21,14 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
     private static String[] xActivityNames = new String[]{
             "CardView",
-            "CardView",
+            "Shadow and Clipping",
             "CardView",
             "CardView"
     };
 
     private static Class[] xActivityClasses = new Class[]{
             CardViewActivity.class,
-            CardViewActivity.class,
+            ShadowAndClippingActivity.class,
             CardViewActivity.class,
             CardViewActivity.class
     };
