@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,20 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+    private static String[] xActivityNames = new String[]{
+            "CardView",
+            "CardView",
+            "CardView",
+            "CardView"
+    };
+
+    private static Class[] xActivityClasses = new Class[]{
+            CardViewActivity.class,
+            CardViewActivity.class,
+            CardViewActivity.class,
+            CardViewActivity.class
+    };
+
     private RecyclerView xRecyclerView;
     private RecyclerView.Adapter xAdapter;
     private RecyclerView.LayoutManager xLayoutManager;
@@ -35,11 +50,11 @@ public class MainActivity extends Activity {
         xLayoutManager = new LinearLayoutManager(this);
         xRecyclerView.setLayoutManager(xLayoutManager);
 
-        xAdapter = new MyAdapter(dataGenerator(20));
+        xAdapter = new MyAdapter(xActivityNames);
         xRecyclerView.setAdapter(xAdapter);
     }
 
-    public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private String[] xDataSet;
 
         public MyAdapter(String[] dataSet) {
@@ -63,7 +78,7 @@ public class MainActivity extends Activity {
             return xDataSet.length;
         }
 
-        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public Button button;
 
@@ -76,6 +91,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.i("Clicked", "---> Clicked: " + getAdapterPosition());
+                Intent intent = new Intent(MainActivity.this, xActivityClasses[getAdapterPosition()]);
+                startActivity(intent);
             }
         }
     }
