@@ -21,6 +21,7 @@
         card_view:cardCornerRadius="8dp">
 
         <TextView
+            android:layout_gravity="center"
             android:id="@+id/info_text"
             android:text="CarView"
             android:textColor="@android:color/black"
