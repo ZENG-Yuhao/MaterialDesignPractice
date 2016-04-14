@@ -1,37 +1,29 @@
 package com.esigelec.zengyuhao.materialdesignpractice;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
     private static String[] xActivityNames = new String[]{
             "CardView",
             "Shadow and Clipping",
             "ActionBar",
-            "PaperTitleStrip"
+            "PaperTabStrip"
     };
 
     private static Class[] xActivityClasses = new Class[]{
             CardViewActivity.class,
             ShadowAndClippingActivity.class,
             ActionBarActivity.class,
-            PaperTitleStripActivity.class
+            PaperTabStripActivity.class
     };
 
     private RecyclerView xRecyclerView;

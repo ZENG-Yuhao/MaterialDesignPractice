@@ -2,13 +2,11 @@ package com.esigelec.zengyuhao.materialdesignpractice;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -16,10 +14,7 @@ import android.widget.ImageView;
 
 import com.esigelec.zengyuhao.materialdesignpractice.Core.Image.EfficientBitmap;
 
-import java.util.ArrayList;
-import java.util.concurrent.RecursiveTask;
-
-public class PaperTitleStripActivity extends Activity {
+public class PaperTabStripActivity extends Activity {
     private static String[] titles = {"Dice", "Play", "Info", "Android", "Wu", "Earth"};
     private static int[] imageResId = {R.drawable.img0, R.drawable.img1, R.drawable.img2, R.drawable.img3, R.drawable
             .img4, R.drawable.img5};
@@ -35,8 +30,8 @@ public class PaperTitleStripActivity extends Activity {
 
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        PagerTitleStrip pagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
-
+        PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_tab_strip);
+        pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
 
         final ViewTreeObserver observer = viewPager.getViewTreeObserver();
         if (observer != null) {
@@ -48,7 +43,8 @@ public class PaperTitleStripActivity extends Activity {
                     mPlaceHolderBitmap = EfficientBitmap.decodeBitmap(getResources(), R.drawable.ic_action_replay,
                             pagerHeigth, pagerWidth);
 
-                    observer.removeOnGlobalLayoutListener(this);
+                    ViewTreeObserver observer1 = viewPager.getViewTreeObserver();
+                    observer1.removeOnGlobalLayoutListener(this);
                 }
             });
         }
@@ -61,9 +57,10 @@ public class PaperTitleStripActivity extends Activity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = new ImageView(getBaseContext());
+            ImageView imageView = new ImageView(getApplicationContext());
             EfficientBitmap.loadBitmap(getResources(), imageView, mPlaceHolderBitmap, imageResId[position],
                     pagerWidth, pagerHeigth, EfficientBitmap.DecoderAsyncTask.MODE_NO_MEMORY_CACHE);
+            container.addView(imageView);
             return imageView;
         }
 

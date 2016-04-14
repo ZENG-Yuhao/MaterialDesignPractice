@@ -23,7 +23,7 @@
             android:name=".ActionBarActivity"
             android:label="@string/title_activity_action_bar">
         </activity>
-        <activity android:name=".PaperTitleStripActivity">
+        <activity android:name=".PaperTabStripActivity">
         </activity>
     </application>
 
