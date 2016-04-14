@@ -21,7 +21,7 @@ public class PaperTabStripActivity extends Activity {
 
     private static Bitmap mPlaceHolderBitmap;
 
-    private int pagerHeigth, pagerWidth;
+    private int pagerHeigth = 100, pagerWidth = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class PaperTabStripActivity extends Activity {
             });
         }
         viewPager.setAdapter(new MyPagerAdapter());
-
+        viewPager.setCurrentItem(0);
 
     }
 
