@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MaterialDesignPractice</string>
+    <string name="title_activity_action_bar">ActionBarActivity</string>
 </resources>

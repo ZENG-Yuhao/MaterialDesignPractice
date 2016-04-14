@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,15 +23,15 @@ public class MainActivity extends Activity {
     private static String[] xActivityNames = new String[]{
             "CardView",
             "Shadow and Clipping",
-            "CardView",
-            "CardView"
+            "ActionBar",
+            "PaperTitleStrip"
     };
 
     private static Class[] xActivityClasses = new Class[]{
             CardViewActivity.class,
             ShadowAndClippingActivity.class,
-            CardViewActivity.class,
-            CardViewActivity.class
+            ActionBarActivity.class,
+            PaperTitleStripActivity.class
     };
 
     private RecyclerView xRecyclerView;

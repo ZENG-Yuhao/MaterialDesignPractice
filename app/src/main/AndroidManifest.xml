@@ -19,6 +19,12 @@
         </activity>
         <activity android:name=".ShadowAndClippingActivity">
         </activity>
+        <activity
+            android:name=".ActionBarActivity"
+            android:label="@string/title_activity_action_bar">
+        </activity>
+        <activity android:name=".PaperTitleStripActivity">
+        </activity>
     </application>
 
 </manifest>
