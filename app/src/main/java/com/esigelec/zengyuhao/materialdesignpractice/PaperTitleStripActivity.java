@@ -61,7 +61,7 @@ public class PaperTitleStripActivity extends Activity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = null;
+            ImageView imageView = new ImageView(getBaseContext());
             EfficientBitmap.loadBitmap(getResources(), imageView, mPlaceHolderBitmap, imageResId[position],
                     pagerWidth, pagerHeigth, EfficientBitmap.DecoderAsyncTask.MODE_NO_MEMORY_CACHE);
             return imageView;
@@ -80,6 +80,11 @@ public class PaperTitleStripActivity extends Activity {
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
         }
     }
 }
