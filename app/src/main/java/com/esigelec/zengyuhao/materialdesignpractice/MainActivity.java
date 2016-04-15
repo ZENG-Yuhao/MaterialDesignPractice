@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
             "CardView",
             "Shadow and Clipping",
             "ActionBar",
-            "PaperTabStrip"
+            "PagerTabStrip"
     };
 
     private static Class[] xActivityClasses = new Class[]{
