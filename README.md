@@ -2,7 +2,6 @@
 Practices when learning google material design.
 
 ### Overview:
-- [Main](#main)
 - [RecyclerView & CardView](#recyclerview-and-cardview)
 - [PagerTapStrip](#pagertapstrip)
 - [Shadow & Clipping & VectorDrawable](#shadow-clipping-vectordrawable)
