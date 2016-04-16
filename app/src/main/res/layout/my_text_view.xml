@@ -4,6 +4,7 @@
         android:layout_height="75dp"
         android:background="@android:color/white"
         android:elevation="16dp"
+        android:textAllCaps="false"
         android:textColor="@android:color/darker_gray">
 
 </Button>

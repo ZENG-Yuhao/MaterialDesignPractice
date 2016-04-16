@@ -17,7 +17,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:text="Pull from left to right to show the drawer, or click me."
+            android:text="Pull from left to right to show the drawer, or click here."
             android:textSize="18sp"/>
 
     </FrameLayout>

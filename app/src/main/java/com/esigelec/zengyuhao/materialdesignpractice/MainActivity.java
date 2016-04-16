@@ -13,19 +13,21 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
     private static String[] xActivityNames = new String[]{
-            "CardView",
-            "Shadow and Clipping",
-            "ActionBar",
+            "Notification",
+            "Navigation Drawer",
             "PagerTabStrip",
-            "Navigation Drawer"
+            "ActionBar",
+            "Shadow and Clipping",
+            "CardView"
     };
 
     private static Class[] xActivityClasses = new Class[]{
-            CardViewActivity.class,
-            ShadowAndClippingActivity.class,
-            ActionBarActivity.class,
+            NotificationActivity.class,
+            NavigationDrawerActivity.class,
             PaperTabStripActivity.class,
-            NavigationDrawerActivity.class
+            ActionBarActivity.class,
+            ShadowAndClippingActivity.class,
+            CardViewActivity.class
     };
 
     private RecyclerView xRecyclerView;
