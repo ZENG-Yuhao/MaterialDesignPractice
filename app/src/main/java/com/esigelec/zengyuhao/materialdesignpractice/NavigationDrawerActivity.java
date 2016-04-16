@@ -5,6 +5,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.ListViewAutoScrollHelper;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,9 @@ public class NavigationDrawerActivity extends Activity {
             .ic_assignment_late_black_24dp, R.drawable.ic_assistant_black_24dp, R.drawable.ic_attach_file_black_24dp,
             R.drawable.ic_backup_black_24dp};
 
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,8 @@ public class NavigationDrawerActivity extends Activity {
 
         final ListView leftDrawer = (ListView) findViewById(R.id.left_drawer);
         leftDrawer.setAdapter(new DrawerListAdapter());
+
+        // listen item click events
         leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -37,6 +43,44 @@ public class NavigationDrawerActivity extends Activity {
             }
         });
 
+        // listen drawer open and close events
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                Toast.makeText(getApplicationContext(), "Drawer opened", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                Toast.makeText(getApplicationContext(), "Drawer closed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.str_open, R.string.str_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setIcon(R.drawable.ic_arrow_downward_black_24dp);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                getActionBar().setIcon(R.drawable.ic_arrow_back_black_24dp);
+            }
+        };
+
+        drawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     public class DrawerListAdapter extends BaseAdapter {
