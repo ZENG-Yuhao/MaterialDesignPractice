@@ -16,14 +16,16 @@ public class MainActivity extends Activity {
             "CardView",
             "Shadow and Clipping",
             "ActionBar",
-            "PagerTabStrip"
+            "PagerTabStrip",
+            "Navigation Drawer"
     };
 
     private static Class[] xActivityClasses = new Class[]{
             CardViewActivity.class,
             ShadowAndClippingActivity.class,
             ActionBarActivity.class,
-            PaperTabStripActivity.class
+            PaperTabStripActivity.class,
+            NavigationDrawerActivity.class
     };
 
     private RecyclerView xRecyclerView;

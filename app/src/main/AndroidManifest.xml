@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".PaperTabStripActivity">
         </activity>
+        <activity android:name=".NavigationDrawerActivity">
+        </activity>
     </application>
 
 </manifest>
