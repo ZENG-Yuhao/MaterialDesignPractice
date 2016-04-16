@@ -8,11 +8,13 @@ import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NavigationDrawerActivity extends Activity {
     final private static String[] DRAWER_TITLES = {"Profile", "Info", "Favorite", "Attach", "Backup"};
@@ -25,8 +27,16 @@ public class NavigationDrawerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
 
-        ListView leftDrawer = (ListView) findViewById(R.id.left_drawer);
+        final ListView leftDrawer = (ListView) findViewById(R.id.left_drawer);
         leftDrawer.setAdapter(new DrawerListAdapter());
+        leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), "Item Clicked, position " + position, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
     }
 
     public class DrawerListAdapter extends BaseAdapter {
