@@ -9,12 +9,17 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
-            android:text="Pull from left to right to show the drawer"
-            android:layout_gravity="center"
-            android:textSize="18sp"
+            android:id="@+id/text_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:text="Pull from left to right to show the drawer, or click me."
+            android:textSize="18sp"/>
+
     </FrameLayout>
 
     <ListView

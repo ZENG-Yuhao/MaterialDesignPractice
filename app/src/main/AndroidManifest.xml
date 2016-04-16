@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".PaperTabStripActivity">
         </activity>
-        <activity android:name=".NavigationDrawerActivity">
+        <activity android:name=".NavigationDrawerActivity" android:logo="@drawable/ic_arrow_back_black_24dp"
+            android:label="DrawerLayout">
         </activity>
     </application>
 

@@ -3,9 +3,11 @@ package com.esigelec.zengyuhao.materialdesignpractice;
 import android.app.Activity;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class NavigationDrawerActivity extends Activity {
     final private static String[] DRAWER_TITLES = {"Profile", "Info", "Favorite", "Attach", "Backup"};
@@ -40,6 +44,7 @@ public class NavigationDrawerActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getApplicationContext(), "Item Clicked, position " + position, Toast.LENGTH_SHORT)
                         .show();
+                drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
 
@@ -70,17 +75,25 @@ public class NavigationDrawerActivity extends Activity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setIcon(R.drawable.ic_arrow_downward_black_24dp);
+                getActionBar().setTitle("DrawerLayout (Opened)");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                getActionBar().setIcon(R.drawable.ic_arrow_back_black_24dp);
+                getActionBar().setTitle("DrawerLayout");
             }
         };
 
         drawerLayout.addDrawerListener(mDrawerToggle);
+
+        TextView textView = (TextView) findViewById(R.id.text_view);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
     }
 
     public class DrawerListAdapter extends BaseAdapter {
