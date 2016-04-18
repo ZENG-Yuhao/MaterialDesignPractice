@@ -19,7 +19,7 @@ public class ActionBarActivity extends Activity {
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                Toast.makeText(getApplicationContext(), "You have chosen Tab" + tab.getPosition(), Toast
+                Toast.makeText(getApplicationContext(), "You have chosen Tab" + (tab.getPosition() + 1), Toast
                         .LENGTH_SHORT).show();
             }
 
