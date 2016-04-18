@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.Toast;
 
 public class ActionBarActivity extends Activity {
 
@@ -18,7 +19,8 @@ public class ActionBarActivity extends Activity {
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+                Toast.makeText(getApplicationContext(), "You have chosen Tab" + tab.getPosition(), Toast
+                        .LENGTH_SHORT).show();
             }
 
             @Override
@@ -32,8 +34,8 @@ public class ActionBarActivity extends Activity {
             }
         };
 
-        for (int i=0; i<3; i++){
-            actionBar.addTab(actionBar.newTab().setText("Tab"+(i+1)).setTabListener(tabListener));
+        for (int i = 0; i < 3; i++) {
+            actionBar.addTab(actionBar.newTab().setText("Tab" + (i + 1)).setTabListener(tabListener));
         }
     }
 
