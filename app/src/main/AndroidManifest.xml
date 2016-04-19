@@ -32,6 +32,8 @@
         </activity>
         <activity android:name=".NotificationActivity">
         </activity>
+        <activity android:name=".CapturingPhotoActivity">
+        </activity>
     </application>
 
 </manifest>
