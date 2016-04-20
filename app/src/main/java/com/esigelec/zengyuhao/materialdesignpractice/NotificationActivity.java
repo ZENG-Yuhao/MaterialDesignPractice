@@ -11,6 +11,8 @@ import android.widget.Button;
 
 public class NotificationActivity extends Activity {
 
+    final private static int NOTIFICATION_ID = 110;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +34,36 @@ public class NotificationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                manager.notify(110, builder.build());
+                manager.notify(NOTIFICATION_ID, builder.build());
+            }
+        });
+
+        Button btn_cancel = (Button) findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.cancel(NOTIFICATION_ID);
+            }
+        });
+
+        final NotificationCompat.Builder builder_auto = new NotificationCompat.Builder(this);
+        builder_auto.setSmallIcon(R.drawable.ic_devices_black_48dp);
+        builder_auto.setContentTitle("AutoCancel Notification");
+        builder_auto.setContentText("Hello World.");
+
+        Intent resultIntent_auto = new Intent(this, NavigationDrawerActivity.class);
+        PendingIntent resultPendingIntent_auto = PendingIntent.getActivity(this, 0, resultIntent_auto, PendingIntent
+                .FLAG_UPDATE_CURRENT);
+
+        builder_auto.setAutoCancel(true);
+        builder_auto.setContentIntent(resultPendingIntent_auto);
+        Button btn_auto_notification = (Button) findViewById(R.id.btn_auto_cancel_notification);
+        btn_auto_notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.notify(NOTIFICATION_ID + 1, builder_auto.build());
             }
         });
     }
