@@ -34,6 +34,8 @@
         </activity>
         <activity android:name=".CapturingPhotoActivity">
         </activity>
+        <activity android:name=".SnackerBarActivity">
+        </activity>
     </application>
 
 </manifest>

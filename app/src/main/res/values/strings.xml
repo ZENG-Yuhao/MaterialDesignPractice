@@ -3,4 +3,5 @@
     <string name="title_activity_action_bar">ActionBarActivity</string>
     <string name="str_open">open</string>
     <string name="str_close">close</string>
+    <string name="str_snackerbar_message">Hello, this is an message showing by SnackerBar.</string>
 </resources>

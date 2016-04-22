@@ -13,6 +13,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
     private static String[] xActivityNames = new String[]{
+            "SnackerBar",
             "Notification",
             "Navigation Drawer",
             "PagerTabStrip",
@@ -22,6 +23,7 @@ public class MainActivity extends Activity {
     };
 
     private static Class[] xActivityClasses = new Class[]{
+            SnackerBarActivity.class,
             NotificationActivity.class,
             NavigationDrawerActivity.class,
             PaperTabStripActivity.class,
