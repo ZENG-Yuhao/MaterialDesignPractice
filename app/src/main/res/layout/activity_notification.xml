@@ -4,34 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.NotificationActivity">
 
     <Button
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start notification"
         android:layout_gravity="center"
-        android:textAllCaps="false"/>
+        android:text="Start notification"
+        android:textAllCaps="false"
+       />
 
     <Button
         android:id="@+id/btn_cancel"
-        android:text="Cancel Notification"
-        android:layout_gravity="center"
-        android:textAllCaps="false"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Cancel Notification"
+        android:textAllCaps="false"
+        />
 
     <Button
         android:id="@+id/btn_auto_cancel_notification"
-        android:layout_gravity="center"
-        android:text="Auto cancel notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"/>
+        android:layout_gravity="center"
+        android:text="Auto cancel notification"
+        android:textAllCaps="false"
+        />
+
+    <Button
+        android:id="@+id/btn_update_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Update Number"
+        android:textAllCaps="false"
+       />
 </LinearLayout>

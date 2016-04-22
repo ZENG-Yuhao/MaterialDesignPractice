@@ -12,6 +12,7 @@ import android.widget.Button;
 public class NotificationActivity extends Activity {
 
     final private static int NOTIFICATION_ID = 110;
+    private int number = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,16 @@ public class NotificationActivity extends Activity {
         btn_auto_notification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.notify(NOTIFICATION_ID + 1, builder_auto.build());
+            }
+        });
+
+        Button btn_update_number = (Button) findViewById(R.id.btn_update_number);
+        btn_update_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder_auto.setNumber(++number);
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 manager.notify(NOTIFICATION_ID + 1, builder_auto.build());
             }
