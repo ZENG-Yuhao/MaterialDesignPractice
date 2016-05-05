@@ -18,14 +18,14 @@
         android:padding="0dp"
         app:barWidth="100"
         app:percentage="50"
-        android:background="@android:color/darker_gray"
         android:layout_centerInParent="true"
+        android:elevation="12dp"
         />
 
     <TextView
         android:text="This is a customized view which defines a circle progress bar."
         android:layout_below="@id/progressbar"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </RelativeLayout>
