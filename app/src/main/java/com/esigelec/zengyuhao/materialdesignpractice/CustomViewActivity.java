@@ -10,4 +10,6 @@ public class CustomViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_view);
     }
+
+
 }

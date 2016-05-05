@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="CircleProgressBar">
         <attr name="barWidth" format="dimension|integer"/>
-        <attr name="percentage" format="fraction"/>
+        <attr name="percentage" format="integer"/>
         <attr name="barColor" format="color"/>
     </declare-styleable>
 </resources>
