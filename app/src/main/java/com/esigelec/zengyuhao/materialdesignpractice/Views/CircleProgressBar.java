@@ -88,9 +88,9 @@ public class CircleProgressBar extends View {
         if (centerX >= 0 && centerY >= 0 && circleR >= 0) {
             canvas.drawCircle(centerX, centerY, circleR, paint);
 
-            canvas.drawArc(rect, -90, 47, true, paint1);
+            canvas.drawArc(rect, -90, 0.37f*360, true, paint1);
             canvas.drawCircle(centerX, centerY, circleR * 0.8f, paint2);
-            canvas.drawText("47%", centerX-50, centerY+10, paintTxt);
+            canvas.drawText("37%", centerX-50, centerY+10, paintTxt);
         }
     }
 
