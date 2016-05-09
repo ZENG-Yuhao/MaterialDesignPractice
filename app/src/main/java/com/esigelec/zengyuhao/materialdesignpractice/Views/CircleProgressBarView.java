@@ -15,7 +15,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 /**
  * Created by enzoz on 2016/4/22.
  */
-public class CircleProgressBar extends View {
+public class CircleProgressBarView extends View {
     private int mBarWidth;
     private Color mBarColor;
     private BarStyle mBarStyle;
@@ -31,17 +31,17 @@ public class CircleProgressBar extends View {
         DYNAMIC
     }
 
-    public CircleProgressBar(Context context) {
+    public CircleProgressBarView(Context context) {
         super(context);
         init();
     }
 
-    public CircleProgressBar(Context context, AttributeSet attrs) {
+    public CircleProgressBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CircleProgressBar, 0, 0);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CircleProgressBarView, 0, 0);
         try {
-            mBarWidth = a.getInteger(R.styleable.CircleProgressBar_barWidth, 0);
-            mPercentage = a.getInteger(R.styleable.CircleProgressBar_percentage, 0);
+            mBarWidth = a.getInteger(R.styleable.CircleProgressBarView_barWidth, 0);
+            mPercentage = a.getInteger(R.styleable.CircleProgressBarView_percentage, 0);
             Log.i("attr", "attr---->" + mBarWidth + " " + mPercentage);
         } finally {
             a.recycle();
@@ -77,6 +77,19 @@ public class CircleProgressBar extends View {
 
     }
 
+    public void updatePercentage(int percentage) {
+        mPercentage = percentage;
+        if (mPercentage > 100)
+            mPercentage = 100;
+        else if (mPercentage < 0)
+            mPercentage = 0;
+        invalidate();
+    }
+
+    public int getPercentage() {
+        return mPercentage;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -88,9 +101,9 @@ public class CircleProgressBar extends View {
         if (centerX >= 0 && centerY >= 0 && circleR >= 0) {
             canvas.drawCircle(centerX, centerY, circleR, paint);
 
-            canvas.drawArc(rect, -90, 0.37f*360, true, paint1);
+            canvas.drawArc(rect, -90, 0.01f * mPercentage * 360, true, paint1);
             canvas.drawCircle(centerX, centerY, circleR * 0.8f, paint2);
-            canvas.drawText("37%", centerX-50, centerY+10, paintTxt);
+            canvas.drawText(String.valueOf(mPercentage) + "%", centerX - 50, centerY + 10, paintTxt);
         }
     }
 

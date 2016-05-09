@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CircleProgressBar">
+    <declare-styleable name="CircleProgressBarView">
         <attr name="barWidth" format="dimension|integer"/>
         <attr name="percentage" format="integer"/>
         <attr name="barColor" format="color"/>
