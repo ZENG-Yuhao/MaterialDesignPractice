@@ -2,7 +2,7 @@
 Practices when learning google material design.
 
 ### Overview:
-- [Circle ProgressBar](#customized-circleprogressbar)
+- [Customized CircleProgressBar](#customized-circleprogressbar)
 - [Navigation Drawer](#navigation-drawer)
 - [PagerTapStrip](#pagertapstrip)
 - [Shadow & Clipping & VectorDrawable](#shadow-clipping-vectordrawable)
