@@ -13,6 +13,12 @@ import android.view.View;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 /**
+ *  * To make the view to be fully customized, onMeasure(), onLayout(), onDraw() are the key methods.
+ * Also, if we need the attributes to be visible in the xml design, it has to declare them in the <b>attrs.xml</b>,
+ * where shows also how to manage same-name-attribute conflicts.
+ *
+ * Must notice that all initialisations of Paint, Canvas are heavy works, never put them in onDraw(), since this
+ * method is invoked very frequently.
  * Created by enzoz on 2016/4/22.
  */
 public class CircleProgressBarView extends View {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 /**
+ *
  * Created by Enzo(ZENG Yuhao) on 16/5/10.
  */
 public class CircleProgressBar extends RelativeLayout {
