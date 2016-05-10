@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>.
-
     <!-- When there are conflicts with attributes' names, what we need to do is making those attr in the common filed
-    and declaring them again in the private field. -->
+    and declaring them again in the private field. Just like what I have done below. -->
 
     <attr name="barWidth" format="dimension|integer"/>
     <attr name="percentage" format="integer"/>
