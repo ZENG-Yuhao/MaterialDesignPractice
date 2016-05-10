@@ -2,13 +2,16 @@
 Practices when learning google material design.
 
 ### Overview:
+- [Circle ProgressBar](#customized-circleprogressbar)
 - [Navigation Drawer](#navigation-drawer)
 - [PagerTapStrip](#pagertapstrip)
-- [Circle ProgressBar](#circle-progressbar)
 - [Shadow & Clipping & VectorDrawable](#shadow-clipping-vectordrawable)
 - [RecyclerView & CardView](#recyclerview-and-cardview)
 - [ActionBar](#actionbar)
 - [Notification](#notification)
+
+#### Customized CircleProgressBar
+<img src="https://github.com/ZENG-Yuhao/MaterialDesignPractice/blob/master/screenshots/CircleProgressBar.PNG" width="300" height="525">
 
 #### Navigation Drawer
 <img src="https://github.com/ZENG-Yuhao/MaterialDesignPractice/blob/master/screenshots/DrawerLayout_hide.PNG" width="300" height="525">
@@ -17,9 +20,6 @@ Practices when learning google material design.
 #### PagerTapStrip
 <img src="https://github.com/ZENG-Yuhao/MaterialDesignPractice/blob/master/screenshots/PagerTapStrip0.PNG" width="300" height="525">
 <img src="https://github.com/ZENG-Yuhao/MaterialDesignPractice/blob/master/screenshots/PagerTapStrip.PNG" width="300" height="525">
-
-#### Circle ProgressBar
-<img src="https://github.com/ZENG-Yuhao/MaterialDesignPractice/blob/master/screenshots/CircleProgressBar.PNG" width="300" height="525">
 
 #### Shadow Clipping VectorDrawable
 <img src="https://github.com/ZENG-Yuhao/MaterialDesignPractice/blob/master/screenshots/ShadowAndClipping.PNG" width="300" height="525">
