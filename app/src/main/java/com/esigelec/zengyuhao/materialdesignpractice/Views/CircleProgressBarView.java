@@ -68,13 +68,14 @@ public class CircleProgressBarView extends View {
         paint2.setStrokeJoin(Paint.Join.ROUND);
         paint2.setStrokeWidth(3);
 
+        /*
         paintTxt = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintTxt.setColor(getResources().getColor(android.R.color.holo_blue_dark));
         paintTxt.setTextSize(70);
         paintTxt.setStrokeCap(Paint.Cap.ROUND);
         paintTxt.setStrokeJoin(Paint.Join.ROUND);
         paintTxt.setStrokeWidth(3);
-
+        */
     }
 
     public void updatePercentage(int percentage) {
@@ -103,7 +104,7 @@ public class CircleProgressBarView extends View {
 
             canvas.drawArc(rect, -90, 0.01f * mPercentage * 360, true, paint1);
             canvas.drawCircle(centerX, centerY, circleR * 0.8f, paint2);
-            canvas.drawText(String.valueOf(mPercentage) + "%", centerX - 50, centerY + 10, paintTxt);
+            //canvas.drawText(String.valueOf(mPercentage) + "%", centerX - 50, centerY + 10, paintTxt);
         }
     }
 
