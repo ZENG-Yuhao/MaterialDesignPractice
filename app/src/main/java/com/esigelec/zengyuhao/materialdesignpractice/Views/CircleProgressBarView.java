@@ -19,6 +19,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
  *
  * Must notice that all initialisations of Paint, Canvas are heavy works, never put them in onDraw(), since this
  * method is invoked very frequently.
+ *
  * Created by enzoz on 2016/4/22.
  */
 public class CircleProgressBarView extends View {
