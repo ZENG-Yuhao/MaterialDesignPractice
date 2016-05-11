@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.Views;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.esigelec.zengyuhao.materialdesignpractice">
+<manifest package="com.esigelec.zengyuhao.materialdesignpractice"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -37,6 +37,8 @@
         <activity android:name=".SnackerBarActivity">
         </activity>
         <activity android:name=".CustomViewActivity">
+        </activity>
+        <activity android:name=".IntentServiceActivity">
         </activity>
     </application>
 
