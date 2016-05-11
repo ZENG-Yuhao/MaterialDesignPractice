@@ -57,19 +57,19 @@ public class CircleProgressBarView extends View {
     }
 
     private void init() {
-        paint = new Paint();
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(getResources().getColor(android.R.color.holo_blue_bright));
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeWidth(3);
 
-        paint1 = new Paint();
+        paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint1.setColor(getResources().getColor(android.R.color.holo_blue_dark));
         paint1.setStrokeCap(Paint.Cap.ROUND);
         paint1.setStrokeJoin(Paint.Join.ROUND);
         paint1.setStrokeWidth(3);
 
-        paint2 = new Paint();
+        paint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint2.setColor(Color.WHITE);
         paint2.setStrokeCap(Paint.Cap.ROUND);
         paint2.setStrokeJoin(Paint.Join.ROUND);

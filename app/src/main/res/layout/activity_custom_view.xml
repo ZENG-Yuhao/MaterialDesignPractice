@@ -30,7 +30,7 @@
         android:layout_height="220dp"
         android:layout_below="@id/progressbar"
         android:layout_centerHorizontal="true"
-        app:barTextSize="7sp"
+        app:barTextSize="8sp"
         app:barWidth="50"
         app:percentage="75"/>
 
@@ -47,6 +47,6 @@
     <SeekBar
         android:id="@+id/seekbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_below="@id/txtvw_description"/>
 </RelativeLayout>
