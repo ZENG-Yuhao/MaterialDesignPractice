@@ -40,6 +40,9 @@
         </activity>
         <activity android:name=".IntentServiceActivity">
         </activity>
+
+        <service android:name=".Service.MyIntentService"
+                 android:exported="false"/>
     </application>
 
 </manifest>
