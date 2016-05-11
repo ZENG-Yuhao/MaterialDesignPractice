@@ -14,6 +14,7 @@ import android.widget.Button;
 public class MainActivity extends Activity {
     private static String[] xActivityNames = new String[]{
             "CustomView",
+            "IntentService",
             "SnackerBar",
             "Notification",
             "Navigation Drawer",
@@ -25,6 +26,7 @@ public class MainActivity extends Activity {
 
     private static Class[] xActivityClasses = new Class[]{
             CustomViewActivity.class,
+            IntentServiceActivity.class,
             SnackerBarActivity.class,
             NotificationActivity.class,
             NavigationDrawerActivity.class,
