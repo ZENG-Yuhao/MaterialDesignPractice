@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class MainActivity extends Activity {
-    private static String[] xActivityNames = new String[]{
+    final private static String[] xActivityNames = new String[]{
             "CustomView",
             "IntentService",
             "SnackerBar",
@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
             "CardView"
     };
 
-    private static Class[] xActivityClasses = new Class[]{
+    final private static Class[] xActivityClasses = new Class[]{
             CustomViewActivity.class,
             IntentServiceActivity.class,
             SnackerBarActivity.class,
