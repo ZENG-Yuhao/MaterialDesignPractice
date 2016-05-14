@@ -27,7 +27,7 @@ public class PaperTabStripActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paper_title_strip);
-
+        getActionBar().setTitle("PagerTapStrip");
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_tab_strip);

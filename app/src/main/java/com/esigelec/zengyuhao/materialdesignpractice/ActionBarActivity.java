@@ -1,10 +1,9 @@
 package com.esigelec.zengyuhao.materialdesignpractice;
 
 import android.app.ActionBar;
-import android.app.FragmentTransaction;
-import android.app.Notification;
-import android.os.Bundle;
 import android.app.Activity;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.widget.Toast;
 
 public class ActionBarActivity extends Activity {
@@ -13,6 +12,7 @@ public class ActionBarActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action_bar);
+        getActionBar().setTitle("ActionBar");
 
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

@@ -12,7 +12,7 @@ public class ShadowAndClippingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shadow_and_clipping);
-
+        getActionBar().setTitle("Shadow and Clipping");
         CardView cardview = (CardView) findViewById(R.id.card_view);
         cardview.setOnTouchListener(new View.OnTouchListener() {
             @Override
