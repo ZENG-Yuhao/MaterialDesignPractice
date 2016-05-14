@@ -13,6 +13,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "CircularReveal Effect",
             "Ripple Effect",
             "CustomView",
             "IntentService",
@@ -25,6 +26,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            CircularRevealActivity.class,
             RippleEffectActivity.class,
             CustomViewActivity.class,
             IntentServiceActivity.class,

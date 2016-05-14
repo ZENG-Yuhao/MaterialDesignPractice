@@ -47,6 +47,8 @@
 
         <activity android:name=".RippleEffectActivity">
         </activity>
+        <activity android:name=".CircularRevealActivity">
+        </activity>
     </application>
 
 </manifest>
