@@ -54,7 +54,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/myrect"
+            android:background="@drawable/ripple_rect"
             android:elevation="10dp"
             android:text="Shadow with Drawable"
             />

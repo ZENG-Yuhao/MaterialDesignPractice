@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/card_view"
         android:layout_toRightOf="@id/btn1"
-        android:background="@drawable/myrect"
+        android:background="@drawable/ripple_rect"
         android:text="CustomDrawable"/>
 
 </RelativeLayout>
