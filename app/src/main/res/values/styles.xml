@@ -24,6 +24,7 @@
         inherits already AppCompat or Material.
             ## <item name="android:windowContentTransitions">true</item> ##
         -->
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
 </resources>

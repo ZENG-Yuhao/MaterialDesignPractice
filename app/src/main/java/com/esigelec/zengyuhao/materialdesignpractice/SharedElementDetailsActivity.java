@@ -12,6 +12,7 @@ public class SharedElementDetailsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_element_details);
+        getActionBar().hide();
 
         Slide slide = new Slide(Gravity.BOTTOM);
         slide.addTarget(R.id.description);

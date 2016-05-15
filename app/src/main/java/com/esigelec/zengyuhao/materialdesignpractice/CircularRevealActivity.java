@@ -11,6 +11,8 @@ import android.widget.TextView;
 public class CircularRevealActivity extends Activity {
     private TextView txt1, txt2;
     private Boolean isBlue = true;
+    private LinearLayout linearLayout;
+    private Animator anim, anim1;// prevent starting another animation before the end of current animation
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,28 +22,88 @@ public class CircularRevealActivity extends Activity {
         txt1 = (TextView) findViewById(R.id.txt1);
         txt2 = (TextView) findViewById(R.id.txt2);
 
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.my_linear_layout);
+        linearLayout = (LinearLayout) findViewById(R.id.my_linear_layout);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // prevent starting another animation before the end of current animation
+                linearLayout.setClickable(false);
+
+                // calculate params
                 double half_width = v.getWidth() / 2;
                 double half_height = v.getHeight() / 2;
                 int finalRadius = (int) Math.hypot(half_width, half_height);
-                Animator anim = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height, 0,
-                        finalRadius);
+
+                // set exit animator
+                anim = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height,
+                        finalRadius, 0);
                 anim.setDuration(400);
-                if (isBlue) {
-                    txt1.setText("Orange Title");
-                    txt2.setText("Orange Content");
-                    v.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
-                } else {
-                    txt1.setText("Blue Title");
-                    txt2.setText("Blue Content");
-                    v.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
-                }
-                isBlue = !isBlue;
-                anim.start();
+                anim.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        changeContent();
+                        anim1.start();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+                // set enter animator
+                anim1 = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height, 0,
+                        finalRadius);
+                anim1.setDuration(400);
+                anim1.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        // animation set finished, reset the clickable state
+                        linearLayout.setClickable(true);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+                // start exit animator and then enter animator
+                    anim.start();
             }
         });
+    }
+
+    private void changeContent() {
+        if (isBlue) {
+            txt1.setText("Orange Title");
+            txt2.setText("Orange Content");
+            linearLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+        } else {
+            txt1.setText("Blue Title");
+            txt2.setText("Blue Content");
+            linearLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+        }
+        isBlue = !isBlue;
     }
 }

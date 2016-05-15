@@ -43,6 +43,7 @@ public class SharedElementsTransitionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_elements_transition);
+        getActionBar().hide();
 
         ImageView img = (ImageView) findViewById(R.id.img);
         /* Dangerous configuration
