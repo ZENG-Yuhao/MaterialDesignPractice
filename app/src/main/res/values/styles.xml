@@ -16,6 +16,14 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:colorBackground">@color/background_floating_material_light</item>
 
+        <item name="android:windowExitTransition">
+            @transition/grid_exit
+        </item>
+
+        <!-- We may need this config for Transitions. This attribute will be set to true automatically if the AppTheme
+        inherits already AppCompat or Material.
+            ## <item name="android:windowContentTransitions">true</item> ##
+        -->
     </style>
 
 </resources>

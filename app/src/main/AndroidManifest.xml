@@ -49,6 +49,10 @@
         </activity>
         <activity android:name=".CircularRevealActivity">
         </activity>
+        <activity android:name=".SharedElementsTransitionActivity">
+        </activity>
+        <activity android:name=".SharedElementDetailsActivity">
+        </activity>
     </application>
 
 </manifest>
