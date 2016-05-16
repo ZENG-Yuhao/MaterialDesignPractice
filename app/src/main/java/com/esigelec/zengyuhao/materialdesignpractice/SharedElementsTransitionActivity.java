@@ -46,7 +46,7 @@ public class SharedElementsTransitionActivity extends Activity {
         getActionBar().hide();
 
         ImageView img = (ImageView) findViewById(R.id.img);
-        /* Dangerous configuration
+        /* Dangerous configuration in this field
            final Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(SharedElementsTransitionActivity.this,
            img, "transition_image").toBundle();
         */
