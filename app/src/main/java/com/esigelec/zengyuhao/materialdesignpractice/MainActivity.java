@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "Observer & Observable",
             "Shared Elements Transition",
             "CircularReveal Effect",
             "Ripple Effect",
@@ -29,6 +28,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            ObserverAndObservableActivity.class,
             SharedElementsTransitionActivity.class,
             CircularRevealActivity.class,
             RippleEffectActivity.class,
