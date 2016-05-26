@@ -11,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginActivity;
+
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "MVP example",
             "Observer & Observable",
             "Shared Elements Transition",
             "CircularReveal Effect",
@@ -28,6 +31,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            LoginActivity.class,
             ObserverAndObservableActivity.class,
             SharedElementsTransitionActivity.class,
             CircularRevealActivity.class,
