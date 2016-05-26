@@ -52,8 +52,8 @@ public class LoginActivity extends Activity implements ILoginView {
 
     @Override
     public void clearTextFields() {
-        editxt_account.clearComposingText();
-        editxt_pswd.clearComposingText();
+        editxt_account.setText("");
+        editxt_pswd.setText("");
     }
 
     @Override
