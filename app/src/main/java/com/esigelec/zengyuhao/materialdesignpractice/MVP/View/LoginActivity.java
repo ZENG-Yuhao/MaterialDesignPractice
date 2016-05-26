@@ -33,7 +33,7 @@ public class LoginActivity extends Activity implements ILoginView {
             public void onClick(View v) {
                 String str_account = editxt_account.getText().toString();
                 String str_pswd = editxt_pswd.getText().toString();
-                if (str_account != "" && str_pswd != "") {
+                if (str_account.equals("") && str_pswd.equals("")) {
                     mPresenter.doLogin(str_account, str_pswd);
                 } else {
                     Toast.makeText(LoginActivity.this, "Invalid input.", Toast.LENGTH_SHORT).show();
@@ -52,8 +52,8 @@ public class LoginActivity extends Activity implements ILoginView {
 
     @Override
     public void clearTextFields() {
-        editxt_account.setText("");
-        editxt_pswd.setText("");
+        editxt_account.clearComposingText();
+        editxt_pswd.clearComposingText();
     }
 
     @Override
