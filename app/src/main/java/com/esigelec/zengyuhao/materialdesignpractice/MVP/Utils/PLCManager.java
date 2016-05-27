@@ -6,16 +6,16 @@ import android.content.Loader;
 import android.os.Bundle;
 
 /**
- * PresenterLoader's callbacks manager.
+ * Presenter Loader Callbacks Manager.
  * Created by Enzo on 16/5/27.
  */
-public class PLCallBack<P extends IPresenter, V extends IView> implements LoaderManager
+public class PLCManager<P extends IPresenter, V extends IView> implements LoaderManager
         .LoaderCallbacks<P> {
     private Context mContext;
     private V mView;
     private InstanceProvider<P> mInstanceProvider;
 
-    public PLCallBack(Context context, V view) {
+    public PLCManager(Context context, V view) {
         mContext = context;
         mView = view;
     }
