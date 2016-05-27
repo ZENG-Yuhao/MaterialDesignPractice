@@ -24,14 +24,15 @@ public class Login3Activity extends Activity implements ILoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // There is an unknown error, we can not apply "this" which will be recognized as Login3Activity for 2nd
-        // param.  It must be cast to ILoginView
-        PLCManager<ILoginPresenter, ILoginView> plc = new PLCManager<>(this, (ILoginView) this, new IPresenterFactory<ILoginPresenter>() {
+        IPresenterFactory<ILoginPresenter> factory = new IPresenterFactory<ILoginPresenter>() {
             @Override
             public ILoginPresenter create() {
                 return new LoginPresenter();
             }
-        });
+        };
+        // There is an unknown error, we can not apply "this" which will be recognized as Login3Activity for 2nd
+        // param.  It must be cast to ILoginView
+        PLCManager<ILoginPresenter, ILoginView> plc = new PLCManager<>(this, (ILoginView) this, factory);
 
         getLoaderManager().initLoader(LOADER_ID, null, plc);
 
