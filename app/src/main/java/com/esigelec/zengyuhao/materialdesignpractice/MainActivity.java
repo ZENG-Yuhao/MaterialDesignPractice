@@ -11,10 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login2Activity;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login3Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginActivity;
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "MVP example with Loader2",
+            "MVP example with Loader",
             "MVP example",
             "Observer & Observable",
             "Shared Elements Transition",
@@ -31,6 +35,8 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            Login3Activity.class,
+            Login2Activity.class,
             LoginActivity.class,
             ObserverAndObservableActivity.class,
             SharedElementsTransitionActivity.class,

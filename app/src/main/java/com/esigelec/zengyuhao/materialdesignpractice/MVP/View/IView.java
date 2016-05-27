@@ -17,4 +17,6 @@ public interface IView<P extends IPresenter> {
      * @return the presenter being bound to this view.
      */
     P getPresenter();
+
+    void setPresenter(P presenter);
 }

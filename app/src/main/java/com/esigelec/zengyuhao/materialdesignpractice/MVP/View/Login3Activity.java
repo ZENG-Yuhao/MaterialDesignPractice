@@ -1,8 +1,6 @@
 package com.esigelec.zengyuhao.materialdesignpractice.MVP.View;
 
 import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.Loader;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +9,11 @@ import android.widget.Toast;
 
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils.IPresenterFactory;
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils.PresenterLoader;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils.PLCallBack;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-public class Login2Activity extends Activity implements ILoginView, LoaderManager.LoaderCallbacks<ILoginPresenter>{
-    private static final int LOADER_ID = 110;
-
+public class Login3Activity extends Activity implements ILoginView {
+    private static final int LOADER_ID = 111;
     private ILoginPresenter mPresenter;
     private EditText editxt_account, editxt_pswd;
     private Button btn_login, btn_clear;
@@ -27,8 +23,18 @@ public class Login2Activity extends Activity implements ILoginView, LoaderManage
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // init PresenterLoader, we use "this" because activity implements LoadCallBacks<ILoginPresenter>
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        // There is an unknown error, we can not apply "this" which will be recognized as Login3Activity for 2nd
+        // param.  It must be cast to ILoginView
+        PLCallBack<ILoginPresenter, ILoginView> plc = new PLCallBack<>(getApplicationContext(), (ILoginView) this);
+        plc.setInstanceProvider(new PLCallBack.InstanceProvider<ILoginPresenter>() {
+            @Override
+            public ILoginPresenter provide() {
+                // provide an instance of presenter used in current case
+                return new LoginPresenter();
+            }
+        });
+        getLoaderManager().initLoader(LOADER_ID, null, plc);
+
 
         editxt_account = (EditText) findViewById(R.id.editxt_account);
         editxt_pswd = (EditText) findViewById(R.id.editxt_pswd);
@@ -41,8 +47,6 @@ public class Login2Activity extends Activity implements ILoginView, LoaderManage
                 String str_pswd = editxt_pswd.getText().toString();
                 if (!str_account.equals("") && !str_pswd.equals("")) {
                     mPresenter.doLogin(str_account, str_pswd);
-                } else {
-                    Toast.makeText(Login2Activity.this, "Invalid input.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -86,6 +90,8 @@ public class Login2Activity extends Activity implements ILoginView, LoaderManage
 
     @Override
     protected void onStop() {
+        // In fact, for an activity, we need just one presenter in all his lifecycle, and normally it won't change
+        // the view so there is no need to detach the view/activity when onStop()
         mPresenter.onViewDetach();
         super.onStop();
     }
@@ -96,23 +102,4 @@ public class Login2Activity extends Activity implements ILoginView, LoaderManage
         super.onDestroy();
     }
 
-    @Override
-    public Loader<ILoginPresenter> onCreateLoader(int id, Bundle args) {
-        return new PresenterLoader<>(this, new IPresenterFactory<ILoginPresenter>() {
-            @Override
-            public ILoginPresenter create() {
-                return new LoginPresenter();
-            }
-        });
-    }
-
-    @Override
-    public void onLoadFinished(Loader<ILoginPresenter> loader, ILoginPresenter presenter) {
-        mPresenter = presenter;
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ILoginPresenter> loader) {
-        mPresenter = null;
-    }
 }

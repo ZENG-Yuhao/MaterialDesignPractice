@@ -26,7 +26,7 @@ public interface IPresenter<V extends IView> {
      *
      * 1. Generics type are designed and are used only in compile-time, all generics type will be erased before
      * run-time. So, the purpose is just making sure that programmers do not make unmatched-type errors when
-     * designing and programming.
+     * designing and programming. We can consider it as an type-checker.
      *
      * 2. In pattern MVP, since a specific presenter (ILoginPresenter) has a strong correlation with a specific view
      * (ILoginView), It'd better to make some liaison between these interfaces. Such like, We make ILoginPresnter to
@@ -40,6 +40,8 @@ public interface IPresenter<V extends IView> {
      * {@link com.esigelec.zengyuhao.materialdesignpractice.MVP.View.ILoginView} as a parameter of onViewAttach(),
      * and apply {@link IPresenter} as a return of getPresenter().
      *
+     * 3. We can not create an instance of a class via interface, since it always need a instance first.
      *
+     * 4. Always use interface rather than an
      */
 }
