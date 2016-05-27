@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenterFactory;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.PLCManager;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
@@ -25,14 +26,13 @@ public class Login3Activity extends Activity implements ILoginView {
 
         // There is an unknown error, we can not apply "this" which will be recognized as Login3Activity for 2nd
         // param.  It must be cast to ILoginView
-        PLCManager<ILoginPresenter, ILoginView> plc = new PLCManager<>(getApplicationContext(), (ILoginView) this);
-        plc.setInstanceProvider(new PLCManager.InstanceProvider<ILoginPresenter>() {
+        PLCManager<ILoginPresenter, ILoginView> plc = new PLCManager<>(this, (ILoginView) this, new IPresenterFactory<ILoginPresenter>() {
             @Override
-            public ILoginPresenter provide() {
-                // provide an instance of presenter used in current case
+            public ILoginPresenter create() {
                 return new LoginPresenter();
             }
         });
+
         getLoaderManager().initLoader(LOADER_ID, null, plc);
 
 

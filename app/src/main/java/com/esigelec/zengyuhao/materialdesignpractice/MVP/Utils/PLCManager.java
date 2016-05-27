@@ -13,21 +13,18 @@ public class PLCManager<P extends IPresenter, V extends IView> implements Loader
         .LoaderCallbacks<P> {
     private Context mContext;
     private V mView;
+    private IPresenterFactory<P> mFactory;
     private InstanceProvider<P> mInstanceProvider;
 
-    public PLCManager(Context context, V view) {
+    public PLCManager(Context context, V view, IPresenterFactory<P> factory) {
         mContext = context;
         mView = view;
+        mFactory = factory;
     }
 
     @Override
     public Loader<P> onCreateLoader(int id, Bundle args) {
-        return new PresenterLoader<>(mContext, new IPresenterFactory<P>() {
-            @Override
-            public P create() {
-                return mInstanceProvider.provide();
-            }
-        });
+        return new PresenterLoader<>(mContext, mFactory);
     }
 
     @Override
