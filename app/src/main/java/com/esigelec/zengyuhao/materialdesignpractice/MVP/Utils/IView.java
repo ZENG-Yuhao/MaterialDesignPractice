@@ -1,6 +1,6 @@
-package com.esigelec.zengyuhao.materialdesignpractice.MVP.View;
+package com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils;
 
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.IPresenter;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenter;
 
 /**
  * Basic interface of Views in pattern MVP

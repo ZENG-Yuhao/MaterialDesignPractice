@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils.IPresenterFactory;
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils.PresenterLoader;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenterFactory;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.PresenterLoader;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class Login2Activity extends Activity implements ILoginView, LoaderManager.LoaderCallbacks<ILoginPresenter>{

@@ -1,12 +1,9 @@
-package com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils;
+package com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils;
 
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
-
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.IPresenter;
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.IView;
 
 /**
  * PresenterLoader's callbacks manager.

@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils.PLCallBack;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.PLCallBack;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class Login3Activity extends Activity implements ILoginView {

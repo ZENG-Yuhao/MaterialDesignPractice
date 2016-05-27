@@ -1,9 +1,7 @@
-package com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.Utils;
+package com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils;
 
 import android.content.Context;
 import android.content.Loader;
-
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.IPresenter;
 
 /**
  * Created by Enzo(ZENG Yuhao) on 16/5/26.
