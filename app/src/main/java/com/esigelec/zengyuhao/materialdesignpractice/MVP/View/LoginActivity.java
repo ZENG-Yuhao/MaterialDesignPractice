@@ -75,8 +75,8 @@ public class LoginActivity extends Activity implements ILoginView {
 
     @Override
     protected void onStop() {
-        // In fact, for an activity, we need just one presenter in all his lifecycle, so there is no need to detach
-        // the presenter when onStop()
+        // In fact, for an activity, we need just one presenter in all his lifecycle, and normally it won't change
+        // the view so there is no need to detach the presenter when onStop()
         mPresenter.onViewDetach();
         super.onStop();
     }
