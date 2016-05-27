@@ -11,7 +11,8 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginPresent
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-public class LoginActivity extends Activity implements ILoginView {
+public class Login2Activity extends Activity implements ILoginView{
+    private static final int LOADER_ID = 110;
 
     private ILoginPresenter mPresenter;
     private EditText editxt_account, editxt_pswd;
@@ -21,8 +22,6 @@ public class LoginActivity extends Activity implements ILoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mPresenter = new LoginPresenter();
 
         editxt_account = (EditText) findViewById(R.id.editxt_account);
         editxt_pswd = (EditText) findViewById(R.id.editxt_pswd);
@@ -36,7 +35,7 @@ public class LoginActivity extends Activity implements ILoginView {
                 if (str_account.equals("") && str_pswd.equals("")) {
                     mPresenter.doLogin(str_account, str_pswd);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Invalid input.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login2Activity.this, "Invalid input.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -75,8 +74,6 @@ public class LoginActivity extends Activity implements ILoginView {
 
     @Override
     protected void onStop() {
-        // In fact, for an activity, we need just one presenter in all his lifecycle, so there is no need to detach
-        // the presenter when onStop()
         mPresenter.onViewDetach();
         super.onStop();
     }
@@ -86,6 +83,5 @@ public class LoginActivity extends Activity implements ILoginView {
         mPresenter.onDestroy();
         super.onDestroy();
     }
-
 
 }

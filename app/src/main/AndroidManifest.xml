@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.esigelec.zengyuhao.materialdesignpractice"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.esigelec.zengyuhao.materialdesignpractice">
 
     <application
         android:allowBackup="true"
@@ -10,55 +10,39 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CardViewActivity">
-        </activity>
-        <activity android:name=".ShadowAndClippingActivity">
-        </activity>
+        <activity android:name=".CardViewActivity"></activity>
+        <activity android:name=".ShadowAndClippingActivity"></activity>
         <activity
             android:name=".ActionBarActivity"
-            android:label="@string/title_activity_action_bar">
-        </activity>
-        <activity android:name=".PaperTabStripActivity">
-        </activity>
+            android:label="@string/title_activity_action_bar"></activity>
+        <activity android:name=".PaperTabStripActivity"></activity>
         <activity
             android:name=".NavigationDrawerActivity"
             android:label="DrawerLayout"
-            android:logo="@drawable/ic_arrow_back_black_24dp">
-        </activity>
-        <activity android:name=".NotificationActivity">
-        </activity>
-        <activity android:name=".CapturingPhotoActivity">
-        </activity>
-        <activity android:name=".SnackerBarActivity">
-        </activity>
-        <activity android:name=".CustomViewActivity">
-        </activity>
-        <activity android:name=".IntentServiceActivity">
-        </activity>
+            android:logo="@drawable/ic_arrow_back_black_24dp"></activity>
+        <activity android:name=".NotificationActivity"></activity>
+        <activity android:name=".CapturingPhotoActivity"></activity>
+        <activity android:name=".SnackerBarActivity"></activity>
+        <activity android:name=".CustomViewActivity"></activity>
+        <activity android:name=".IntentServiceActivity"></activity>
 
         <service
             android:name=".Service.MyIntentService"
-            android:exported="false"/>
+            android:exported="false" />
 
-        <activity android:name=".RippleEffectActivity">
-        </activity>
-        <activity android:name=".CircularRevealActivity">
-        </activity>
-        <activity android:name=".SharedElementsTransitionActivity">
-        </activity>
-        <activity android:name=".SharedElementDetailsActivity">
-        </activity>
-        <activity android:name=".AlterDialogActivity">
-        </activity>
-        <activity android:name=".ObserverAndObservableActivity">
-        </activity>
-        <activity android:name=".MVP.View.LoginActivity">
-        </activity>
+        <activity android:name=".RippleEffectActivity"></activity>
+        <activity android:name=".CircularRevealActivity"></activity>
+        <activity android:name=".SharedElementsTransitionActivity"></activity>
+        <activity android:name=".SharedElementDetailsActivity"></activity>
+        <activity android:name=".AlterDialogActivity"></activity>
+        <activity android:name=".ObserverAndObservableActivity"></activity>
+        <activity android:name=".MVP.View.LoginActivity"></activity>
+        <activity android:name=".MVP.View.Login2Activity"></activity>
     </application>
 
 </manifest>

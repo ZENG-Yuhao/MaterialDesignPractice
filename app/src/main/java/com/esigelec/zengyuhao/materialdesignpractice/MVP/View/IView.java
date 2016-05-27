@@ -3,7 +3,7 @@ package com.esigelec.zengyuhao.materialdesignpractice.MVP.View;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.IPresenter;
 
 /**
- * Basic interface of View in pattern MVP
+ * Basic interface of Views in pattern MVP
  * Created by Enzo(ZENG Yuhao) on 16/5/26.
  */
 public interface IView<P extends IPresenter> {

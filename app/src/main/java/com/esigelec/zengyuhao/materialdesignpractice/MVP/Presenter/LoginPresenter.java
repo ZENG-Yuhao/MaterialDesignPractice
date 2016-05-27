@@ -32,4 +32,6 @@ public class LoginPresenter implements ILoginPresenter {
     public void onDestroy() {
         onViewDetach();
     }
+
+
 }
