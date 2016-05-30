@@ -20,7 +20,7 @@ public class PLCManager<P extends IPresenter, V extends IView> implements Loader
      *
      * @param context used to retrieve application context.
      * @param view used to set and reset the presenter that is bound to current view/activity.
-     * @param factory used to offer a factory to create an instance in loader.
+     * @param factory used to offer a factory to create an instance of specific presenter in loader.
      */
     public PLCManager(Context context, V view, IPresenterFactory<P> factory) {
         mContext = context;
