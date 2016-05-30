@@ -24,7 +24,7 @@ public class Login3Activity extends Activity implements ILoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Factory class being used tu provide a method to create instance.
+        // Factory class being used to provide a method to create instance.
         IPresenterFactory<ILoginPresenter> factory = new IPresenterFactory<ILoginPresenter>() {
             @Override
             public ILoginPresenter create() {

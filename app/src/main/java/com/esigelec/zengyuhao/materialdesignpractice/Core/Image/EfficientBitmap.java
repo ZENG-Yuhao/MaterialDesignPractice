@@ -231,7 +231,7 @@ public class EfficientBitmap {
                     return bitmap.getByteCount() / 1024;
                 }
             };
-            xSftRefCache = new SoftReference<LruCache<String, Bitmap>>(memoryCache);
+            xSftRefCache = new SoftReference<>(memoryCache);
         }
 
         public static void addBitmap(String key, Bitmap bitmap) {
