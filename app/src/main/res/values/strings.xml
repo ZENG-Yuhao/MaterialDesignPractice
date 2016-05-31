@@ -4,4 +4,6 @@
     <string name="str_open">open</string>
     <string name="str_close">close</string>
     <string name="str_snackerbar_message">Hello, this is an message showing by SnackerBar.</string>
+    <string name="action_attach">Attach</string>
+    <string name="action_settings">Settings</string>
 </resources>
