@@ -37,7 +37,7 @@ public class CircularRevealActivity extends Activity {
                 // set exit animator
                 anim = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height,
                         finalRadius, 0);
-                anim.setDuration(400);
+                anim.setDuration(200);
                 anim.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
@@ -64,7 +64,7 @@ public class CircularRevealActivity extends Activity {
                 // set enter animator
                 anim1 = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height, 0,
                         finalRadius);
-                anim1.setDuration(400);
+                anim1.setDuration(200);
                 anim1.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
