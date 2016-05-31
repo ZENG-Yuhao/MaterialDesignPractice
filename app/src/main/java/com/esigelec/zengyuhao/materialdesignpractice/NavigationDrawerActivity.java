@@ -75,13 +75,11 @@ public class NavigationDrawerActivity extends Activity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle("DrawerLayout (Opened)");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                getActionBar().setTitle("DrawerLayout");
             }
         };
 

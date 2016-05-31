@@ -13,7 +13,6 @@ public class CustomViewActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_view);
-        getActionBar().setTitle("CircleProgressBar");
 
         final CircleProgressBarView progressBar = (CircleProgressBarView) findViewById(R.id.progressbar);
         progressBar.updatePercentage(50);

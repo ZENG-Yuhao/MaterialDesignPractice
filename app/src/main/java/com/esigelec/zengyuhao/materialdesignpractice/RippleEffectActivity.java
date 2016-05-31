@@ -18,7 +18,6 @@ public class RippleEffectActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ripple_effect);
-        getActionBar().setTitle("RippleEffect");
     }
 
     @Override

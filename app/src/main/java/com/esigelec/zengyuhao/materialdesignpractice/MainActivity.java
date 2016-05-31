@@ -17,6 +17,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginActivity;
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "ToolBar",
             "MVP example with Loader2",
             "MVP example with Loader",
             "MVP example",
@@ -35,6 +36,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            ToolBarActivity.class,
             Login3Activity.class,
             Login2Activity.class,
             LoginActivity.class,

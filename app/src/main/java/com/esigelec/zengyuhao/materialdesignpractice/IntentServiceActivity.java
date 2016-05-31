@@ -34,7 +34,6 @@ public class IntentServiceActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intent_service);
-        getActionBar().setTitle("IntentService");
 
         Button btn_start_service = (Button) findViewById(R.id.btn_start_service);
         btn_start_service.setOnClickListener(new View.OnClickListener() {

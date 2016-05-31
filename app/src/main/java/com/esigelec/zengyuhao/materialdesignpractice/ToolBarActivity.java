@@ -2,12 +2,13 @@ package com.esigelec.zengyuhao.materialdesignpractice;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public class CardViewActivity extends Activity {
+public class ToolBarActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_view);
+        setContentView(R.layout.activity_tool_bar);
     }
 }

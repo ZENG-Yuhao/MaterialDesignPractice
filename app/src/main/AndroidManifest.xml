@@ -45,6 +45,8 @@
         <activity android:name=".MVP.View.Login2Activity"/>
         <activity android:name=".MVP.View.Login3Activity">
         </activity>
+        <activity android:name=".ToolBarActivity">
+        </activity>
     </application>
 
 </manifest>
