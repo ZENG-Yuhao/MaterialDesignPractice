@@ -6,6 +6,6 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.ILoginView;
 /**
  * Created by Enzo(ZENG Yuhao) on 16/5/26.
  */
-public interface ILoginPresenter extends IPresenter<ILoginView> {
+public interface ILoginPresenter<V extends ILoginView> extends IPresenter<V> {
     void doLogin(String account, String password);
 }

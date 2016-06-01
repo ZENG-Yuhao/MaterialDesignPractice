@@ -11,7 +11,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginPresent
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-public class LoginActivity extends Activity implements ILoginView {
+public class LoginActivity extends Activity implements ILoginView<ILoginPresenter> {
 
     private ILoginPresenter mPresenter;
     private EditText editxt_account, editxt_pswd;

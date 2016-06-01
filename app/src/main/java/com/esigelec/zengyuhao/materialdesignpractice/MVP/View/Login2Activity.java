@@ -15,7 +15,8 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenterFactory
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.PresenterLoader;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-public class Login2Activity extends Activity implements ILoginView, LoaderManager.LoaderCallbacks<ILoginPresenter>{
+public class Login2Activity extends Activity implements ILoginView<ILoginPresenter>, LoaderManager
+        .LoaderCallbacks<ILoginPresenter> {
     private static final int LOADER_ID = 110;
 
     private ILoginPresenter mPresenter;

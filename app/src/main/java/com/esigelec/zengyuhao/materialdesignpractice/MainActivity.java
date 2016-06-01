@@ -14,10 +14,12 @@ import android.widget.Button;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login2Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login3Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginActivity;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActivity;
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
             "ToolBar",
+            "Extendable MVP example",
             "MVP example with Loader2",
             "MVP example with Loader",
             "MVP example",
@@ -37,6 +39,7 @@ public class MainActivity extends Activity {
 
     final private static Class[] xActivityClasses = new Class[]{
             ToolBarActivity.class,
+            LoginExtendedActivity.class,
             Login3Activity.class,
             Login2Activity.class,
             LoginActivity.class,

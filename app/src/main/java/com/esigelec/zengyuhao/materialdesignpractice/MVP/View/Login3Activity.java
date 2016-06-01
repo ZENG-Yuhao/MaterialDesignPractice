@@ -9,21 +9,39 @@ import android.widget.Toast;
 
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenterFactory;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IView;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.PLCManager;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-public class Login3Activity extends Activity implements ILoginView {
-    private static final int LOADER_ID = 111;
-    private ILoginPresenter mPresenter;
-    private EditText editxt_account, editxt_pswd;
-    private Button btn_login, btn_clear;
+public class Login3Activity<P extends ILoginPresenter> extends Activity implements ILoginView<P> {
+    protected static final int LOADER_ID = 111;
+    protected P mPresenter;
+    protected EditText editxt_account, editxt_pswd;
+    protected Button btn_login, btn_clear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        init();
+    }
 
+    protected void init() {
+        initLayout();
+        initLoader();
+    }
+
+    protected void initLoader() {
+        getLoaderManager().initLoader(LOADER_ID, null, getPLCManager());
+    }
+
+    protected PLCManager<? extends IPresenter, ? extends IView> getPLCManager() {
+        return new PLCManager<>(this, this, getFactory());
+    }
+
+    protected IPresenterFactory<? extends IPresenter> getFactory() {
         // Factory class being used to provide a method to create instance.
         IPresenterFactory<ILoginPresenter> factory = new IPresenterFactory<ILoginPresenter>() {
             @Override
@@ -31,13 +49,10 @@ public class Login3Activity extends Activity implements ILoginView {
                 return new LoginPresenter();
             }
         };
-        // There is an unknown error, we can not apply "this" which will be recognized as Login3Activity for 2nd
-        // param.  It must be cast to ILoginView
-        PLCManager<ILoginPresenter, ILoginView> plc = new PLCManager<>(this, (ILoginView) this, factory);
+        return factory;
+    }
 
-        getLoaderManager().initLoader(LOADER_ID, null, plc);
-
-
+    protected void initLayout() {
         editxt_account = (EditText) findViewById(R.id.editxt_account);
         editxt_pswd = (EditText) findViewById(R.id.editxt_pswd);
 
@@ -75,12 +90,12 @@ public class Login3Activity extends Activity implements ILoginView {
 
 
     @Override
-    public ILoginPresenter getPresenter() {
+    public P getPresenter() {
         return mPresenter;
     }
 
     @Override
-    public void setPresenter(ILoginPresenter presenter) {
+    public void setPresenter(P presenter) {
         mPresenter = presenter;
     }
 
