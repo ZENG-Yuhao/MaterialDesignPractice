@@ -2,6 +2,7 @@ package com.esigelec.zengyuhao.materialdesignpractice.MVP.View;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +25,12 @@ public class Login3Activity<P extends ILoginPresenter> extends Activity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(getViewRes());
         init();
+    }
+
+    protected int getViewRes(){
+        return R.layout.activity_login;
     }
 
     protected void init() {

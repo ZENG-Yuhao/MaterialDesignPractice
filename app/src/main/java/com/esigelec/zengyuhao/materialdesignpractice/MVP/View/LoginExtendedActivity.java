@@ -10,7 +10,9 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginExtended
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.LoginPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenter;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenterFactory;
+import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IView;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.PLCManager;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class LoginExtendedActivity<P extends ILoginExtendedPresenter> extends Login3Activity<P> implements
         ILoginExtendedView<P> {
@@ -18,6 +20,13 @@ public class LoginExtendedActivity<P extends ILoginExtendedPresenter> extends Lo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //mPresenter will be created in the loader, it's not available in onCreate();
+        //mPresenter.sayHello();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         mPresenter.sayHello();
     }
 
