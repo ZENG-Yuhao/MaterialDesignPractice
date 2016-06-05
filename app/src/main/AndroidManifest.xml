@@ -49,6 +49,10 @@
         </activity>
         <activity android:name=".MVP.View.LoginExtendedActivity">
         </activity>
+        <activity android:name=".HardwareAccelerationActivity">
+        </activity>
+        <activity android:name=".HardwareAcceleration2Activity">
+        </activity>
     </application>
 
 </manifest>
