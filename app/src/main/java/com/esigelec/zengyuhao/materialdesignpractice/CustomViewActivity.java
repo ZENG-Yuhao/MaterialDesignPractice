@@ -15,9 +15,9 @@ public class CustomViewActivity extends Activity {
         setContentView(R.layout.activity_custom_view);
 
         final CircleProgressBarView progressBar = (CircleProgressBarView) findViewById(R.id.progressbar);
-        progressBar.updatePercentage(50);
 
         final CircleProgressBar progressBar1 = (CircleProgressBar) findViewById(R.id.progressbar1);
+        progressBar1.setPercentage(50);
 
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekbar);
         seekBar.setMax(100);
