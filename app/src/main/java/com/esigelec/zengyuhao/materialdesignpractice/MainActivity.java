@@ -18,6 +18,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActiv
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "Hardware Acceleration",
             "ToolBar",
             "Extendable MVP example",
             "MVP example with Loader2",
@@ -38,6 +39,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            HardwareAccelerationActivity.class,
             ToolBarActivity.class,
             LoginExtendedActivity.class,
             Login3Activity.class,

@@ -14,11 +14,9 @@
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.HardwareAccelerationActivity">
 
     <com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.CircleProgressBar
-        android:id="@+id/progressbar1"
+        android:id="@+id/circle_progressbar"
         android:layout_width="220dp"
         android:layout_height="220dp"
-        android:layout_below="@id/progressbar"
-        android:layout_centerHorizontal="true"
         app:barTextSize="8sp"
         app:barWidth="50"
         app:percentage="75"/>
@@ -43,8 +41,8 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_next"
-        android:text="Next"
+        android:id="@+id/btn_switch"
+        android:text="Go to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
