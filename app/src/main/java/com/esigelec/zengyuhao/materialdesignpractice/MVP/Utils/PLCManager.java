@@ -24,6 +24,12 @@ public class PLCManager<P extends IPresenter, V extends IView> implements Loader
      */
     public PLCManager(Context context, V view, IPresenterFactory<P> factory) {
         mContext = context;
+
+        /*
+         * Here, in PLCManager, we hold a strong reference of the activity, and the instance of PLCManager is
+         * referenced in the activity, this makes a circular reference. System GC can handle this situation, so there
+          * is no need to detach the view(activity) and it will not cause a memory leak.
+         */
         mView = view;
         mFactory = factory;
     }
