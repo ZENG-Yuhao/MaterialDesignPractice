@@ -34,12 +34,12 @@ public class PLCManager<P extends IPresenter, V extends IView> implements Loader
         /*
          * Here, in PLCManager, we hold a strong reference of the Activity, and the instance of PLCManager is
          * referenced in the Activity, also PLCManager has implemented LoaderCallbacks interface, which will be
-         * passed to and will be saved in LoaderManager when initLoader() or restartLoader(), just,
-         * LoaderManager has the same lifecycle with Activity, their relationship is like below:
-         *        Activity <--> PLCManager <-- LoaderManager
+         * passed to and will be saved in the instance of LoaderManager when initLoader() or restartLoader(), just,
+         * loaderManager(instance) has the same lifecycle with Activity, their relationship is like below:
+         *        Activity <--> PLCManager <-- loaderManager --> Activity
          *
          * All these make a circular reference, but system GC can handle this situation, so there is no need to
-         * detach the view(activity) and it will not cause a memory leak.
+         * detach the view(activity) here and it will not cause a memory leak.
          */
         mView = view;
         mFactory = factory;
