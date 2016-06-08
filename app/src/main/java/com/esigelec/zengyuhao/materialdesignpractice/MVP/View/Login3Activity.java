@@ -112,13 +112,6 @@ public class Login3Activity<P extends ILoginPresenter> extends Activity implemen
 
     @Override
     protected void onStop() {
-        /*
-         * Although we will do presenter.onDestroy() in activity's onDestroy() method, but it's very important to
-         * detach the view for the presenter here, because the presenter is hold in Loader who has a much longer
-         * lifecycle than activity, and our view(this activity) is attached to the presenter, that means if we
-         * don't do presenter.onViewDetach() here, when view(activity) is stopped to the backend, and when GC try to
-         * recycler this activity, it can't, since the activity is still referenced by the presenter (in Loader).
-         */
         mPresenter.onViewDetach();
         super.onStop();
     }

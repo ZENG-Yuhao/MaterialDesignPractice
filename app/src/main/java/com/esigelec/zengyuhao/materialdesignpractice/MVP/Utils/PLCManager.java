@@ -8,6 +8,12 @@ import android.os.Debug;
 
 /**
  * Presenter Loader Callbacks Manager.
+ * Tips:
+ * 1. In each Activity or Fragment, an instance of LoaderManager will be instantiated, and it will be controlled by his
+ * owner (Activity/Fragment)
+ * 2. The instance of LoaderManager has the same lifecycle with his owner, normally it will die with his owner, it
+ * will be kept only when his owner is destroyed because of configuration change (for example, screen rotating).
+ *
  * Created by Enzo on 16/5/27.
  */
 public class PLCManager<P extends IPresenter, V extends IView> implements LoaderManager
