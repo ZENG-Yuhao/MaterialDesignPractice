@@ -43,7 +43,7 @@ public class Login3Activity<P extends ILoginPresenter> extends Activity implemen
     }
 
     protected PLCManager<? extends IPresenter, ? extends IView> getPLCManager() {
-        return new PLCManager<>(this, this, getFactory());
+        return new PLCManager<>(getApplicationContext(), this, getFactory());
     }
 
     protected IPresenterFactory<? extends IPresenter> getFactory() {
@@ -112,8 +112,13 @@ public class Login3Activity<P extends ILoginPresenter> extends Activity implemen
 
     @Override
     protected void onStop() {
-        // In fact, for an activity, we need just one presenter in all his lifecycle, and normally it won't change
-        // the view so there is no need to detach the view/activity when onStop()
+        /*
+         * Although we will do presenter.onDestroy() in activity's onDestroy() method, but it's very important to
+         * detach the view for the presenter here, because the presenter is hold in Loader who has a much longer
+         * lifecycle than activity, and our view(this activity) is attached to the presenter, that means if we
+         * don't do presenter.onViewDetach() here, when view(activity) is stopped at the backend, and when GC try to
+         * recycler this activity, it can't, since the activity is still referenced by the presenter.
+         */
         mPresenter.onViewDetach();
         super.onStop();
     }
