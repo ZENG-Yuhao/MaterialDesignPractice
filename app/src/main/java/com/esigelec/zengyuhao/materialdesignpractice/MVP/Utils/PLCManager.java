@@ -32,7 +32,7 @@ public class PLCManager<P extends IPresenter, V extends IView> implements Loader
          * LoaderManager has the same lifecycle with Activity, their relationship is like below:
          *        Activity <--> PLCManager <-- LoaderManager
          *
-         * All these make a circular reference. But system GC can handle this situation, so there is no need to
+         * All these make a circular reference, but system GC can handle this situation, so there is no need to
          * detach the view(activity) and it will not cause a memory leak.
          */
         mView = view;
@@ -51,7 +51,6 @@ public class PLCManager<P extends IPresenter, V extends IView> implements Loader
 
     @Override
     public void onLoaderReset(Loader<P> loader) {
-        if (mView != null)
             mView.setPresenter(null);
     }
 
