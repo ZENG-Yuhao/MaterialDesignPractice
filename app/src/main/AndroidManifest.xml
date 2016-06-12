@@ -53,6 +53,8 @@
         </activity>
         <activity android:name=".HardwareAcceleration2Activity">
         </activity>
+        <activity android:name=".DialogActivity">
+        </activity>
     </application>
 
 </manifest>

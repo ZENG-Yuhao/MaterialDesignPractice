@@ -1,6 +1,7 @@
 package com.esigelec.zengyuhao.materialdesignpractice;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActiv
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "Dialog",
             "Hardware Acceleration",
             "ToolBar",
             "Extendable MVP example",
@@ -39,6 +41,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            DialogActivity.class,
             HardwareAccelerationActivity.class,
             ToolBarActivity.class,
             LoginExtendedActivity.class,
