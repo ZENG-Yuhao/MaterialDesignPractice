@@ -2,6 +2,7 @@ package com.esigelec.zengyuhao.materialdesignpractice.MVP.View;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter.ILoginExtendedPresenter;

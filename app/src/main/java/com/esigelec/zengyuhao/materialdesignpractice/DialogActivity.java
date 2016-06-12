@@ -17,7 +17,6 @@ public class DialogActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setContentView(R.layout.activity_dialog);
 
         btn_normal_dialog = (Button) findViewById(R.id.btn_normal_dialog);
@@ -61,6 +60,7 @@ public class DialogActivity extends Activity {
     }
 
     public static class CustomViewDialogFragment extends DialogFragment {
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
