@@ -55,6 +55,10 @@
         </activity>
         <activity android:name=".DialogActivity">
         </activity>
+        <activity android:name=".EXEM.BottomToolBarActivity">
+        </activity>
+        <activity android:name=".EXEM.NavigationEXEMActivity">
+        </activity>
     </application>
 
 </manifest>

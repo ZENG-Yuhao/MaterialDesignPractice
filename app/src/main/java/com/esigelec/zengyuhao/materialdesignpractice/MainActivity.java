@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.esigelec.zengyuhao.materialdesignpractice.EXEM.NavigationEXEMActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login2Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login3Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginActivity;
@@ -19,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActiv
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
+            "WaveScanner UI",
             "Dialog",
             "Hardware Acceleration",
             "ToolBar",
@@ -41,6 +43,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] xActivityClasses = new Class[]{
+            NavigationEXEMActivity.class,
             DialogActivity.class,
             HardwareAccelerationActivity.class,
             ToolBarActivity.class,

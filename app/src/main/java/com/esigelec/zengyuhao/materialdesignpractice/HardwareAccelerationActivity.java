@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.CircleProgressBar;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.CircleProgressBar.CircleProgressBar;
 
 public class HardwareAccelerationActivity extends Activity {
     private CircleProgressBar circleProgressBar;

@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.CircleProgressBar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
