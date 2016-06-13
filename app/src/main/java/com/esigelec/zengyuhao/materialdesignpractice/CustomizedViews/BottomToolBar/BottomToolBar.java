@@ -34,7 +34,10 @@ public class BottomToolBar extends LinearLayout {
 
     }
 
-
+    /**
+     * A holder of a view at specific position of the BottomToolBar, this philosophy decouple dependencies between
+     * classes and it gives more possibilities to define custom actions.
+     */
     public abstract class ViewHolder {
         protected View itemView;
         protected int adapterPosition = 0;
