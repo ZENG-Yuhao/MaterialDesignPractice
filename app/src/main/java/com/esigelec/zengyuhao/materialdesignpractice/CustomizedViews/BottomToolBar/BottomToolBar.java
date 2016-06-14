@@ -37,6 +37,27 @@ public class BottomToolBar extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+
+    public void setAdapter(Adapter<? extends ViewHolder> adapter) {
+        this.adapter = adapter;
+
+        if (adapter == null) {
+            throw new IllegalArgumentException("adapter may not be null");
+        }
+        if (adapter.getItemCount() == 0) {
+            throw new IllegalArgumentException("item count may not be 0");
+        }
+
+        itemCount = this.adapter.getItemCount();
+        list_holder = new ViewHolder[itemCount];
+        for (int i = 0; i < itemCount; i++) {
+            list_holder[i] = this.adapter.createViewHolder(this);
+            this.adapter.bindViewHolder(list_holder[i], i);
+        }
+
+        initLayout();
+    }
+
     public void initLayout() {
         if (getChildCount() > 0)
             removeAllViews();
@@ -80,29 +101,8 @@ public class BottomToolBar extends LinearLayout {
             view.setLayoutParams(params);
             this.addView(view);
         }
-        // request layout changes
-        requestLayout();
     }
 
-    public void setAdapter(Adapter<? extends ViewHolder> adapter) {
-        this.adapter = adapter;
-
-        if (adapter == null) {
-            throw new IllegalArgumentException("adapter may not be null");
-        }
-        if (adapter.getItemCount() == 0) {
-            throw new IllegalArgumentException("item count may not be 0");
-        }
-
-        itemCount = this.adapter.getItemCount();
-        list_holder = new ViewHolder[itemCount];
-        for (int i = 0; i < itemCount; i++) {
-            list_holder[i] = this.adapter.createViewHolder(this);
-            this.adapter.bindViewHolder(list_holder[i], i);
-        }
-
-        initLayout();
-    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
