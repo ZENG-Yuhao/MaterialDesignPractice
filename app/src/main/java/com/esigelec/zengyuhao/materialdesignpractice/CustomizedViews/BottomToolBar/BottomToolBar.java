@@ -3,8 +3,11 @@ package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomTool
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
 
 /**
@@ -38,9 +41,47 @@ public class BottomToolBar extends LinearLayout {
         if (getChildCount() > 0)
             removeAllViews();
 
-        for (int i = 0; i<itemCount; i++){
+        int height = getHeight();
+        int width = getWidth();
 
+        if (height != 0 && width != 0) {
+            initTabs(height, width);
+        } else {
+            /*
+                if height and width get 0 before the first load of the layout, register listener to obtain height and
+                 width when onLayout() finished.
+             */
+            ViewTreeObserver observer = this.getViewTreeObserver();
+            if (observer != null) {
+                observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        initTabs(getHeight(), getWidth());
+                    }
+                });
+            }
         }
+    }
+
+    private void initTabs(int containerHeight, int containerWidth) {
+        int height, width;
+        if (getOrientation() == HORIZONTAL) {
+            height = containerHeight;
+            width = containerWidth / itemCount;
+        } else {
+            height = containerHeight / itemCount;
+            width = containerWidth;
+        }
+
+        for (int i = 0; i < itemCount; i++) {
+            View view = list_holder[i].itemView;
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
+            params.gravity = Gravity.CENTER;
+            view.setLayoutParams(params);
+            this.addView(view);
+        }
+        // request layout changes
+        requestLayout();
     }
 
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
@@ -61,8 +102,6 @@ public class BottomToolBar extends LinearLayout {
         }
 
         initLayout();
-        // adapter has been changed, must refresh the layout
-        requestLayout();
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
