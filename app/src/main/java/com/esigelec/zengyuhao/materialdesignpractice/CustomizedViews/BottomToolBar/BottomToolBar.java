@@ -34,8 +34,13 @@ public class BottomToolBar extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void init() {
+    public void initLayout() {
+        if (getChildCount() > 0)
+            removeAllViews();
 
+        for (int i = 0; i<itemCount; i++){
+
+        }
     }
 
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
@@ -43,6 +48,9 @@ public class BottomToolBar extends LinearLayout {
 
         if (adapter == null) {
             throw new IllegalArgumentException("adapter may not be null");
+        }
+        if (adapter.getItemCount() == 0) {
+            throw new IllegalArgumentException("item count may not be 0");
         }
 
         itemCount = this.adapter.getItemCount();
@@ -52,6 +60,7 @@ public class BottomToolBar extends LinearLayout {
             this.adapter.bindViewHolder(list_holder[i], i);
         }
 
+        initLayout();
         // adapter has been changed, must refresh the layout
         requestLayout();
     }
