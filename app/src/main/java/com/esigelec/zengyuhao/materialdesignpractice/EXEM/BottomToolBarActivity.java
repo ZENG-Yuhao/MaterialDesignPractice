@@ -1,16 +1,15 @@
 package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar.BottomToolBarRefused;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar.BottomToolBar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class BottomToolBarActivity extends Activity {
@@ -19,17 +18,17 @@ public class BottomToolBarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_tool_bar);
 
-        BottomToolBarRefused toolBar = (BottomToolBarRefused) findViewById(R.id.bottom_toolbar);
+        BottomToolBar toolBar = (BottomToolBar) findViewById(R.id.bottom_toolbar);
         toolBar.setAdapter(new MyAdapter());
-        toolBar.setOnItemClickListener(new BottomToolBarRefused.OnItemClickListener() {
+        toolBar.setOnItemClickListener(new BottomToolBar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Toast.makeText(getApplicationContext(), "Position " + position + " clicked.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public class MyAdapter extends BottomToolBarRefused.Adapter<MyAdapter.MyHolder> {
+    public class MyAdapter extends BottomToolBar.Adapter<MyAdapter.MyHolder> {
 
         @Override
         public int getItemCount() {
@@ -50,10 +49,10 @@ public class BottomToolBarActivity extends Activity {
         public void onBindViewHolder(MyHolder holder, int position) {
             holder.img.setImageResource(R.drawable.ic_devices_black_48dp);
             holder.txt.setText("TAB" + String.valueOf(position));
-            holder.view.setElevation(position * 4);
+            //holder.view.setElevation(position * 4);
         }
 
-        public class MyHolder extends BottomToolBarRefused.ViewHolder {
+        public class MyHolder extends BottomToolBar.ViewHolder {
             public View view;
             public ImageView img;
             public TextView txt;

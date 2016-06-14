@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -18,7 +19,7 @@ import android.widget.LinearLayout;
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
  * Created by root on 13/06/16.
  */
-public class BottomToolBarRefused extends LinearLayout {
+public class BottomToolBar extends LinearLayout {
     private Adapter adapter;
     private ViewHolder[] list_holder;
     private int itemCount;
@@ -26,19 +27,19 @@ public class BottomToolBarRefused extends LinearLayout {
     private int currentPosition = 0;
     Animator anim, anim1;
 
-    public BottomToolBarRefused(Context context) {
+    public BottomToolBar(Context context) {
         super(context);
     }
 
-    public BottomToolBarRefused(Context context, AttributeSet attrs) {
+    public BottomToolBar(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public BottomToolBarRefused(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BottomToolBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public BottomToolBarRefused(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public BottomToolBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -71,7 +72,7 @@ public class BottomToolBarRefused extends LinearLayout {
         int width = getWidth();
 
         if (height != 0 && width != 0) {
-            initTabs(height, width);
+            initTabs(height - getDividerPadding(), width);
         } else {
             /*
                 if height and width get 0 before the first load of the layout, register listener to obtain height and
@@ -100,11 +101,15 @@ public class BottomToolBarRefused extends LinearLayout {
 
     private void initTabs(int containerHeight, int containerWidth) {
         int height, width;
+        final DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+        final float density = metrics.density;
+        final float w = density * 2;
         if (getOrientation() == HORIZONTAL) {
             height = containerHeight;
-            width = containerWidth / itemCount;
+            width = (int)Math.ceil((containerWidth - w * (itemCount - 1)) / itemCount);
+            Log.i("haha", "getDividerPadding--->" + getDividerPadding());
         } else {
-            height = containerHeight / itemCount;
+            height = (int)Math.ceil((containerHeight - w * (itemCount - 1)) / itemCount);
             width = containerWidth;
         }
 
@@ -145,7 +150,7 @@ public class BottomToolBarRefused extends LinearLayout {
         });
     }
 
-    private void tempAnim(View v){
+    private void tempAnim(View v) {
         // calculate params
         double half_width = v.getWidth() / 2;
         double half_height = v.getHeight() / 2;
@@ -180,6 +185,7 @@ public class BottomToolBarRefused extends LinearLayout {
         // set enter animator
         anim1 = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height, 0,
                 finalRadius);
+
         anim1.setDuration(200);
         anim1.addListener(new Animator.AnimatorListener() {
             @Override
@@ -189,7 +195,7 @@ public class BottomToolBarRefused extends LinearLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                // animation set finished, reset the clickable state
+
             }
 
             @Override

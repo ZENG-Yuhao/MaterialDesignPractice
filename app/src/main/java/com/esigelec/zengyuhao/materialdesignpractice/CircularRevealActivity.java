@@ -9,10 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CircularRevealActivity extends Activity {
-    private TextView txt1, txt2;
+    private TextView txt1, txt2, txt3, txt4;
     private Boolean isBlue = true;
-    private LinearLayout linearLayout;
+    private LinearLayout linearLayout, linearLayout1;
     private Animator anim, anim1;// prevent starting another animation before the end of current animation
+    private Animator anim3, anim4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +89,46 @@ public class CircularRevealActivity extends Activity {
                     }
                 });
 
+                linearLayout1.setVisibility(View.VISIBLE);
                 // start exit animator and then enter animator
-                    anim.start();
+                //anim.start();
+                int finalRadius1 = (int) Math.hypot(v.getWidth(), v.getHeight());
+
+                anim3 = ViewAnimationUtils.createCircularReveal(linearLayout1, 0, (int)half_height/3,
+                        0, finalRadius1);
+                anim3.setDuration(400);
+                anim3.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+                anim3.start();
             }
         });
+
+
+        txt3 = (TextView) findViewById(R.id.txt3);
+        txt4 = (TextView) findViewById(R.id.txt4);
+        txt3.setText("Orange Title");
+        txt4.setText("Orange Content");
+        linearLayout1 = (LinearLayout) findViewById(R.id.my_linear_layout_1);
+        linearLayout1.setVisibility(View.INVISIBLE);
+        linearLayout1.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+
     }
 
     private void changeContent() {
@@ -106,4 +143,6 @@ public class CircularRevealActivity extends Activity {
         }
         isBlue = !isBlue;
     }
+
+
 }
