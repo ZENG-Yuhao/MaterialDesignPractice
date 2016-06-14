@@ -127,11 +127,12 @@ public class BottomToolBar extends LinearLayout {
             holder.onLostFocusAnimSet = onLostFocusAnimatorSet(holder, position);
         }
 
-
+        // implementation is optional
         public AnimatorSet onFocusAnimatorSet(VH holder, int position) {
             return null;
         }
 
+        // implementation is optional
         public AnimatorSet onLostFocusAnimatorSet(VH holder, int position) {
             return null;
         }
