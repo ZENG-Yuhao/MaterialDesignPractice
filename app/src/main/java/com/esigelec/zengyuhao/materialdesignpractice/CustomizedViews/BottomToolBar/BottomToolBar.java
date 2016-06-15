@@ -258,7 +258,7 @@ public class BottomToolBar extends LinearLayout {
 
         /**
          * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
-         * @param margin bottomMarin
+         * @param margin bottomMarin to be set to itemView
          */
         public void setBottomMargin(int margin) {
             if (margin < 0)
@@ -271,7 +271,7 @@ public class BottomToolBar extends LinearLayout {
 
         /**
          * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
-         * @return
+         * @return bottomMargin of itemView
          */
         public int getBottomMargin() {
             MarginLayoutParams params = (MarginLayoutParams) itemView.getLayoutParams();
