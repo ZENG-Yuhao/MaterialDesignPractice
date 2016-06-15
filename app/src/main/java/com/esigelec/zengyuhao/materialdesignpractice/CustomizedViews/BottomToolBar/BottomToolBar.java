@@ -215,7 +215,7 @@ public class BottomToolBar extends LinearLayout {
     }
 
     private void animateTransition(int selectedPos) {
-        // display animation
+        // display custom animations
         if (list_holder[selectedPos].onFocusAnimSet != null)
             list_holder[selectedPos].onFocusAnimSet.start();
 
