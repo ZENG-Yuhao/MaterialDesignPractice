@@ -221,9 +221,9 @@ public class BottomToolBar extends LinearLayout {
 
         if (list_holder[currentPosition].onLostFocusAnimSet != null)
             list_holder[currentPosition].onLostFocusAnimSet.start();
-        if (list_holder[currentPosition].itemView.getAnimation() != null)
-            Log.i("animateTransition", "animateTransition--->" + list_holder[currentPosition].itemView.getAnimation()
-                    .toString());
+
+        // these animations below force a declaration in root view as "clipChildren = false" to enable his children view
+        // to stretch out of their parent.
         Animator animCurr = ObjectAnimator.ofInt(list_holder[currentPosition], "bottomMargin",
                 list_holder[currentPosition].getBottomMargin(), 0);
         animCurr.setDuration(150);
@@ -258,6 +258,7 @@ public class BottomToolBar extends LinearLayout {
 
         /**
          * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
+         *
          * @param margin bottomMarin to be set to itemView
          */
         public void setBottomMargin(int margin) {
@@ -271,6 +272,7 @@ public class BottomToolBar extends LinearLayout {
 
         /**
          * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
+         *
          * @return bottomMargin of itemView
          */
         public int getBottomMargin() {
