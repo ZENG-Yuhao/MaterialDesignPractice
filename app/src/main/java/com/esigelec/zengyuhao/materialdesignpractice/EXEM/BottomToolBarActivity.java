@@ -4,6 +4,13 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +26,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 import org.w3c.dom.Text;
 
-public class BottomToolBarActivity extends Activity {
+public class BottomToolBarActivity extends FragmentActivity {
     private static final int[] IMG_SRC = {
             R.drawable.ic_assistant_black_24dp,
             R.drawable.ic_attach_file_black_24dp,
@@ -36,23 +43,32 @@ public class BottomToolBarActivity extends Activity {
             "Scanner"
     };
 
-    private TextView txt_state;
+    private final int NUM_PAGES = 5;
+    private ViewPager viewPager;
+    private PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_tool_bar);
 
-        final TextView txt_state = (TextView) findViewById(R.id.txtvw_state);
 
+        // init BottomToolBar
         BottomToolBar toolBar = (BottomToolBar) findViewById(R.id.bottom_toolbar);
         toolBar.setAdapter(new MyAdapter());
         toolBar.setOnItemClickListener(new BottomToolBar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                txt_state.setText(TITLE_STR[position]);
+                viewPager.setCurrentItem(position);
             }
         });
+
+
+        // init ViewPager
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new MyPageChangedListener());
 
     }
 
@@ -93,5 +109,42 @@ public class BottomToolBarActivity extends Activity {
             }
         }
 
+    }
+
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return BlankFragment.newInstance(TITLE_STR[position], String.valueOf(position));
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+    }
+
+
+    private class MyPageChangedListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            Log.i("haha", "onPageScrolled---->" + "position: " + position + " positionOffset:" + positionOffset + " " +
+                    "positionOffsetPixels:" + positionOffsetPixels);
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
     }
 }

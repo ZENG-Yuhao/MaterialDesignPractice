@@ -4,13 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -72,7 +73,7 @@ public class BottomToolBar extends LinearLayout {
         int width = getWidth();
 
         if (height != 0 && width != 0) {
-            initTabs(height - getDividerPadding(), width);
+            initTabs(height, width);
         } else {
             /*
                 if height and width get 0 before the first load of the layout, register listener to obtain height and
@@ -117,7 +118,10 @@ public class BottomToolBar extends LinearLayout {
         for (int i = 0; i < itemCount; i++) {
             View view = list_holder[i].itemView;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
-            params.weight = 2;
+            if (i == currentPosition)
+                params.weight = 1650;
+            else
+                params.weight = 1000;
             params.gravity = Gravity.CENTER;
             view.setLayoutParams(params);
             Log.i("Haha", "initTabs--->>" + "i " + i + "; itemCount" + itemCount + ";" + view.getParent());
@@ -159,6 +163,18 @@ public class BottomToolBar extends LinearLayout {
         if (list_holder[currentPosition].onLostFocusAnimSet != null)
             list_holder[currentPosition].onLostFocusAnimSet.start();
 
+        LinearLayout.LayoutParams param_curr = (LinearLayout.LayoutParams) list_holder[currentPosition].itemView
+                .getLayoutParams();
+        param_curr.weight = 1000;
+
+        LinearLayout.LayoutParams params_select = (LinearLayout.LayoutParams) list_holder[selectedPos].itemView
+                .getLayoutParams();
+        params_select.weight = 1650;
+        requestLayout();
+    }
+
+
+    private void animation1(int selectedPos) {
         // these animations below force a declaration in root view as "clipChildren = false" to enable his children view
         // to stretch out of their parent.
         Animator animCurr = ObjectAnimator.ofInt(list_holder[currentPosition], "bottomMargin",
