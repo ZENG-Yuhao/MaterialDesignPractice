@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.v7.view.menu.MenuView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,19 +15,33 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsoluteLayout;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
  * Created by root on 13/06/16.
  */
-public class BottomToolBar extends LinearLayout {
-    private Adapter adapter;
+public class BottomToolBar extends FrameLayout {
+    private static final int HORIZONTAL = 0;
+    private static final int VERTICAL = 1;
+    private final int mOrientation = HORIZONTAL;
+
+    // Holder and adapter
+    private Adapter mAdapter;
     private ViewHolder[] list_holder;
+    // number of items in list_holder
     private int itemCount;
+    private int weightTotal;
     private OnItemClickListener onItemClickListener;
     private int currentPosition = 0;
-    Animator anim, anim1;
+    /**
+     * If adapter has been newly set, must wipe all layout params when onMeasureViewHolder for secure to avoid margin
+     * and padding problems.
+     */
+    private boolean isAdapterNewlySet = true;
 
     public BottomToolBar(Context context) {
         super(context);
@@ -46,7 +61,8 @@ public class BottomToolBar extends LinearLayout {
 
 
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
-        this.adapter = adapter;
+        mAdapter = adapter;
+        isAdapterNewlySet = true;
 
         if (adapter == null) {
             throw new IllegalArgumentException("adapter may not be null");
@@ -55,25 +71,41 @@ public class BottomToolBar extends LinearLayout {
             throw new IllegalArgumentException("item count may not be 0");
         }
 
-        itemCount = this.adapter.getItemCount();
+        //init list_holder through adapter
+        itemCount = mAdapter.getItemCount();
         list_holder = new ViewHolder[itemCount];
+        weightTotal = 0;
         for (int i = 0; i < itemCount; i++) {
-            list_holder[i] = this.adapter.createViewHolder(this);
-            this.adapter.bindViewHolder(list_holder[i], i);
+            list_holder[i] = mAdapter.createViewHolder(this);
+
+            // set weight
+            int weight = (i == currentPosition) ? mAdapter.getWeightOnFocus(i) : mAdapter.getWeightOnLostFocus(i);
+            list_holder[i].weight = (weight > 0) ? weight : 1;
+            weightTotal += list_holder[i].weight;
+
+            // bind
+            mAdapter.bindViewHolder(list_holder[i], i);
         }
 
-        initLayout();
-    }
-
-    public void initLayout() {
+        // remove all children views when adapter has been changed
         if (getChildCount() > 0)
             removeAllViews();
+        initLayout();
+        isAdapterNewlySet = false;
+    }
+
+    /**
+     * To be invoked when first this layout first loads.
+     */
+    // TODO: 2016/6/15 add OnGlobalLayoutListener to surveille incoming layout changes, and then adjust child-views size
+    public void initLayout() {
 
         int height = getHeight();
         int width = getWidth();
 
         if (height != 0 && width != 0) {
-            initTabs(height, width);
+            //initTabs(height, width);
+            requestViewHoldersLayout();
         } else {
             /*
                 if height and width get 0 before the first load of the layout, register listener to obtain height and
@@ -84,8 +116,10 @@ public class BottomToolBar extends LinearLayout {
                 observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        initTabs(getHeight(), getWidth());
+                        //initTabs(getHeight(), getWidth());
+                        requestViewHoldersLayout();
 
+                        // once height and width got, unregister the listener
                         ViewTreeObserver observerLocal = getViewTreeObserver();
                         if (null != observerLocal) {
                             // removeOnGlobalLayoutListener() is only supported by SDK later than JELLY_BEAN
@@ -98,6 +132,13 @@ public class BottomToolBar extends LinearLayout {
                 });
             }
         }
+
+        // after measurement, add views in list_holder to the layout
+        for (int i = 0; i < itemCount; i++) {
+            this.addView(list_holder[i].itemView);
+        }
+
+        requestLayout();
     }
 
     private void initTabs(int containerHeight, int containerWidth) {
@@ -120,6 +161,7 @@ public class BottomToolBar extends LinearLayout {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
             if (i == currentPosition)
                 params.weight = 1650;
+
             else
                 params.weight = 1000;
             params.gravity = Gravity.CENTER;
@@ -129,6 +171,60 @@ public class BottomToolBar extends LinearLayout {
         }
     }
 
+    public void requestViewHoldersLayout() {
+        onViewHoldersMeasure();
+        requestLayout();
+    }
+
+    /**
+     * Measurement for each ViewHolder, make sure getWidth() and getHeight() are nonzero before invoking this method.
+     */
+    public void onViewHoldersMeasure() {
+        if (getWidth() == 0 || getHeight() == 0) return;
+        int width, height;
+        ViewGroup.LayoutParams lp;
+        for (int i = 0; i < itemCount; i++) {
+            if (getOrientation() == HORIZONTAL) {
+                height = getHeight();
+                width = getWidth() * list_holder[i].weight / weightTotal;
+            } else {
+                height = getHeight() * list_holder[i].weight / weightTotal;
+                width = getWidth();
+            }
+
+            if (isAdapterNewlySet) {
+                lp = new ViewGroup.LayoutParams(width, height);
+                list_holder[i].itemView.setLayoutParams(lp);
+            } else {
+                lp = list_holder[i].itemView.getLayoutParams();
+                lp.width = width;
+                lp.height = height;
+            }
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        onViewHoldersLayout();
+    }
+
+    public void onViewHoldersLayout() {
+        ViewGroup.LayoutParams lp;
+        View view;
+        int left = 0, top = 0;
+        for (int i = 0; i < itemCount; i++) {
+            view = list_holder[i].itemView;
+            lp = list_holder[i].itemView.getLayoutParams();
+            if (getOrientation() == HORIZONTAL) {
+                list_holder[i].itemView.layout(left, 0, left + lp.width, lp.height);
+                left += lp.width;
+            } else {
+                list_holder[i].itemView.layout(0, top, lp.width, top + lp.height);
+                top += lp.height;
+            }
+        }
+    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
@@ -163,14 +259,23 @@ public class BottomToolBar extends LinearLayout {
         if (list_holder[currentPosition].onLostFocusAnimSet != null)
             list_holder[currentPosition].onLostFocusAnimSet.start();
 
-        LinearLayout.LayoutParams param_curr = (LinearLayout.LayoutParams) list_holder[currentPosition].itemView
-                .getLayoutParams();
-        param_curr.weight = 1000;
+//        LinearLayout.LayoutParams param_curr = (LinearLayout.LayoutParams) list_holder[currentPosition].itemView
+//                .getLayoutParams();
+//        param_curr.weight = 1000;
+//
+//        LinearLayout.LayoutParams params_select = (LinearLayout.LayoutParams) list_holder[selectedPos].itemView
+//                .getLayoutParams();
+//        params_select.weight = 1650;
+//        requestLayout();
 
-        LinearLayout.LayoutParams params_select = (LinearLayout.LayoutParams) list_holder[selectedPos].itemView
-                .getLayoutParams();
-        params_select.weight = 1650;
-        requestLayout();
+        list_holder[selectedPos].weight = mAdapter.getWeightOnFocus(selectedPos);
+        list_holder[currentPosition].weight = mAdapter.getWeightOnLostFocus(currentPosition);
+
+        // delta = nextState - lastState
+        int delta = mAdapter.getWeightOnFocus(selectedPos) - mAdapter.getWeightOnLostFocus(selectedPos);
+        delta += mAdapter.getWeightOnLostFocus(currentPosition) - mAdapter.getWeightOnFocus(currentPosition);
+        weightTotal += delta;
+        requestViewHoldersLayout();
     }
 
 
@@ -189,9 +294,14 @@ public class BottomToolBar extends LinearLayout {
         animSelect.start();
     }
 
+    public int getOrientation() {
+        return mOrientation;
+    }
+
     public static abstract class ViewHolder {
         public View itemView;
         public int position = 0;
+        public int weight = 1;
         public AnimatorSet onFocusAnimSet;
         public AnimatorSet onLostFocusAnimSet;
 
@@ -259,6 +369,10 @@ public class BottomToolBar extends LinearLayout {
         public AnimatorSet onLostFocusAnimatorSet(VH holder, int position) {
             return null;
         }
+
+        public abstract int getWeightOnFocus(int position);
+
+        public abstract int getWeightOnLostFocus(int position);
 
         public abstract int getItemCount();
 

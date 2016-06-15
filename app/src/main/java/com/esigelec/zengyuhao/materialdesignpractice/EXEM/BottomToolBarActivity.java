@@ -74,6 +74,17 @@ public class BottomToolBarActivity extends FragmentActivity {
 
     public class MyAdapter extends BottomToolBar.Adapter<MyAdapter.MyHolder> {
 
+
+        @Override
+        public int getWeightOnFocus(int position) {
+            return 1650;
+        }
+
+        @Override
+        public int getWeightOnLostFocus(int position) {
+            return 1000;
+        }
+
         @Override
         public int getItemCount() {
             return IMG_SRC.length;
