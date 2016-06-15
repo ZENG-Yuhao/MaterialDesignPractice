@@ -151,69 +151,6 @@ public class BottomToolBar extends LinearLayout {
         });
     }
 
-    private void tempAnim(View v) {
-        // calculate params
-        double half_width = v.getWidth() / 2;
-        double half_height = v.getHeight() / 2;
-        int finalRadius = (int) Math.hypot(half_width, half_height);
-
-        // set exit animator
-        anim = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height,
-                finalRadius, 0);
-        anim.setDuration(200);
-        anim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                anim1.start();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
-        // set enter animator
-        anim1 = ViewAnimationUtils.createCircularReveal(v, (int) half_width, (int) half_height, 0,
-                finalRadius);
-
-        anim1.setDuration(200);
-        anim1.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
-        // start exit animator and then enter animator
-        anim.start();
-    }
-
     private void animateTransition(int selectedPos) {
         // display custom animations
         if (list_holder[selectedPos].onFocusAnimSet != null)
@@ -226,11 +163,11 @@ public class BottomToolBar extends LinearLayout {
         // to stretch out of their parent.
         Animator animCurr = ObjectAnimator.ofInt(list_holder[currentPosition], "bottomMargin",
                 list_holder[currentPosition].getBottomMargin(), 0);
-        animCurr.setDuration(150);
+        animCurr.setDuration(100);
 
         Animator animSelect = ObjectAnimator.ofInt(list_holder[selectedPos], "bottomMargin", list_holder[selectedPos]
-                .getBottomMargin(), 50);
-        animSelect.setDuration(150);
+                .getBottomMargin(), 40);
+        animSelect.setDuration(100);
 
         animCurr.start();
         animSelect.start();

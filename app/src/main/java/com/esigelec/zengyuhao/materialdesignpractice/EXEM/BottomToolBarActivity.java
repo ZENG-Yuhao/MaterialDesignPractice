@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,37 +17,50 @@ import android.widget.Toast;
 import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar.BottomToolBar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
+import org.w3c.dom.Text;
+
 public class BottomToolBarActivity extends Activity {
+    private static final int[] IMG_SRC = {
+            R.drawable.ic_assistant_black_24dp,
+            R.drawable.ic_attach_file_black_24dp,
+            R.drawable.ic_assignment_ind_black_24dp,
+            R.drawable.ic_assignment_late_black_24dp,
+            R.drawable.ic_backup_black_24dp,
+    };
+
+    private static final String[] TITLE_STR = {
+            "Info Site",
+            "Installation",
+            "Cartographie",
+            "Cas B",
+            "Scanner"
+    };
+
+    private TextView txt_state;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_tool_bar);
+
+        final TextView txt_state = (TextView) findViewById(R.id.txtvw_state);
 
         BottomToolBar toolBar = (BottomToolBar) findViewById(R.id.bottom_toolbar);
         toolBar.setAdapter(new MyAdapter());
         toolBar.setOnItemClickListener(new BottomToolBar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                txt_state.setText(TITLE_STR[position]);
             }
         });
 
-        final Button btn_start = (Button) findViewById(R.id.btn_start);
-        btn_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, v.getHeight());
-                params.weight = 1;
-                v.setLayoutParams(params);
-            }
-        });
     }
 
     public class MyAdapter extends BottomToolBar.Adapter<MyAdapter.MyHolder> {
 
         @Override
         public int getItemCount() {
-            return 5;
+            return IMG_SRC.length;
         }
 
         @Override
@@ -61,8 +75,8 @@ public class BottomToolBarActivity extends Activity {
 
         @Override
         public void onBindViewHolder(MyHolder holder, int position) {
-            holder.img.setImageResource(R.drawable.ic_devices_black_48dp);
-            holder.txt.setText("TAB" + String.valueOf(position));
+            holder.img.setImageResource(IMG_SRC[position]);
+            holder.txt.setText(TITLE_STR[position]);
             //holder.view.setElevation(position * 4);
         }
 
