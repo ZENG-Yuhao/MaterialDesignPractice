@@ -4,14 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.EXEM.BottomToolBarActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="Start Animation"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Follower"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Follower"/>
+    </LinearLayout>
+
 
     <com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar.BottomToolBar
         android:id="@+id/bottom_toolbar"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:showDividers="middle"
-        android:divider="@drawable/divider"
+        android:layout_height="72dp"
         android:layout_alignParentBottom="true"
-        android:layout_height="72dp"/>
+        android:divider="@drawable/divider"
+        android:orientation="horizontal"
+        android:showDividers="middle"/>
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomTool
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
 
 /**
@@ -106,16 +106,18 @@ public class BottomToolBar extends LinearLayout {
         final float w = density * 2;
         if (getOrientation() == HORIZONTAL) {
             height = containerHeight;
-            width = (int)Math.ceil((containerWidth - w * (itemCount - 1)) / itemCount);
-            Log.i("haha", "getDividerPadding--->" + getDividerPadding());
+            //width = (int)Math.ceil((containerWidth - w * (itemCount - 1)) / itemCount);
+            width = 0;
         } else {
-            height = (int)Math.ceil((containerHeight - w * (itemCount - 1)) / itemCount);
+            //height = (int)Math.ceil((containerHeight - w * (itemCount - 1)) / itemCount);
+            height = 0;
             width = containerWidth;
         }
 
         for (int i = 0; i < itemCount; i++) {
             View view = list_holder[i].itemView;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
+            params.weight = 2;
             params.gravity = Gravity.CENTER;
             view.setLayoutParams(params);
             Log.i("Haha", "initTabs--->>" + "i " + i + "; itemCount" + itemCount + ";" + view.getParent());
@@ -137,8 +139,7 @@ public class BottomToolBar extends LinearLayout {
         holder.itemView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                tempAnim(v);
-                //if (currentPosition == position) return;
+                if (currentPosition == position) return;
 
                 animateTransition(position);
                 // call user customized method
@@ -220,6 +221,19 @@ public class BottomToolBar extends LinearLayout {
 
         if (list_holder[currentPosition].onLostFocusAnimSet != null)
             list_holder[currentPosition].onLostFocusAnimSet.start();
+        if (list_holder[currentPosition].itemView.getAnimation() != null)
+            Log.i("animateTransition", "animateTransition--->" + list_holder[currentPosition].itemView.getAnimation()
+                    .toString());
+        Animator animCurr = ObjectAnimator.ofInt(list_holder[currentPosition], "bottomMargin",
+                list_holder[currentPosition].getBottomMargin(), 0);
+        animCurr.setDuration(150);
+
+        Animator animSelect = ObjectAnimator.ofInt(list_holder[selectedPos], "bottomMargin", list_holder[selectedPos]
+                .getBottomMargin(), 50);
+        animSelect.setDuration(150);
+
+        animCurr.start();
+        animSelect.start();
     }
 
     public static abstract class ViewHolder {
@@ -240,6 +254,28 @@ public class BottomToolBar extends LinearLayout {
 
         public final int getAdapterPosition() {
             return position;
+        }
+
+        /**
+         * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
+         * @param margin bottomMarin
+         */
+        public void setBottomMargin(int margin) {
+            if (margin < 0)
+                margin = 0;
+
+            MarginLayoutParams params = (MarginLayoutParams) itemView.getLayoutParams();
+            params.bottomMargin = margin;
+            itemView.requestLayout();
+        }
+
+        /**
+         * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
+         * @return
+         */
+        public int getBottomMargin() {
+            MarginLayoutParams params = (MarginLayoutParams) itemView.getLayoutParams();
+            return params.bottomMargin;
         }
 
     }

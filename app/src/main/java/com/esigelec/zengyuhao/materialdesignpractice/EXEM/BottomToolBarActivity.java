@@ -1,11 +1,15 @@
 package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +27,17 @@ public class BottomToolBarActivity extends Activity {
         toolBar.setOnItemClickListener(new BottomToolBar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getApplicationContext(), "Position " + position + " clicked.", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        final Button btn_start = (Button) findViewById(R.id.btn_start);
+        btn_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, v.getHeight());
+                params.weight = 1;
+                v.setLayoutParams(params);
             }
         });
     }
