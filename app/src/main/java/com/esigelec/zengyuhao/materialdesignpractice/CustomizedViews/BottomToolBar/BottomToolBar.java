@@ -36,8 +36,7 @@ public class BottomToolBar extends FrameLayout {
     private int weightNoFocus = 10000;
 
     /* Synchronizer */
-    private WeakReference<ViewPager> pagerWkRef;
-    private PagerChangeSynchronizer synchronizer;
+    private FocusChangeSynchronizer synchronizer = new FocusChangeSynchronizer();
 
     /**
      * If adapter has been newly set, must wipe all layout params when onMeasureViewHolder for secure to avoid margin
@@ -69,7 +68,6 @@ public class BottomToolBar extends FrameLayout {
     }
 
     public void init() {
-        synchronizer = new PagerChangeSynchronizer();
 
         setWillNotDraw(false);
         paint = new Paint();
@@ -303,9 +301,9 @@ public class BottomToolBar extends FrameLayout {
     public void bindViewPager(ViewPager pager) {
         if (pager != null) {
             // if there is already one pager bound, unbind it.
-            if (pagerWkRef != null && pagerWkRef.get() != null)
+            if (synchronizer.pagerWkRef != null && synchronizer.pagerWkRef.get() != null)
                 unbindViewPager();
-            pagerWkRef = new WeakReference<>(pager);
+            synchronizer.pagerWkRef = new WeakReference<>(pager);
             // make sure they are at the same position
             pager.setCurrentItem(currentPosition);
             pager.addOnPageChangeListener(synchronizer);
@@ -313,7 +311,7 @@ public class BottomToolBar extends FrameLayout {
     }
 
     public void unbindViewPager() {
-        ViewPager pager = pagerWkRef.get();
+        ViewPager pager = synchronizer.pagerWkRef.get();
         if (pager != null) {
             pager.removeOnPageChangeListener(synchronizer);
         }
@@ -376,13 +374,20 @@ public class BottomToolBar extends FrameLayout {
 
 
     public interface OnItemClickListener {
+        /**
+         * You should never invoke setCurrentItem() of the bound ViewPager in this callback method, because
+         * FocusChangeSynchronizer will handle it for you. Otherwise, you will receive a trembling of view.
+         * @param view the view was clicked.
+         * @param position the position of the clicked view in this layout.
+         */
         void onItemClick(View view, int position);
     }
 
 
-    private class PagerChangeSynchronizer implements ViewPager.OnPageChangeListener {
+    private class FocusChangeSynchronizer implements ViewPager.OnPageChangeListener {
         public static final int ZONE_LEFT = 0; // middle point of screen located at left side of current page
         public static final int ZONE_RIGHT = 1; // middle point of screen located at right side of current page
+        public WeakReference<ViewPager> pagerWkRef;
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -411,8 +416,8 @@ public class BottomToolBar extends FrameLayout {
 
         @Override
         public void onPageSelected(int position) {
-            //setCurrentItem(position);
-            currentPosition = position;
+            setCurrentItem(position);
+            //currentPosition = position;
         }
 
         @Override
