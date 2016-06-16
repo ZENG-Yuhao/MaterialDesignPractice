@@ -43,6 +43,14 @@ public class BottomToolBarActivity extends FragmentActivity {
             "Scanner"
     };
 
+    private static final int[] BACKGROUND_COLOR = {
+            android.R.color.holo_blue_dark,
+            android.R.color.holo_orange_dark,
+            android.R.color.holo_purple,
+            android.R.color.holo_green_dark,
+            android.R.color.holo_red_dark
+    };
+
     private final int NUM_PAGES = 5;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -62,7 +70,6 @@ public class BottomToolBarActivity extends FragmentActivity {
                 viewPager.setCurrentItem(position);
             }
         });
-        toolBar.addView(null);
 
         // init ViewPager
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -70,20 +77,11 @@ public class BottomToolBarActivity extends FragmentActivity {
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new MyPageChangedListener());
 
+
+        toolBar.bindViewPager(viewPager);
     }
 
     public class MyAdapter extends BottomToolBar.Adapter<MyAdapter.MyHolder> {
-
-
-        @Override
-        public int getWeightOnFocus(int position) {
-            return 1900;
-        }
-
-        @Override
-        public int getWeightOnLostFocus(int position) {
-            return 1000;
-        }
 
         @Override
         public int getItemCount() {
@@ -104,7 +102,8 @@ public class BottomToolBarActivity extends FragmentActivity {
         public void onBindViewHolder(MyHolder holder, int position) {
             holder.img.setImageResource(IMG_SRC[position]);
             holder.txt.setText(TITLE_STR[position]);
-            holder.view.setElevation(position * 4);
+            holder.view.setElevation(position * 8);
+            holder.view.setBackgroundColor(getResources().getColor(BACKGROUND_COLOR[position]));
         }
 
         public class MyHolder extends BottomToolBar.ViewHolder {
@@ -150,12 +149,12 @@ public class BottomToolBarActivity extends FragmentActivity {
 
         @Override
         public void onPageSelected(int position) {
-
+            Log.i("haha", "onPageSelected---->" + position);
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
-
+            Log.i("haha", "onPageScrollStateChanged---->" + state);
         }
     }
 }

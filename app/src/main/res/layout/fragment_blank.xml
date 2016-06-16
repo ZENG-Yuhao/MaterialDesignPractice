@@ -2,9 +2,11 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"
              tools:context="com.esigelec.zengyuhao.materialdesignpractice.EXEM.BlankFragment">
 
     <TextView
+        android:layout_marginTop="250dp"
         android:id="@+id/txt_page_name"
         android:gravity="center"
         android:layout_width="match_parent"
