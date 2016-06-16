@@ -62,7 +62,7 @@ public class BottomToolBarActivity extends FragmentActivity {
                 viewPager.setCurrentItem(position);
             }
         });
-
+        toolBar.addView(null);
 
         // init ViewPager
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -77,7 +77,7 @@ public class BottomToolBarActivity extends FragmentActivity {
 
         @Override
         public int getWeightOnFocus(int position) {
-            return 1650;
+            return 1900;
         }
 
         @Override
@@ -104,7 +104,7 @@ public class BottomToolBarActivity extends FragmentActivity {
         public void onBindViewHolder(MyHolder holder, int position) {
             holder.img.setImageResource(IMG_SRC[position]);
             holder.txt.setText(TITLE_STR[position]);
-            //holder.view.setElevation(position * 4);
+            holder.view.setElevation(position * 4);
         }
 
         public class MyHolder extends BottomToolBar.ViewHolder {

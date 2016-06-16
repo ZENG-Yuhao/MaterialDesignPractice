@@ -1,24 +1,13 @@
 package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Build;
-import android.support.v7.view.menu.MenuView;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AbsoluteLayout;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
@@ -59,6 +48,36 @@ public class BottomToolBar extends FrameLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    /**
+     * Adding view manually for this layout is forbidden for not disturbing the layout. Using this method to add view
+     * wouldn't have any effect.
+     * <p/>
+     * The same as other <b>addView(args..)</b>, for clarity of the codes, other addView methods weren't declared as
+     * deprecated, but you still should not use them.
+     *
+     * @deprecated use {@link #setAdapter(Adapter)} to reset all child-view instead.
+     */
+    @Deprecated
+    @Override
+    public void addView(View child) {
+
+    }
+
+
+    /**
+     * Removing view manually for this layout is forbidden for not disturbing the layout. Using this method to remove
+     * view wouldn't have any effect.
+     * <p/>
+     * The same as other <b>removeView(args..)</b>, for clarity of the codes, other removeView methods weren't
+     * declared as deprecated, but you still should not use them.
+     *
+     * @deprecated use {@link #setAdapter(Adapter)} to reset all child-view instead.
+     */
+    @Deprecated
+    @Override
+    public void removeAllViews() {
+
+    }
 
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
         mAdapter = adapter;
@@ -89,7 +108,7 @@ public class BottomToolBar extends FrameLayout {
 
         // remove all children views when adapter has been changed
         if (getChildCount() > 0)
-            removeAllViews();
+            super.removeAllViews();
         initLayout();
         isAdapterNewlySet = false;
     }
@@ -99,6 +118,11 @@ public class BottomToolBar extends FrameLayout {
      */
     // TODO: 2016/6/15 add OnGlobalLayoutListener to surveille incoming layout changes, and then adjust child-views size
     public void initLayout() {
+
+        // add views in list_holder to the layout
+        for (int i = 0; i < itemCount; i++) {
+            super.addView(list_holder[i].itemView);
+        }
 
         int height = getHeight();
         int width = getWidth();
@@ -132,43 +156,6 @@ public class BottomToolBar extends FrameLayout {
                 });
             }
         }
-
-        // after measurement, add views in list_holder to the layout
-        for (int i = 0; i < itemCount; i++) {
-            this.addView(list_holder[i].itemView);
-        }
-
-        requestLayout();
-    }
-
-    private void initTabs(int containerHeight, int containerWidth) {
-        int height, width;
-        final DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        final float density = metrics.density;
-        final float w = density * 2;
-        if (getOrientation() == HORIZONTAL) {
-            height = containerHeight;
-            //width = (int)Math.ceil((containerWidth - w * (itemCount - 1)) / itemCount);
-            width = 0;
-        } else {
-            //height = (int)Math.ceil((containerHeight - w * (itemCount - 1)) / itemCount);
-            height = 0;
-            width = containerWidth;
-        }
-
-        for (int i = 0; i < itemCount; i++) {
-            View view = list_holder[i].itemView;
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
-            if (i == currentPosition)
-                params.weight = 1650;
-
-            else
-                params.weight = 1000;
-            params.gravity = Gravity.CENTER;
-            view.setLayoutParams(params);
-            Log.i("Haha", "initTabs--->>" + "i " + i + "; itemCount" + itemCount + ";" + view.getParent());
-            this.addView(view);
-        }
     }
 
     public void requestViewHoldersLayout() {
@@ -178,8 +165,9 @@ public class BottomToolBar extends FrameLayout {
 
     /**
      * Measurement for each ViewHolder, make sure getWidth() and getHeight() are nonzero before invoking this method.
+     * These measures must be done outside onMeasure() method and before requestLayout() or requestViewHolderLayout().
      */
-    public void onViewHoldersMeasure() {
+    protected void onViewHoldersMeasure() {
         if (getWidth() == 0 || getHeight() == 0) return;
         int width, height;
         ViewGroup.LayoutParams lp;
@@ -205,16 +193,13 @@ public class BottomToolBar extends FrameLayout {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
         onViewHoldersLayout();
     }
 
-    public void onViewHoldersLayout() {
+    protected void onViewHoldersLayout() {
         ViewGroup.LayoutParams lp;
-        View view;
         int left = 0, top = 0;
         for (int i = 0; i < itemCount; i++) {
-            view = list_holder[i].itemView;
             lp = list_holder[i].itemView.getLayoutParams();
             if (getOrientation() == HORIZONTAL) {
                 list_holder[i].itemView.layout(left, 0, left + lp.width, lp.height);
@@ -245,11 +230,25 @@ public class BottomToolBar extends FrameLayout {
                 // call user customized method
                 onItemClickListener.onItemClick(v, position);
 
-                // update current position
-                currentPosition = position;
+                setCurrentItem(position);
             }
         });
     }
+
+    public void setCurrentItem(int position) {
+        list_holder[position].weight = mAdapter.getWeightOnFocus(position);
+        list_holder[currentPosition].weight = mAdapter.getWeightOnLostFocus(currentPosition);
+
+        // delta = nextState - lastState
+        int delta = mAdapter.getWeightOnFocus(position) - mAdapter.getWeightOnLostFocus(position);
+        delta += mAdapter.getWeightOnLostFocus(currentPosition) - mAdapter.getWeightOnFocus(currentPosition);
+        weightTotal += delta;
+        requestViewHoldersLayout();
+
+        // update current position
+        currentPosition = position;
+    }
+
 
     private void animateTransition(int selectedPos) {
         // display custom animations
@@ -258,40 +257,6 @@ public class BottomToolBar extends FrameLayout {
 
         if (list_holder[currentPosition].onLostFocusAnimSet != null)
             list_holder[currentPosition].onLostFocusAnimSet.start();
-
-//        LinearLayout.LayoutParams param_curr = (LinearLayout.LayoutParams) list_holder[currentPosition].itemView
-//                .getLayoutParams();
-//        param_curr.weight = 1000;
-//
-//        LinearLayout.LayoutParams params_select = (LinearLayout.LayoutParams) list_holder[selectedPos].itemView
-//                .getLayoutParams();
-//        params_select.weight = 1650;
-//        requestLayout();
-
-        list_holder[selectedPos].weight = mAdapter.getWeightOnFocus(selectedPos);
-        list_holder[currentPosition].weight = mAdapter.getWeightOnLostFocus(currentPosition);
-
-        // delta = nextState - lastState
-        int delta = mAdapter.getWeightOnFocus(selectedPos) - mAdapter.getWeightOnLostFocus(selectedPos);
-        delta += mAdapter.getWeightOnLostFocus(currentPosition) - mAdapter.getWeightOnFocus(currentPosition);
-        weightTotal += delta;
-        requestViewHoldersLayout();
-    }
-
-
-    private void animation1(int selectedPos) {
-        // these animations below force a declaration in root view as "clipChildren = false" to enable his children view
-        // to stretch out of their parent.
-        Animator animCurr = ObjectAnimator.ofInt(list_holder[currentPosition], "bottomMargin",
-                list_holder[currentPosition].getBottomMargin(), 0);
-        animCurr.setDuration(100);
-
-        Animator animSelect = ObjectAnimator.ofInt(list_holder[selectedPos], "bottomMargin", list_holder[selectedPos]
-                .getBottomMargin(), 40);
-        animSelect.setDuration(100);
-
-        animCurr.start();
-        animSelect.start();
     }
 
     public int getOrientation() {
@@ -318,31 +283,6 @@ public class BottomToolBar extends FrameLayout {
         public final int getAdapterPosition() {
             return position;
         }
-
-        /**
-         * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
-         *
-         * @param margin bottomMarin to be set to itemView
-         */
-        public void setBottomMargin(int margin) {
-            if (margin < 0)
-                margin = 0;
-
-            MarginLayoutParams params = (MarginLayoutParams) itemView.getLayoutParams();
-            params.bottomMargin = margin;
-            itemView.requestLayout();
-        }
-
-        /**
-         * Wrapper method for that ObjectAnimator can animate itemView's margin through ViewHolder.
-         *
-         * @return bottomMargin of itemView
-         */
-        public int getBottomMargin() {
-            MarginLayoutParams params = (MarginLayoutParams) itemView.getLayoutParams();
-            return params.bottomMargin;
-        }
-
     }
 
 
