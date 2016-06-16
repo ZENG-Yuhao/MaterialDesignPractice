@@ -33,7 +33,7 @@ public class BottomToolBar extends FrameLayout {
     private OnItemClickListener mOnItemClickListener;
     private int mCurrentPosition = 0;
     /* default weight */
-    private int mWeightFocus = 23000;
+    private int mWeightFocus = 20000;
     private int mWeightNoFocus = 10000;
 
     /* Synchronizer */
@@ -139,7 +139,6 @@ public class BottomToolBar extends FrameLayout {
         if (getChildCount() > 0)
             super.removeAllViews();
         initLayout();
-        isAdapterNewlySet = false;
     }
 
     /**
@@ -203,15 +202,16 @@ public class BottomToolBar extends FrameLayout {
         for (int i = 0; i < mItemCount; i++) {
             if (getOrientation() == HORIZONTAL) {
                 height = getHeight();
-                width = getWidth() * mHolderList[i].weight / mWeightCount;
+                width = (int) Math.ceil((float) getWidth() * mHolderList[i].weight / mWeightCount);
             } else {
-                height = getHeight() * mHolderList[i].weight / mWeightCount;
+                height = (int) Math.ceil((float) getHeight() * mHolderList[i].weight / mWeightCount);
                 width = getWidth();
             }
 
             if (isAdapterNewlySet) {
-                lp = new ViewGroup.LayoutParams(width, height);
+                lp = new FrameLayout.LayoutParams(width, height);
                 mHolderList[i].itemView.setLayoutParams(lp);
+                isAdapterNewlySet = false;
             } else {
                 lp = mHolderList[i].itemView.getLayoutParams();
                 lp.width = width;
