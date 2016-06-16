@@ -20,23 +20,24 @@ import java.lang.ref.WeakReference;
  * Created by root on 13/06/16.
  */
 public class BottomToolBar extends FrameLayout {
+    /* layout orientation */
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
     private int mOrientation = HORIZONTAL;
 
     /* Holder and adapter */
     private Adapter mAdapter;
-    private ViewHolder[] list_holder;
-    private int itemCount;  // number of items in list_holder
-    private int weightTotal;
-    private OnItemClickListener onItemClickListener;
-    private int currentPosition = 0;
+    private ViewHolder[] mHolderList;
+    private int mItemCount;  // number of items in mHolderList
+    private int mWeightCount;
+    private OnItemClickListener mOnItemClickListener;
+    private int mCurrentPosition = 0;
     /* default weight */
-    private int weightFocus = 23000;
-    private int weightNoFocus = 10000;
+    private int mWeightFocus = 23000;
+    private int mWeightNoFocus = 10000;
 
     /* Synchronizer */
-    private FocusChangeSynchronizer synchronizer = new FocusChangeSynchronizer();
+    private FocusChangeSynchronizer mSynchronizer = new FocusChangeSynchronizer();
 
     /**
      * If adapter has been newly set, must wipe all layout params when onMeasureViewHolder for secure to avoid margin
@@ -109,8 +110,8 @@ public class BottomToolBar extends FrameLayout {
     }
 
     public void setWeights(int weightFocus, int weightNoFocus) {
-        this.weightFocus = weightFocus > 0 ? weightFocus : 1;
-        this.weightNoFocus = weightNoFocus > 0 ? weightNoFocus : 1;
+        this.mWeightFocus = weightFocus > 0 ? weightFocus : 1;
+        this.mWeightNoFocus = weightNoFocus > 0 ? weightNoFocus : 1;
     }
 
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
@@ -124,14 +125,14 @@ public class BottomToolBar extends FrameLayout {
             throw new IllegalArgumentException("item count may not be 0");
         }
 
-        /* init list_holder through adapter */
-        itemCount = mAdapter.getItemCount();
-        list_holder = new ViewHolder[itemCount];
-        weightTotal = (itemCount - 1) * weightNoFocus + weightFocus;
-        for (int i = 0; i < itemCount; i++) {
-            list_holder[i] = mAdapter.createViewHolder(this);
-            list_holder[i].weight = (i == currentPosition) ? weightFocus : weightNoFocus;
-            mAdapter.bindViewHolder(list_holder[i], i);
+        /* init mHolderList through adapter */
+        mItemCount = mAdapter.getItemCount();
+        mHolderList = new ViewHolder[mItemCount];
+        mWeightCount = (mItemCount - 1) * mWeightNoFocus + mWeightFocus;
+        for (int i = 0; i < mItemCount; i++) {
+            mHolderList[i] = mAdapter.createViewHolder(this);
+            mHolderList[i].weight = (i == mCurrentPosition) ? mWeightFocus : mWeightNoFocus;
+            mAdapter.bindViewHolder(mHolderList[i], i);
         }
 
         /* remove all children views when adapter has been changed */
@@ -147,9 +148,9 @@ public class BottomToolBar extends FrameLayout {
     // TODO: 2016/6/15 add OnGlobalLayoutListener to surveille incoming layout changes, and then adjust child-views size
     public void initLayout() {
 
-        // add views in list_holder to the layout
-        for (int i = 0; i < itemCount; i++) {
-            super.addView(list_holder[i].itemView);
+        // add views in mHolderList to the layout
+        for (int i = 0; i < mItemCount; i++) {
+            super.addView(mHolderList[i].itemView);
         }
 
         int height = getHeight();
@@ -199,20 +200,20 @@ public class BottomToolBar extends FrameLayout {
         if (getWidth() == 0 || getHeight() == 0) return;
         int width, height;
         ViewGroup.LayoutParams lp;
-        for (int i = 0; i < itemCount; i++) {
+        for (int i = 0; i < mItemCount; i++) {
             if (getOrientation() == HORIZONTAL) {
                 height = getHeight();
-                width = getWidth() * list_holder[i].weight / weightTotal;
+                width = getWidth() * mHolderList[i].weight / mWeightCount;
             } else {
-                height = getHeight() * list_holder[i].weight / weightTotal;
+                height = getHeight() * mHolderList[i].weight / mWeightCount;
                 width = getWidth();
             }
 
             if (isAdapterNewlySet) {
                 lp = new ViewGroup.LayoutParams(width, height);
-                list_holder[i].itemView.setLayoutParams(lp);
+                mHolderList[i].itemView.setLayoutParams(lp);
             } else {
-                lp = list_holder[i].itemView.getLayoutParams();
+                lp = mHolderList[i].itemView.getLayoutParams();
                 lp.width = width;
                 lp.height = height;
             }
@@ -227,13 +228,13 @@ public class BottomToolBar extends FrameLayout {
     protected void onViewHoldersLayout() {
         ViewGroup.LayoutParams lp;
         int left = 0, top = 0;
-        for (int i = 0; i < itemCount; i++) {
-            lp = list_holder[i].itemView.getLayoutParams();
+        for (int i = 0; i < mItemCount; i++) {
+            lp = mHolderList[i].itemView.getLayoutParams();
             if (getOrientation() == HORIZONTAL) {
-                list_holder[i].itemView.layout(left, 0, left + lp.width, lp.height);
+                mHolderList[i].itemView.layout(left, 0, left + lp.width, lp.height);
                 left += lp.width;
             } else {
-                list_holder[i].itemView.layout(0, top, lp.width, top + lp.height);
+                mHolderList[i].itemView.layout(0, top, lp.width, top + lp.height);
                 top += lp.height;
             }
         }
@@ -247,11 +248,11 @@ public class BottomToolBar extends FrameLayout {
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClickListener = listener;
+        this.mOnItemClickListener = listener;
 
         // register listener for each holder
-        for (int i = 0; i < itemCount; i++) {
-            registerOnItemClickListener(list_holder[i], i);
+        for (int i = 0; i < mItemCount; i++) {
+            registerOnItemClickListener(mHolderList[i], i);
         }
     }
 
@@ -259,11 +260,11 @@ public class BottomToolBar extends FrameLayout {
         holder.itemView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentPosition == position) return;
+                if (mCurrentPosition == position) return;
 
                 animateTransition(position);
                 // call user customized method
-                onItemClickListener.onItemClick(v, position);
+                mOnItemClickListener.onItemClick(v, position);
 
                 //setCurrentItem(position);
             }
@@ -271,23 +272,23 @@ public class BottomToolBar extends FrameLayout {
     }
 
     public void setCurrentItem(int position) {
-        list_holder[position].weight = weightFocus;
-        list_holder[currentPosition].weight = weightNoFocus;
+        mHolderList[position].weight = mWeightFocus;
+        mHolderList[mCurrentPosition].weight = mWeightNoFocus;
 
         requestViewHoldersLayout();
 
         // update current position
-        currentPosition = position;
+        mCurrentPosition = position;
     }
 
 
     private void animateTransition(int selectedPos) {
         // display custom animations
-        if (list_holder[selectedPos].onFocusAnimSet != null)
-            list_holder[selectedPos].onFocusAnimSet.start();
+        if (mHolderList[selectedPos].onFocusAnimSet != null)
+            mHolderList[selectedPos].onFocusAnimSet.start();
 
-        if (list_holder[currentPosition].onLostFocusAnimSet != null)
-            list_holder[currentPosition].onLostFocusAnimSet.start();
+        if (mHolderList[mCurrentPosition].onLostFocusAnimSet != null)
+            mHolderList[mCurrentPosition].onLostFocusAnimSet.start();
     }
 
     public int getOrientation() {
@@ -299,22 +300,13 @@ public class BottomToolBar extends FrameLayout {
     }
 
     public void bindViewPager(ViewPager pager) {
-        if (pager != null) {
-            // if there is already one pager bound, unbind it.
-            if (synchronizer.pagerWkRef != null && synchronizer.pagerWkRef.get() != null)
-                unbindViewPager();
-            synchronizer.pagerWkRef = new WeakReference<>(pager);
-            // make sure they are at the same position
-            pager.setCurrentItem(currentPosition);
-            pager.addOnPageChangeListener(synchronizer);
-        }
+        if (mSynchronizer != null)
+            mSynchronizer.bindViewPager(pager);
     }
 
     public void unbindViewPager() {
-        ViewPager pager = synchronizer.pagerWkRef.get();
-        if (pager != null) {
-            pager.removeOnPageChangeListener(synchronizer);
-        }
+        if (mSynchronizer != null)
+            mSynchronizer.unbindViewPager();
     }
 
     public static abstract class ViewHolder {
@@ -377,17 +369,43 @@ public class BottomToolBar extends FrameLayout {
         /**
          * You should never invoke setCurrentItem() of the bound ViewPager in this callback method, because
          * FocusChangeSynchronizer will handle it for you. Otherwise, you will receive a trembling of view.
-         * @param view the view was clicked.
+         *
+         * @param view     the view was clicked.
          * @param position the position of the clicked view in this layout.
          */
         void onItemClick(View view, int position);
     }
 
-
     private class FocusChangeSynchronizer implements ViewPager.OnPageChangeListener {
+        public WeakReference<ViewPager> pagerWkRef;
+        /* zone state */
         public static final int ZONE_LEFT = 0; // middle point of screen located at left side of current page
         public static final int ZONE_RIGHT = 1; // middle point of screen located at right side of current page
-        public WeakReference<ViewPager> pagerWkRef;
+
+        /* focus change event */
+        public static final int ITEM_CLICKING = 2;
+        public static final int PAGER_SCROLLING = 3;
+        public int mTriggerEvent = PAGER_SCROLLING;
+
+        public void bindViewPager(ViewPager pager) {
+            if (pager != null) {
+                // if there is already one pager bound, unbind it.
+                if (pagerWkRef != null && pagerWkRef.get() != null)
+                    unbindViewPager();
+                pagerWkRef = new WeakReference<>(pager);
+                // make sure they are at the same position
+                pager.setCurrentItem(mCurrentPosition);
+                pager.addOnPageChangeListener(this);
+            }
+        }
+
+        public void unbindViewPager() {
+            if (pagerWkRef == null) return;
+            ViewPager pager = pagerWkRef.get();
+            if (pager != null) {
+                pager.removeOnPageChangeListener(this);
+            }
+        }
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -395,21 +413,21 @@ public class BottomToolBar extends FrameLayout {
                 Distribution of positionOffset relative to middle point of screen (MP) is like:
                 [0, 0.999) - MP - [0, 0.999)
              */
-            int zoneFlag = (position == currentPosition - 1) ? ZONE_LEFT : ZONE_RIGHT;
+            int zoneFlag = (position == mCurrentPosition - 1) ? ZONE_LEFT : ZONE_RIGHT;
             // this value is relative to the middle point, the smaller the value, the closer the distance is.
             float distanceOffset = (zoneFlag == ZONE_LEFT) ? (1 - positionOffset) : positionOffset;
 
             /* calculate layout changes */
             int targetPos;
             if (zoneFlag == ZONE_LEFT)
-                targetPos = currentPosition - 1;
+                targetPos = mCurrentPosition - 1;
             else
-                targetPos = currentPosition + 1;
+                targetPos = mCurrentPosition + 1;
 
-            if (targetPos >= 0 && targetPos < itemCount) {
-                int delta = Math.round((weightFocus - weightNoFocus) * distanceOffset);
-                list_holder[currentPosition].weight = weightFocus - delta;
-                list_holder[targetPos].weight = weightNoFocus + delta;
+            if (targetPos >= 0 && targetPos < mItemCount) {
+                int delta = Math.round((mWeightFocus - mWeightNoFocus) * distanceOffset);
+                mHolderList[mCurrentPosition].weight = mWeightFocus - delta;
+                mHolderList[targetPos].weight = mWeightNoFocus + delta;
                 requestViewHoldersLayout();
             }
         }
@@ -417,12 +435,13 @@ public class BottomToolBar extends FrameLayout {
         @Override
         public void onPageSelected(int position) {
             setCurrentItem(position);
-            //currentPosition = position;
+            //mCurrentPosition = position;
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
 
         }
+
     }
 }
