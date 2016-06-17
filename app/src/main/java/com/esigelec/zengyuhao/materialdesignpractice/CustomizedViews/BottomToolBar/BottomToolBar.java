@@ -1,19 +1,22 @@
 package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar;
 
-import android.animation.AnimatorSet;
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
+import android.widget.Scroller;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
@@ -32,21 +35,42 @@ public class BottomToolBar extends FrameLayout {
     private int mWeightCount;
     private OnItemClickListener mOnItemClickListener;
     private int mCurrentPosition = 0;
-    /* default weight */
-    private int mWeightFocus = 20000;
-    private int mWeightNoFocus = 10000;
-
-    /* Synchronizer */
-    private FocusChangeSynchronizer mSynchronizer = new FocusChangeSynchronizer();
-
     /**
      * If adapter has been newly set, must wipe all layout params when onMeasureViewHolder for secure to avoid margin
      * and padding problems.
      */
     private boolean isAdapterNewlySet = true;
 
+    /* default weight */
+    private int mWeightFocus = 21000;
+    private int mWeightNoFocus = 10000;
 
-    private Paint paint;
+    /* Synchronizer */
+    /**
+     * Indicates that the pager is in an idle, settled state. The current page
+     * is fully in view and no animation is in progress.
+     */
+    public static final int SCROLL_STATE_IDLE = 0;
+
+    /**
+     * Indicates that the pager is currently being dragged by the user.
+     */
+    public static final int SCROLL_STATE_DRAGGING = 1;
+
+    /**
+     * Indicates that the pager is in the process of settling to a final position.
+     */
+    public static final int SCROLL_STATE_SETTLING = 2;
+    // zone state
+    public static final int ZONE_LEFT = 0; // middle point of screen located at left side of current page
+    public static final int ZONE_RIGHT = 1; // middle point of screen located at right side of current page
+    // event state
+    public static final int MODE_CLICK = 0;
+    public static final int MODE_SCROLL = 1;
+    private FocusChangeSynchronizer mSynchronizer = new FocusChangeSynchronizer();
+
+    /* ViewPagerScroller */
+    public static final int pagerScrollDuration = 150;
 
     public BottomToolBar(Context context) {
         super(context);
@@ -70,12 +94,6 @@ public class BottomToolBar extends FrameLayout {
 
     public void init() {
 
-        setWillNotDraw(false);
-        paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStyle(Paint.Style.FILL);
     }
 
     /**
@@ -114,6 +132,15 @@ public class BottomToolBar extends FrameLayout {
         this.mWeightNoFocus = weightNoFocus > 0 ? weightNoFocus : 1;
     }
 
+    public void correctWeight(int positionFocus) {
+        for (int i = 0; i < mItemCount; i++) {
+            if (i == positionFocus)
+                mHolderList[i].weight = mWeightFocus;
+            else
+                mHolderList[i].weight = mWeightNoFocus;
+        }
+    }
+
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
         mAdapter = adapter;
         isAdapterNewlySet = true;
@@ -145,7 +172,7 @@ public class BottomToolBar extends FrameLayout {
      * To be invoked when first this layout first loads.
      */
     // TODO: 2016/6/15 add OnGlobalLayoutListener to surveille incoming layout changes, and then adjust child-views size
-    public void initLayout() {
+    protected void initLayout() {
 
         // add views in mHolderList to the layout
         for (int i = 0; i < mItemCount; i++) {
@@ -222,10 +249,6 @@ public class BottomToolBar extends FrameLayout {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        onViewHoldersLayout();
-    }
-
-    protected void onViewHoldersLayout() {
         ViewGroup.LayoutParams lp;
         int left = 0, top = 0;
         for (int i = 0; i < mItemCount; i++) {
@@ -238,13 +261,6 @@ public class BottomToolBar extends FrameLayout {
                 top += lp.height;
             }
         }
-    }
-
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawRect(0, 0, 100, 100, paint);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -260,35 +276,20 @@ public class BottomToolBar extends FrameLayout {
         holder.itemView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentPosition == position) return;
+                //if (position == mCurrentPosition) return;
 
-                animateTransition(position);
+                mSynchronizer.onClick(position);
+
                 // call user customized method
                 mOnItemClickListener.onItemClick(v, position);
-
-                //setCurrentItem(position);
             }
         });
     }
 
     public void setCurrentItem(int position) {
-        mHolderList[position].weight = mWeightFocus;
-        mHolderList[mCurrentPosition].weight = mWeightNoFocus;
-
-        requestViewHoldersLayout();
-
-        // update current position
         mCurrentPosition = position;
-    }
-
-
-    private void animateTransition(int selectedPos) {
-        // display custom animations
-        if (mHolderList[selectedPos].onFocusAnimSet != null)
-            mHolderList[selectedPos].onFocusAnimSet.start();
-
-        if (mHolderList[mCurrentPosition].onLostFocusAnimSet != null)
-            mHolderList[mCurrentPosition].onLostFocusAnimSet.start();
+        correctWeight(mCurrentPosition);
+        requestViewHoldersLayout();
     }
 
     public int getOrientation() {
@@ -313,15 +314,12 @@ public class BottomToolBar extends FrameLayout {
         public View itemView;
         public int position = 0;
         public int weight = 1;
-        public AnimatorSet onFocusAnimSet;
-        public AnimatorSet onLostFocusAnimSet;
 
         public ViewHolder(View view) {
             if (view == null) {
                 throw new IllegalArgumentException("itemView may not be null");
             }
             itemView = view;
-
             // for that the holder can be re retrieved by the view
             itemView.setTag(this);
         }
@@ -334,26 +332,14 @@ public class BottomToolBar extends FrameLayout {
 
     public static abstract class Adapter<VH extends ViewHolder> {
 
-        protected final VH createViewHolder(ViewGroup parent) {
+        protected VH createViewHolder(ViewGroup parent) {
             VH holder = onCreateViewHolder(parent);
             return holder;
         }
 
-        protected final void bindViewHolder(VH holder, int position) {
+        protected void bindViewHolder(VH holder, int position) {
             holder.position = position;
             onBindViewHolder(holder, position);
-            holder.onFocusAnimSet = onFocusAnimatorSet(holder, position);
-            holder.onLostFocusAnimSet = onLostFocusAnimatorSet(holder, position);
-        }
-
-        // implementation is optional
-        public AnimatorSet onFocusAnimatorSet(VH holder, int position) {
-            return null;
-        }
-
-        // implementation is optional
-        public AnimatorSet onLostFocusAnimatorSet(VH holder, int position) {
-            return null;
         }
 
         public abstract int getItemCount();
@@ -361,14 +347,13 @@ public class BottomToolBar extends FrameLayout {
         public abstract VH onCreateViewHolder(ViewGroup parent);
 
         public abstract void onBindViewHolder(VH holder, int position);
-
     }
 
 
     public interface OnItemClickListener {
         /**
          * You should never invoke setCurrentItem() of the bound ViewPager in this callback method, because
-         * FocusChangeSynchronizer will handle it for you. Otherwise, you will receive a trembling of view.
+         * {@link FocusChangeSynchronizer} will handle it for you. Otherwise, you may risk a conflict.
          *
          * @param view     the view was clicked.
          * @param position the position of the clicked view in this layout.
@@ -377,35 +362,77 @@ public class BottomToolBar extends FrameLayout {
     }
 
     private class FocusChangeSynchronizer implements ViewPager.OnPageChangeListener {
-        public WeakReference<ViewPager> pagerWkRef;
-        /* zone state */
-        public static final int ZONE_LEFT = 0; // middle point of screen located at left side of current page
-        public static final int ZONE_RIGHT = 1; // middle point of screen located at right side of current page
 
-        /* focus change event */
-        public static final int ITEM_CLICKING = 2;
-        public static final int PAGER_SCROLLING = 3;
-        public int mTriggerEvent = PAGER_SCROLLING;
+        public int mTriggerMode = MODE_SCROLL;
+
+        public WeakReference<ViewPager> pagerWeakReference;
+        public ItemChangedAnimator mAnimator;
+        public Interpolator mInterpolator;
+
+
+        public FocusChangeSynchronizer() {
+            mInterpolator = new DecelerateInterpolator();
+            mAnimator = new ItemChangedAnimator();
+            mAnimator.setInterpolator(mInterpolator);
+        }
+
+        /**
+         * @return true if there is already a pager bound to the synchronizer
+         */
+        public boolean isPagerBound() {
+            return (pagerWeakReference != null && pagerWeakReference.get() != null);
+        }
 
         public void bindViewPager(ViewPager pager) {
             if (pager != null) {
                 // if there is already one pager bound, unbind it.
-                if (pagerWkRef != null && pagerWkRef.get() != null)
+                if (isPagerBound())
                     unbindViewPager();
-                pagerWkRef = new WeakReference<>(pager);
+                pagerWeakReference = new WeakReference<>(pager);
                 // make sure they are at the same position
                 pager.setCurrentItem(mCurrentPosition);
                 pager.addOnPageChangeListener(this);
+                bindScrollerToViewPager(pager);
             }
         }
 
         public void unbindViewPager() {
-            if (pagerWkRef == null) return;
-            ViewPager pager = pagerWkRef.get();
-            if (pager != null) {
-                pager.removeOnPageChangeListener(this);
+            if (isPagerBound())
+                pagerWeakReference.get().removeOnPageChangeListener(this);
+        }
+
+
+        public void bindScrollerToViewPager(ViewPager pager) {
+            try {
+                Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+                mScroller.setAccessible(true);
+                ViewPagerScroller scroller = new ViewPagerScroller(pager.getContext(), mInterpolator);
+                mScroller.set(pager, scroller);
+            } catch (NoSuchFieldException e) {
+            } catch (IllegalArgumentException e) {
+            } catch (IllegalAccessException e) {
             }
         }
+
+        public void onClick(int position) {
+            mTriggerMode = MODE_CLICK;
+            onItemSelected(position);
+        }
+
+        public void onItemSelected(int position) {
+            if (mAnimator.isRunning()) {
+                mAnimator.cancel();
+            }
+            // Canceling animation must be executed before return
+            if (mCurrentPosition == position) return;
+
+            mAnimator.start(mCurrentPosition, position);
+            if (isPagerBound())
+                pagerWeakReference.get().setCurrentItem(position);
+
+
+        }
+
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -413,35 +440,97 @@ public class BottomToolBar extends FrameLayout {
                 Distribution of positionOffset relative to middle point of screen (MP) is like:
                 [0, 0.999) - MP - [0, 0.999)
              */
-            int zoneFlag = (position == mCurrentPosition - 1) ? ZONE_LEFT : ZONE_RIGHT;
-            // this value is relative to the middle point, the smaller the value, the closer the distance is.
-            float distanceOffset = (zoneFlag == ZONE_LEFT) ? (1 - positionOffset) : positionOffset;
-
-            /* calculate layout changes */
-            int targetPos;
-            if (zoneFlag == ZONE_LEFT)
-                targetPos = mCurrentPosition - 1;
-            else
-                targetPos = mCurrentPosition + 1;
-
-            if (targetPos >= 0 && targetPos < mItemCount) {
-                int delta = Math.round((mWeightFocus - mWeightNoFocus) * distanceOffset);
-                mHolderList[mCurrentPosition].weight = mWeightFocus - delta;
-                mHolderList[targetPos].weight = mWeightNoFocus + delta;
-                requestViewHoldersLayout();
-            }
         }
 
+        /* This method will be invoked when ViewPager.setCurrentItem() or after onPageScrollStateChanged() with
+           a state that equals 2 (SCROLL_STATE_SETTING)
+         */
         @Override
         public void onPageSelected(int position) {
-            setCurrentItem(position);
-            //mCurrentPosition = position;
+            if (mTriggerMode == MODE_SCROLL)
+                onItemSelected(position);
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
+            if (state == SCROLL_STATE_DRAGGING)
+                mTriggerMode = MODE_SCROLL;
+        }
+
+    }
+
+    private class ItemChangedAnimator extends ValueAnimator implements Animator.AnimatorListener, ValueAnimator
+            .AnimatorUpdateListener {
+        // create local variables to avoid conflict with the global variables
+        public int currentPosition;
+        public int targetPosition;
+
+        public ItemChangedAnimator() {
+            setIntValues(0, mWeightFocus - mWeightNoFocus);
+            addListener(this);
+            addUpdateListener(this);
+            setDuration(pagerScrollDuration);
+        }
+
+        public void start(int currentPosition, int targetPosition) {
+            if (currentPosition == targetPosition) return;
+            this.currentPosition = currentPosition;
+            this.targetPosition = targetPosition;
+            this.start();
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
 
         }
 
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            setCurrentItem(targetPosition);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            // if this animation is being canceled, end it immediately.
+            onAnimationEnd(animation);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            int delta = (int) animation.getAnimatedValue();
+            mHolderList[currentPosition].weight = mWeightFocus - delta;
+            mHolderList[targetPosition].weight = mWeightNoFocus + delta;
+            Log.i("haha", "-------> onAnimate:" + delta + "   " + currentPosition + "    " + targetPosition);
+            requestViewHoldersLayout();
+        }
+    }
+
+    private class ViewPagerScroller extends Scroller {
+        public ViewPagerScroller(Context context) {
+            super(context);
+        }
+
+        public ViewPagerScroller(Context context, Interpolator interpolator) {
+            super(context, interpolator);
+        }
+
+        public ViewPagerScroller(Context context, Interpolator interpolator, boolean flywheel) {
+            super(context, interpolator, flywheel);
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+            super.startScroll(startX, startY, dx, dy, pagerScrollDuration);
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy) {
+            super.startScroll(startX, startY, dx, dy, pagerScrollDuration);
+        }
     }
 }

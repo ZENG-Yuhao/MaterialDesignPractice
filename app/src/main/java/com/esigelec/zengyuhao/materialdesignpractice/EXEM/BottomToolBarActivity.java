@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -67,7 +68,6 @@ public class BottomToolBarActivity extends FragmentActivity {
         toolBar.setOnItemClickListener(new BottomToolBar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                viewPager.setCurrentItem(position);
             }
         });
 
@@ -122,7 +122,7 @@ public class BottomToolBarActivity extends FragmentActivity {
     }
 
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+    private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -143,18 +143,17 @@ public class BottomToolBarActivity extends FragmentActivity {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            Log.i("haha", "onPageScrolled---->" + "position: " + position + " positionOffset:" + positionOffset + " " +
-                    "positionOffsetPixels:" + positionOffsetPixels);
+            Log.i("haha", "onPageScrolled---->" + position + " : " + positionOffsetPixels);
         }
 
         @Override
         public void onPageSelected(int position) {
-            Log.i("haha", "onPageSelected---->" + position);
+            Log.i("haha", "onPageSelected--------------------------->" + position);
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
-            Log.i("haha", "onPageScrollStateChanged---->" + state);
+            Log.i("haha", "onPageScrollStateChanged--------------------------->" + state);
         }
     }
 }

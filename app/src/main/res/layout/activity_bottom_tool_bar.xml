@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     android:clipChildren="false"
     android:orientation="vertical"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.EXEM.BottomToolBarActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
-        android:layout_weight="8"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="8"/>
 
     <com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar.BottomToolBar
         android:id="@+id/bottom_toolbar"
