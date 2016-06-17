@@ -361,6 +361,9 @@ public class BottomToolBar extends FrameLayout {
         void onItemClick(View view, int position);
     }
 
+    /**
+     * Helper class for synchronizer the scrolling of the ViewPager bound and items of this toolbar
+     */
     private class FocusChangeSynchronizer implements ViewPager.OnPageChangeListener {
 
         public int mTriggerMode = MODE_SCROLL;
@@ -385,6 +388,9 @@ public class BottomToolBar extends FrameLayout {
 
         public void bindViewPager(ViewPager pager) {
             if (pager != null) {
+                // if pager and this ToolBar have different number of children, return.
+                if (pager.getChildCount() != mItemCount) return;
+
                 // if there is already one pager bound, unbind it.
                 if (isPagerBound())
                     unbindViewPager();
@@ -429,10 +435,7 @@ public class BottomToolBar extends FrameLayout {
             mAnimator.start(mCurrentPosition, position);
             if (isPagerBound())
                 pagerWeakReference.get().setCurrentItem(position);
-
-
         }
-
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
