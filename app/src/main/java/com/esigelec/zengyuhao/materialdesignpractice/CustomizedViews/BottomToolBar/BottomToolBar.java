@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
- * Created by root on 13/06/16.
  */
 public class BottomToolBar extends FrameLayout {
     /* layout orientation */
@@ -127,11 +126,21 @@ public class BottomToolBar extends FrameLayout {
 
     }
 
+    /**
+     * Each item of this toolbar has two states: OnFocus and NoFocus, when an item was selected, its state is
+     * OnFocus vice versa. The widths of two states are based on two weights defined here.
+     * @param weightFocus weight for the selected item
+     * @param weightNoFocus weight for non-selected items
+     */
     public void setWeights(int weightFocus, int weightNoFocus) {
         this.mWeightFocus = weightFocus > 0 ? weightFocus : 1;
         this.mWeightNoFocus = weightNoFocus > 0 ? weightNoFocus : 1;
     }
 
+    /**
+     * After doing layout animations, there may be errors of widths, use this method can fix it.
+     * @param positionFocus To indicate which items was selected.
+     */
     public void correctWeight(int positionFocus) {
         for (int i = 0; i < mItemCount; i++) {
             if (i == positionFocus)
@@ -141,6 +150,10 @@ public class BottomToolBar extends FrameLayout {
         }
     }
 
+    /**
+     * To set an adapter for creating views of items, defining default actions, getting information etc.
+     * @param adapter the adapter to be set.
+     */
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
         mAdapter = adapter;
         isAdapterNewlySet = true;
@@ -213,6 +226,11 @@ public class BottomToolBar extends FrameLayout {
         }
     }
 
+    /**
+     * Refresh layout changes, in some way, it's equivalent to requestLayout(), because onMeasure() method isn't
+     * overridden, so an measure for items before requestLayout() is required. And this method is necessary after each
+     * layout animation or layout change.
+     */
     public void requestViewHoldersLayout() {
         onViewHoldersMeasure();
         requestLayout();
