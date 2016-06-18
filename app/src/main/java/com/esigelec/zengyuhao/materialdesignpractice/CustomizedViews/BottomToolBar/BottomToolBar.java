@@ -281,9 +281,14 @@ public class BottomToolBar extends FrameLayout {
         }
     }
 
+    /**
+     * Bind a listener to handle click event for each item.
+     * @param listener
+     */
     public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mOnItemClickListener = listener;
+        if (listener == null)  return;
 
+        this.mOnItemClickListener = listener;
         // register listener for each holder
         for (int i = 0; i < mItemCount; i++) {
             registerOnItemClickListener(mHolderList[i], i);
