@@ -385,7 +385,7 @@ public class BottomToolBar extends FrameLayout {
     }
 
     /**
-     * Helper class for synchronizer the scrolling of the ViewPager bound and items of this toolbar
+     * Helper class for synchronizer the scrolling of the ViewPager bound and items of this toolbar.
      */
     private class FocusChangeSynchronizer implements ViewPager.OnPageChangeListener {
 
@@ -403,7 +403,7 @@ public class BottomToolBar extends FrameLayout {
         }
 
         /**
-         * @return true if there is already a pager bound to the synchronizer
+         * @return true if there is already a pager bound to the synchronizer.
          */
         public boolean isPagerBound() {
             return (pagerWeakReference != null && pagerWeakReference.get() != null);
@@ -434,7 +434,7 @@ public class BottomToolBar extends FrameLayout {
         }
 
         /**
-         * Redefine a new scroller to the bound ViewPager to have an unified interpreter and animation/scrolling
+         * Redefine a new scroller to the bound ViewPager to have an unified interpolator and animation/scrolling
          * duration.
          * @param pager
          */
@@ -543,6 +543,9 @@ public class BottomToolBar extends FrameLayout {
         }
     }
 
+    /**
+     * New custom scroller with a given scroll duration, and can accept an indicated interpolator.
+     */
     private class ViewPagerScroller extends Scroller {
         public ViewPagerScroller(Context context) {
             super(context);
