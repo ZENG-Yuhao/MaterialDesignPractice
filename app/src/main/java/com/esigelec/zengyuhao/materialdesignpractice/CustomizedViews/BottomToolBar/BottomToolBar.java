@@ -425,12 +425,19 @@ public class BottomToolBar extends FrameLayout {
             }
         }
 
+        /**
+         * Unbind the ViewPager that is currently bound.
+         */
         public void unbindViewPager() {
             if (isPagerBound())
                 pagerWeakReference.get().removeOnPageChangeListener(this);
         }
 
-
+        /**
+         * Redefine a new scroller to the bound ViewPager to have an unified interpreter and animation/scrolling
+         * duration.
+         * @param pager
+         */
         public void bindScrollerToViewPager(ViewPager pager) {
             try {
                 Field mScroller = ViewPager.class.getDeclaredField("mScroller");
