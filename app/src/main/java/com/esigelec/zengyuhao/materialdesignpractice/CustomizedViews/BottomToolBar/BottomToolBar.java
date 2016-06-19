@@ -352,7 +352,6 @@ public class BottomToolBar extends FrameLayout {
         }
     }
 
-
     public static abstract class Adapter<VH extends ViewHolder> {
 
         protected VH createViewHolder(ViewGroup parent) {
