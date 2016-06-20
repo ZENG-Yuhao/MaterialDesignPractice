@@ -65,10 +65,8 @@ public class BottomToolBarActivity extends FragmentActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-        viewPager.addOnPageChangeListener(new MyPageChangedListener());
-
-
         toolBar.bindViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new MyPageChangedListener());
     }
 
     public class MyAdapter extends SideToolbar.Adapter<MyAdapter.MyHolder> {
@@ -92,7 +90,7 @@ public class BottomToolBarActivity extends FragmentActivity {
         public void onBindViewHolder(MyHolder holder, int position) {
             holder.img.setImageResource(IMG_SRC[position]);
             holder.txt.setText(TITLE_STR[position]);
-            holder.view.setElevation(position * 8);
+            //holder.view.setElevation(position * 8);
             holder.view.setBackgroundColor(getResources().getColor(BACKGROUND_COLOR[position]));
         }
 

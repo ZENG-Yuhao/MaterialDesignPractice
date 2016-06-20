@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -15,6 +16,8 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Scroller;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -30,6 +33,7 @@ public class SideToolbar extends FrameLayout {
 
     /* shadow */
     private ImageView mShadowView;
+    private boolean isShadowLayoutChanged = true;
 
     /* Holder and adapter */
     private Adapter mAdapter;
@@ -43,8 +47,9 @@ public class SideToolbar extends FrameLayout {
      * and padding problems.
      */
     private boolean isAdapterNewlySet = true;
+    private boolean isItemLayoutChanged = true;
 
-    /* default weight */
+    /* item on focus & lost focus */
     private int mWeightFocus = 21000;
     private int mWeightNoFocus = 10000;
 
@@ -68,8 +73,8 @@ public class SideToolbar extends FrameLayout {
     public static final int ZONE_LEFT = 0; // middle point of screen located at left side of current page
     public static final int ZONE_RIGHT = 1; // middle point of screen located at right side of current page
     // event state
-    public static final int MODE_CLICK = 0;
-    public static final int MODE_SCROLL = 1;
+    public static final int MODE_ITEM_CLICK = 0;
+    public static final int MODE_TOUCH_SCROLL = 1;
     private FocusChangeSynchronizer mSynchronizer = new FocusChangeSynchronizer();
 
     /* ViewPagerScroller */
@@ -96,7 +101,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     public void init() {
-
+        initShadow();
     }
 
     /**
@@ -133,7 +138,8 @@ public class SideToolbar extends FrameLayout {
     /**
      * Each item of this toolbar has two states: OnFocus and NoFocus, when an item was selected, its state is
      * OnFocus vice versa. The widths of two states are based on two weights defined here.
-     * @param weightFocus weight for the selected item
+     *
+     * @param weightFocus   weight for the selected item
      * @param weightNoFocus weight for non-selected items
      */
     public void setWeights(int weightFocus, int weightNoFocus) {
@@ -143,6 +149,7 @@ public class SideToolbar extends FrameLayout {
 
     /**
      * After doing layout animations, there may be errors of widths, use this method can fix it.
+     *
      * @param positionFocus To indicate which items was selected.
      */
     public void correctWeight(int positionFocus) {
@@ -154,8 +161,31 @@ public class SideToolbar extends FrameLayout {
         }
     }
 
+
+    protected void initShadow() {
+        mShadowView = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.side_toolbar_shadow, this, false);
+        super.addView(mShadowView);
+    }
+
+    protected void measureShadow() {
+        View initialView = mHolderList[0].itemView;
+        mShadowView.setLeft(initialView.getLeft());
+        mShadowView.setTop(initialView.getTop());
+        mShadowView.setRight(initialView.getRight());
+        mShadowView.setBottom(initialView.getBottom());
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(initialView.getWidth(), initialView.getHeight());
+        //lp.width = initialView.getWidth();
+        //lp.height = initialView.getHeight();
+        mShadowView.setLayoutParams(lp);
+        Log.i("haha", "measureShadow----->" + initialView.getWidth() + " " + initialView.getHeight() + " " + lp.width + " " +
+                "" + lp.height);
+        Log.i("haha", "measureShadow----->" + mShadowView.getLeft() + " " + mShadowView.getTop() + " " + mShadowView
+                .getRight() + " " + mShadowView.getBottom());
+    }
+
     /**
      * To set an adapter for creating views of items, defining default actions, getting information etc.
+     *
      * @param adapter the adapter to be set.
      */
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
@@ -183,6 +213,8 @@ public class SideToolbar extends FrameLayout {
         if (getChildCount() > 0)
             super.removeAllViews();
         initLayout();
+
+
     }
 
     /**
@@ -195,25 +227,25 @@ public class SideToolbar extends FrameLayout {
         for (int i = 0; i < mItemCount; i++) {
             super.addView(mHolderList[i].itemView);
         }
-
         int height = getHeight();
         int width = getWidth();
 
         if (height != 0 && width != 0) {
             //initTabs(height, width);
-            requestViewHoldersLayout();
+            requestGlobalLayout();
+            measureShadow();
+
         } else {
-            /*
-                if height and width get 0 before the first load of the layout, register listener to obtain height and
-                width when onLayout() finished.
-             */
+            // if height and width get 0 before the first load of the layout, register listener to obtain height and
+            // width when onLayout() finished.
             final ViewTreeObserver observer = this.getViewTreeObserver();
             if (observer != null) {
                 observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         //initTabs(getHeight(), getWidth());
-                        requestViewHoldersLayout();
+                        requestGlobalLayout();
+                        measureShadow();
 
                         // once height and width got, unregister the listener
                         ViewTreeObserver observerLocal = getViewTreeObserver();
@@ -231,30 +263,21 @@ public class SideToolbar extends FrameLayout {
     }
 
     /**
-     * Refresh layout changes, in some way, it's equivalent to requestLayout(), because onMeasure() method isn't
-     * overridden, so an measure for items before requestLayout() is required. And this method is necessary after each
-     * layout animation or layout change.
-     */
-    public void requestViewHoldersLayout() {
-        onViewHoldersMeasure();
-        requestLayout();
-    }
-
-    /**
      * Measurement for each ViewHolder, make sure getWidth() and getHeight() are nonzero before invoking this method.
      * These measures must be done outside onMeasure() method and before requestLayout() or requestViewHolderLayout().
      */
     protected void onViewHoldersMeasure() {
-        if (getWidth() == 0 || getHeight() == 0) return;
+        if (!isItemLayoutChanged) return;
+
         int width, height;
         ViewGroup.LayoutParams lp;
         for (int i = 0; i < mItemCount; i++) {
-            if (getOrientation() == HORIZONTAL) {
-                height = getHeight();
-                width = (int) Math.ceil((float) getWidth() * mHolderList[i].weight / mWeightCount);
+            if (mOrientation == HORIZONTAL) {
+                height = getMeasuredHeight();
+                width = integerize((double) getMeasuredWidth() * mHolderList[i].weight / mWeightCount);
             } else {
-                height = (int) Math.ceil((float) getHeight() * mHolderList[i].weight / mWeightCount);
-                width = getWidth();
+                height = integerize((double) getMeasuredHeight() * mHolderList[i].weight / mWeightCount);
+                width = getMeasuredWidth();
             }
 
             if (isAdapterNewlySet) {
@@ -266,31 +289,75 @@ public class SideToolbar extends FrameLayout {
                 lp.width = width;
                 lp.height = height;
             }
-        }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        ViewGroup.LayoutParams lp;
-        int left = 0, top = 0;
-        for (int i = 0; i < mItemCount; i++) {
-            lp = mHolderList[i].itemView.getLayoutParams();
-            if (getOrientation() == HORIZONTAL) {
-                mHolderList[i].itemView.layout(left, 0, left + lp.width, lp.height);
-                left += lp.width;
-            } else {
-                mHolderList[i].itemView.layout(0, top, lp.width, top + lp.height);
-                top += lp.height;
-            }
+            Log.i("haha", "onViewHoldersMeasure--->" + lp.width + " " + lp.height);
         }
     }
 
     /**
+     * Method to maintain unified integralization
+     *
+     * @param value the value to be integerized.
+     * @return the value being integerized.
+     */
+    private int integerize(double value) {
+        return (int) Math.ceil(value);
+    }
+
+    protected void onViewHolderLayout() {
+        if (!isItemLayoutChanged) return;
+
+        ViewGroup.LayoutParams lp;
+        int left = 0, top = 0;
+        for (int i = 0; i < mItemCount; i++) {
+            lp = mHolderList[i].itemView.getLayoutParams();
+            if (mOrientation == HORIZONTAL) {
+                mHolderList[i].itemView.layout(left, 0, left + lp.width, lp.height);
+                left += lp.width;
+            } else if (mOrientation == VERTICAL) {
+                mHolderList[i].itemView.layout(0, top, lp.width, top + lp.height);
+                top += lp.height;
+            }
+        }
+
+
+    }
+
+    protected void onShadowLayout() {
+        if (!isShadowLayoutChanged) return;
+
+        int left = mShadowView.getLeft();
+        int top = mShadowView.getTop();
+        int right = left + mShadowView.getWidth();
+        int bottom = top + mShadowView.getHeight();
+        Log.i("haha", "onShadowLayout----->" + left + " " + top + " " + right + " " + bottom);
+        mShadowView.layout(left, top, right, bottom);
+    }
+
+
+    /**
+     * Refresh layout changes, in some way, it's equivalent to requestLayout(), because onMeasure() method isn't
+     * overridden, so an measure for items before requestLayout() is required. And this method is necessary after each
+     * layout animation or layout change.
+     */
+    public void requestGlobalLayout() {
+        onViewHoldersMeasure();
+        requestLayout();
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        //super.onLayout(changed, l, t, r, b);
+        onViewHolderLayout();
+        onShadowLayout();
+    }
+
+    /**
      * Bind a listener to handle click event for each item.
+     *
      * @param listener
      */
     public void setOnItemClickListener(OnItemClickListener listener) {
-        if (listener == null)  return;
+        if (listener == null) return;
 
         this.mOnItemClickListener = listener;
         // register listener for each holder
@@ -316,7 +383,7 @@ public class SideToolbar extends FrameLayout {
     public void setCurrentItem(int position) {
         mCurrentPosition = position;
         correctWeight(mCurrentPosition);
-        requestViewHoldersLayout();
+        requestGlobalLayout();
     }
 
     public int getOrientation() {
@@ -392,17 +459,17 @@ public class SideToolbar extends FrameLayout {
      */
     private class FocusChangeSynchronizer implements ViewPager.OnPageChangeListener {
 
-        public int mTriggerMode = MODE_SCROLL;
+        public int mTriggerMode = MODE_TOUCH_SCROLL;
 
         public WeakReference<ViewPager> pagerWeakReference;
-        public ItemChangedAnimator mAnimator;
+        public FocusChangedAnimator mItemAnimator;
         public Interpolator mInterpolator;
 
 
         public FocusChangeSynchronizer() {
             mInterpolator = new DecelerateInterpolator();
-            mAnimator = new ItemChangedAnimator();
-            mAnimator.setInterpolator(mInterpolator);
+            mItemAnimator = new FocusChangedAnimator();
+            mItemAnimator.setInterpolator(mInterpolator);
         }
 
         /**
@@ -414,8 +481,6 @@ public class SideToolbar extends FrameLayout {
 
         public void bindViewPager(ViewPager pager) {
             if (pager != null) {
-                // if pager and this ToolBar have different number of children, return.
-                if (pager.getChildCount() != mItemCount) return;
 
                 // if there is already one pager bound, unbind it.
                 if (isPagerBound())
@@ -439,6 +504,7 @@ public class SideToolbar extends FrameLayout {
         /**
          * Redefine a new scroller to the bound ViewPager to have an unified interpolator and animation/scrolling
          * duration.
+         *
          * @param pager
          */
         public void bindScrollerToViewPager(ViewPager pager) {
@@ -454,55 +520,83 @@ public class SideToolbar extends FrameLayout {
         }
 
         public void onClick(int position) {
-            mTriggerMode = MODE_CLICK;
+            mTriggerMode = MODE_ITEM_CLICK;
             onItemSelected(position);
         }
 
         public void onItemSelected(int position) {
-            if (mAnimator.isRunning()) {
-                mAnimator.cancel();
+            if (mItemAnimator.isRunning()) {
+                mItemAnimator.cancel();
             }
             // Canceling animation must be executed before return
             if (mCurrentPosition == position) return;
 
-            mAnimator.start(mCurrentPosition, position);
+            mItemAnimator.start(mCurrentPosition, position);
             if (isPagerBound())
                 pagerWeakReference.get().setCurrentItem(position);
         }
 
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            /*
-                Distribution of positionOffset relative to middle point of screen (MP) is like:
-                [0, 0.999) - MP - [0, 0.999)
-             */
+        public void moveShadow(int position, float positionOffset) {
+//            int targetPos = (position == mCurrentPosition) ? position + 1 : position;
+//            View targetItem = mHolderList[targetPos].itemView;
+//            if (mOrientation == HORIZONTAL) {
+//                int left = targetItem.getLeft() + integerize(positionOffset * targetItem.getWidth());
+//                mShadowView.setTop(0);
+//                mShadowView.setRight(mShadowView.getLeft() + mShadowView.getWidth());
+//                mShadowView.setBottom(mShadowView.getTop() + mShadowView.getHeight());
+//                Log.i("haha", "moveShadow----->" + mShadowView.getLeft() + " " + mShadowView.getTop() + " " + mShadowView.getRight
+//                        () + " " + mShadowView.getBottom() + " " + mShadowView.getWidth() + " " + mShadowView.getHeight());
+//                requestGlobalLayout();
+//                mShadowView.setLeft(left);
+//            } else if (mOrientation == VERTICAL) {
+//                int top = targetItem.getTop() + integerize(positionOffset * targetItem.getHeight());
+//                mShadowView.setTop(top);
+//            }
+
+
         }
 
-        /* This method will be invoked when ViewPager.setCurrentItem() or after onPageScrollStateChanged() with
-           a state that equals 2 (SCROLL_STATE_SETTING)
-         */
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            // when page is scrolled by touch event, make shadow follow the scrolling
+            if (mTriggerMode == MODE_TOUCH_SCROLL) {
+                moveShadow(position, positionOffset);
+            }
+        }
+
+        // This method will be invoked when ViewPager.setCurrentItem() or after onPageScrollStateChanged() with
+        // a state that equals 2 (SCROLL_STATE_SETTING)
+
         @Override
         public void onPageSelected(int position) {
-            if (mTriggerMode == MODE_SCROLL)
+            // add mode filter to avoid cycle call of onItemSelected(), if scrolling is triggered by clicking
+            // this method has already been invoked.
+
+            if (mTriggerMode == MODE_TOUCH_SCROLL)
                 onItemSelected(position);
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
             if (state == SCROLL_STATE_DRAGGING)
-                mTriggerMode = MODE_SCROLL;
+                mTriggerMode = MODE_TOUCH_SCROLL;
         }
 
     }
 
-    private class ItemChangedAnimator extends ValueAnimator implements Animator.AnimatorListener, ValueAnimator
+    private class FocusChangedAnimator extends ValueAnimator implements Animator.AnimatorListener, ValueAnimator
             .AnimatorUpdateListener {
         // create local variables to avoid conflict with the global variables
         public int currentPosition;
         public int targetPosition;
 
-        public ItemChangedAnimator() {
-            setIntValues(0, mWeightFocus - mWeightNoFocus);
+        // for shadowAnimation
+        public int startPoint;
+        public int targetPoint;
+        public int distance;
+
+        public FocusChangedAnimator() {
+            // common initialization
             addListener(this);
             addUpdateListener(this);
             setDuration(pagerScrollDuration);
@@ -512,7 +606,27 @@ public class SideToolbar extends FrameLayout {
             if (currentPosition == targetPosition) return;
             this.currentPosition = currentPosition;
             this.targetPosition = targetPosition;
+            initItemAnimation();
+            initShadowAnimation();
             this.start();
+        }
+
+        public void initItemAnimation() {
+            setIntValues(0, mWeightFocus - mWeightNoFocus);
+        }
+
+        public void initShadowAnimation() {
+            int nbItemsBeforeTarget = targetPosition;
+            if (mOrientation == HORIZONTAL) {
+                startPoint = mShadowView.getLeft();
+                int widthNoFocus = integerize((double) getWidth() * mWeightNoFocus / mWeightCount);
+                targetPoint = nbItemsBeforeTarget * widthNoFocus;
+            } else if (mOrientation == VERTICAL) {
+                startPoint = mShadowView.getTop();
+                int heightNoFocus = integerize((double) getHeight() * mWeightNoFocus / mWeightCount);
+                targetPoint = nbItemsBeforeTarget * heightNoFocus;
+            }
+            distance = targetPoint - startPoint;
         }
 
         @Override
@@ -538,11 +652,31 @@ public class SideToolbar extends FrameLayout {
 
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
+            // animate items' layouts
             int delta = (int) animation.getAnimatedValue();
+            onItemAnimation(delta);
+
+            // animate shadow
+            float fraction = animation.getAnimatedFraction();
+            onShadowAnimation(fraction);
+
+            Log.i("haha", "-------> onAnimate:" + delta + "   " + currentPosition + "    " + targetPosition + " " +
+                    "Fraction" + fraction);
+            requestGlobalLayout();
+        }
+
+        public void onItemAnimation(int delta) {
             mHolderList[currentPosition].weight = mWeightFocus - delta;
             mHolderList[targetPosition].weight = mWeightNoFocus + delta;
-            Log.i("haha", "-------> onAnimate:" + delta + "   " + currentPosition + "    " + targetPosition);
-            requestViewHoldersLayout();
+        }
+
+        public void onShadowAnimation(float fraction) {
+            int delta = integerize(fraction * distance);
+            if (mOrientation == HORIZONTAL) {
+                mShadowView.setLeft(startPoint + delta);
+            } else if (mOrientation == VERTICAL) {
+                mShadowView.setTop(startPoint + delta);
+            }
         }
     }
 
