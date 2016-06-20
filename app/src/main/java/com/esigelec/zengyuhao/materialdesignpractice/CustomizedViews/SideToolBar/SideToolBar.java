@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
  */
-public class BottomToolBar extends FrameLayout {
+public class SideToolBar extends FrameLayout {
     /* layout orientation */
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
@@ -71,22 +71,22 @@ public class BottomToolBar extends FrameLayout {
     /* ViewPagerScroller */
     public static final int pagerScrollDuration = 150;
 
-    public BottomToolBar(Context context) {
+    public SideToolBar(Context context) {
         super(context);
         init();
     }
 
-    public BottomToolBar(Context context, AttributeSet attrs) {
+    public SideToolBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BottomToolBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SideToolBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public BottomToolBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SideToolBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }

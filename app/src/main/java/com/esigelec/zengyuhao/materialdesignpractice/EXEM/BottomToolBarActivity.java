@@ -1,31 +1,21 @@
 package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityManager;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.BottomToolBar.BottomToolBar;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolBar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
-
-import org.w3c.dom.Text;
 
 public class BottomToolBarActivity extends FragmentActivity {
     private static final int[] IMG_SRC = {
@@ -63,9 +53,9 @@ public class BottomToolBarActivity extends FragmentActivity {
 
 
         // init BottomToolBar
-        BottomToolBar toolBar = (BottomToolBar) findViewById(R.id.bottom_toolbar);
+        SideToolBar toolBar = (SideToolBar) findViewById(R.id.bottom_toolbar);
         toolBar.setAdapter(new MyAdapter());
-        toolBar.setOnItemClickListener(new BottomToolBar.OnItemClickListener() {
+        toolBar.setOnItemClickListener(new SideToolBar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
             }
@@ -81,7 +71,7 @@ public class BottomToolBarActivity extends FragmentActivity {
         toolBar.bindViewPager(viewPager);
     }
 
-    public class MyAdapter extends BottomToolBar.Adapter<MyAdapter.MyHolder> {
+    public class MyAdapter extends SideToolBar.Adapter<MyAdapter.MyHolder> {
 
         @Override
         public int getItemCount() {
@@ -106,7 +96,7 @@ public class BottomToolBarActivity extends FragmentActivity {
             holder.view.setBackgroundColor(getResources().getColor(BACKGROUND_COLOR[position]));
         }
 
-        public class MyHolder extends BottomToolBar.ViewHolder {
+        public class MyHolder extends SideToolBar.ViewHolder {
             public View view;
             public ImageView img;
             public TextView txt;
