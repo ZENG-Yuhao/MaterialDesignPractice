@@ -15,7 +15,7 @@
         android:layout_height="0dp"
         android:layout_weight="8"/>
 
-    <com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolBar
+    <com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolbar
         android:id="@+id/bottom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"

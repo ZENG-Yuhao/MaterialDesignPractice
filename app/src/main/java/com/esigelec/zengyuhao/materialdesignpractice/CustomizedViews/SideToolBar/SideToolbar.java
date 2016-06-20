@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Scroller;
 
 import java.lang.ref.WeakReference;
@@ -21,11 +22,14 @@ import java.lang.reflect.Field;
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
  */
-public class SideToolBar extends FrameLayout {
+public class SideToolbar extends FrameLayout {
     /* layout orientation */
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
     private int mOrientation = HORIZONTAL;
+
+    /* shadow */
+    private ImageView mShadowView;
 
     /* Holder and adapter */
     private Adapter mAdapter;
@@ -71,22 +75,22 @@ public class SideToolBar extends FrameLayout {
     /* ViewPagerScroller */
     public static final int pagerScrollDuration = 150;
 
-    public SideToolBar(Context context) {
+    public SideToolbar(Context context) {
         super(context);
         init();
     }
 
-    public SideToolBar(Context context, AttributeSet attrs) {
+    public SideToolbar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public SideToolBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SideToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public SideToolBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SideToolbar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }

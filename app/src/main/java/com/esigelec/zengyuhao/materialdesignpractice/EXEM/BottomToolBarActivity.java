@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolBar;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolbar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class BottomToolBarActivity extends FragmentActivity {
@@ -53,9 +53,9 @@ public class BottomToolBarActivity extends FragmentActivity {
 
 
         // init BottomToolBar
-        SideToolBar toolBar = (SideToolBar) findViewById(R.id.bottom_toolbar);
+        SideToolbar toolBar = (SideToolbar) findViewById(R.id.bottom_toolbar);
         toolBar.setAdapter(new MyAdapter());
-        toolBar.setOnItemClickListener(new SideToolBar.OnItemClickListener() {
+        toolBar.setOnItemClickListener(new SideToolbar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
             }
@@ -71,7 +71,7 @@ public class BottomToolBarActivity extends FragmentActivity {
         toolBar.bindViewPager(viewPager);
     }
 
-    public class MyAdapter extends SideToolBar.Adapter<MyAdapter.MyHolder> {
+    public class MyAdapter extends SideToolbar.Adapter<MyAdapter.MyHolder> {
 
         @Override
         public int getItemCount() {
@@ -96,7 +96,7 @@ public class BottomToolBarActivity extends FragmentActivity {
             holder.view.setBackgroundColor(getResources().getColor(BACKGROUND_COLOR[position]));
         }
 
-        public class MyHolder extends SideToolBar.ViewHolder {
+        public class MyHolder extends SideToolbar.ViewHolder {
             public View view;
             public ImageView img;
             public TextView txt;
