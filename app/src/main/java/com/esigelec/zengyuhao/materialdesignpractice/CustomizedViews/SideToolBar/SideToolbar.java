@@ -491,6 +491,7 @@ public class SideToolbar extends FrameLayout {
 
         public int mTriggerMode = MODE_TOUCH_SCROLL;
         public int mScrollState = SCROLL_STATE_IDLE;
+        public boolean shadowAnimationNotRunning = true;
 
         public WeakReference<ViewPager> pagerWeakReference;
         public FocusChangedAnimator mItemAnimator;
@@ -580,7 +581,8 @@ public class SideToolbar extends FrameLayout {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             // when page is scrolled by touch event, make shadow follow the scrolling
-            if (mTriggerMode == MODE_TOUCH_SCROLL && mScrollState == SCROLL_STATE_DRAGGING) {
+            if (mTriggerMode == MODE_TOUCH_SCROLL && !mItemAnimator.isRunning()) {
+                Log.i("haha", "----->onPage-scroll");
                 moveShadow(position, positionOffset);
             }
         }
@@ -694,6 +696,7 @@ public class SideToolbar extends FrameLayout {
         }
 
         public void onShadowAnimation(float fraction) {
+            Log.i("haha", "----->onPage-animation");
             int delta = integerize(fraction * distance);
             if (mOrientation == HORIZONTAL) {
                 mShadowOffsetLeft = startPoint + delta;
