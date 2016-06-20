@@ -26,6 +26,9 @@ import java.lang.reflect.Field;
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
  */
 public class SideToolbar extends FrameLayout {
+    private int mWidth;
+    private int mHeight;
+
     /* layout orientation */
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
@@ -33,6 +36,10 @@ public class SideToolbar extends FrameLayout {
 
     /* shadow */
     private ImageView mShadowView;
+    private int mShadowOffsetLeft;
+    private int mShadowOffsetTop;
+    private int mShadowWidth;
+    private int mShadowHeight;
     private boolean isShadowLayoutChanged = true;
 
     /* Holder and adapter */
@@ -52,6 +59,8 @@ public class SideToolbar extends FrameLayout {
     /* item on focus & lost focus */
     private int mWeightFocus = 21000;
     private int mWeightNoFocus = 10000;
+    private int widthNoFocus;
+    private int heightNoFocus;
 
     /* Synchronizer */
     /**
@@ -69,9 +78,8 @@ public class SideToolbar extends FrameLayout {
      * Indicates that the pager is in the process of settling to a final position.
      */
     public static final int SCROLL_STATE_SETTLING = 2;
-    // zone state
-    public static final int ZONE_LEFT = 0; // middle point of screen located at left side of current page
-    public static final int ZONE_RIGHT = 1; // middle point of screen located at right side of current page
+
+
     // event state
     public static final int MODE_ITEM_CLICK = 0;
     public static final int MODE_TOUCH_SCROLL = 1;
@@ -101,7 +109,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     public void init() {
-        initShadow();
+        Log.i("HAHA", "------>init");
     }
 
     /**
@@ -162,33 +170,47 @@ public class SideToolbar extends FrameLayout {
     }
 
 
-    protected void initShadow() {
+    protected void inflateShadow() {
+        Log.i("HAHA", "------>inflateShadow");
         mShadowView = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.side_toolbar_shadow, this, false);
-        super.addView(mShadowView);
     }
 
-    protected void measureShadow() {
-        View initialView = mHolderList[0].itemView;
-        mShadowView.setLeft(initialView.getLeft());
-        mShadowView.setTop(initialView.getTop());
-        mShadowView.setRight(initialView.getRight());
-        mShadowView.setBottom(initialView.getBottom());
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(initialView.getWidth(), initialView.getHeight());
-        //lp.width = initialView.getWidth();
-        //lp.height = initialView.getHeight();
-        mShadowView.setLayoutParams(lp);
-        Log.i("haha", "measureShadow----->" + initialView.getWidth() + " " + initialView.getHeight() + " " + lp.width + " " +
-                "" + lp.height);
-        Log.i("haha", "measureShadow----->" + mShadowView.getLeft() + " " + mShadowView.getTop() + " " + mShadowView
-                .getRight() + " " + mShadowView.getBottom());
+    protected void initShadowSize() {
+        Log.i("HAHA", "------>initShadowSize" + getMeasuredWidth() + " " + getMeasuredHeight() + " " + getWidth() + " " +
+                "" + getHeight());
+
+        int width, height;
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mHolderList[mCurrentPosition].itemView.getLayoutParams();
+        if (mOrientation == HORIZONTAL) {
+            width = lp.width;
+            height = integerize(0.05 * lp.height);
+            mShadowOffsetLeft = mCurrentPosition * integerize((double) mWidth * mWeightNoFocus /
+                    mWeightCount);
+            mShadowOffsetTop = 0;
+        } else {
+            width = integerize(0.05 * lp.width);
+            height = lp.height;
+            mShadowOffsetLeft = 0;
+            mShadowOffsetTop = mCurrentPosition * integerize((double) mHeight * mWeightNoFocus /
+                    mWeightCount);
+        }
+        Log.i("HAHA", "------>initShadowSize shadow" + mShadowView.getWidth() + " " + mShadowView.getHeight() + " " +
+                "" + mShadowView.getMeasuredWidth() + " " + mShadowView.getMeasuredHeight());
+        mShadowWidth = width;
+        mShadowHeight = height;
+        FrameLayout.LayoutParams lp_shadow = new FrameLayout.LayoutParams(width, height);
+        mShadowView.setLayoutParams(lp_shadow);
+        //requestLayout();
     }
 
     /**
      * To set an adapter for creating views of items, defining default actions, getting information etc.
+     * Most of initializations start form here.
      *
      * @param adapter the adapter to be set.
      */
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
+        Log.i("HAHA", "------>setAdapter");
         mAdapter = adapter;
         isAdapterNewlySet = true;
 
@@ -214,7 +236,6 @@ public class SideToolbar extends FrameLayout {
             super.removeAllViews();
         initLayout();
 
-
     }
 
     /**
@@ -222,75 +243,82 @@ public class SideToolbar extends FrameLayout {
      */
     // TODO: 2016/6/15 add OnGlobalLayoutListener to surveille incoming layout changes, and then adjust child-views size
     protected void initLayout() {
-
+        Log.i("HAHA", "------>initLayout");
         // add views in mHolderList to the layout
         for (int i = 0; i < mItemCount; i++) {
             super.addView(mHolderList[i].itemView);
         }
-        int height = getHeight();
-        int width = getWidth();
+        // add shadow
+        inflateShadow();
+        super.addView(mShadowView);
 
-        if (height != 0 && width != 0) {
-            //initTabs(height, width);
-            requestGlobalLayout();
-            measureShadow();
+        // if height and width get 0 before the first load of the layout, register listener to obtain height and
+        // width when onLayout() finished.
+        final ViewTreeObserver observer = this.getViewTreeObserver();
+        if (observer != null) {
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mWidth = getWidth();
+                    mHeight = getHeight();
+                    widthNoFocus = integerize((double) mWidth * mWeightNoFocus / mWeightCount);
+                    heightNoFocus = integerize((double) mHeight * mWeightNoFocus / mWeightCount);
 
-        } else {
-            // if height and width get 0 before the first load of the layout, register listener to obtain height and
-            // width when onLayout() finished.
-            final ViewTreeObserver observer = this.getViewTreeObserver();
-            if (observer != null) {
-                observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        //initTabs(getHeight(), getWidth());
-                        requestGlobalLayout();
-                        measureShadow();
+                    requestGlobalLayout();
+                    initShadowSize();
 
-                        // once height and width got, unregister the listener
-                        ViewTreeObserver observerLocal = getViewTreeObserver();
-                        if (null != observerLocal) {
-                            // removeOnGlobalLayoutListener() is only supported by SDK later than JELLY_BEAN
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-                                observerLocal.removeGlobalOnLayoutListener(this);
-                            else
-                                observerLocal.removeOnGlobalLayoutListener(this);
-                        }
+                    // once height and width got, unregister the listener
+                    ViewTreeObserver observerLocal = getViewTreeObserver();
+                    if (null != observerLocal) {
+                        // removeOnGlobalLayoutListener() is only supported by SDK later than JELLY_BEAN
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+                            observerLocal.removeGlobalOnLayoutListener(this);
+                        else
+                            observerLocal.removeOnGlobalLayoutListener(this);
                     }
-                });
-            }
+                }
+            });
         }
+
     }
+//
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        mWidth = MeasureSpec.getSize(widthMeasureSpec);
+//        mHeight = MeasureSpec.getSize(heightMeasureSpec);
+//        Log.i("onMeasure", "---->" + mWidth + " " + mHeight);
+//        Log.i("onMeasure", "---->" + getWidth() + " " + getHeight());
+//    }
 
     /**
      * Measurement for each ViewHolder, make sure getWidth() and getHeight() are nonzero before invoking this method.
      * These measures must be done outside onMeasure() method and before requestLayout() or requestViewHolderLayout().
      */
     protected void onViewHoldersMeasure() {
+        Log.i("HAHA", "------>onViewHoldersMeasure");
         if (!isItemLayoutChanged) return;
 
         int width, height;
         ViewGroup.LayoutParams lp;
         for (int i = 0; i < mItemCount; i++) {
             if (mOrientation == HORIZONTAL) {
-                height = getMeasuredHeight();
-                width = integerize((double) getMeasuredWidth() * mHolderList[i].weight / mWeightCount);
+                height = mHeight;
+                width = integerize((double) mWidth * mHolderList[i].weight / mWeightCount);
             } else {
-                height = integerize((double) getMeasuredHeight() * mHolderList[i].weight / mWeightCount);
-                width = getMeasuredWidth();
+                height = integerize((double) mHeight * mHolderList[i].weight / mWeightCount);
+                width = mWidth;
             }
-
             if (isAdapterNewlySet) {
                 lp = new FrameLayout.LayoutParams(width, height);
                 mHolderList[i].itemView.setLayoutParams(lp);
-                isAdapterNewlySet = false;
             } else {
                 lp = mHolderList[i].itemView.getLayoutParams();
                 lp.width = width;
                 lp.height = height;
             }
-            Log.i("haha", "onViewHoldersMeasure--->" + lp.width + " " + lp.height);
         }
+        isAdapterNewlySet = false;
     }
 
     /**
@@ -304,6 +332,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     protected void onViewHolderLayout() {
+        Log.i("HAHA", "------>onViewHolderLayout");
         if (!isItemLayoutChanged) return;
 
         ViewGroup.LayoutParams lp;
@@ -323,16 +352,9 @@ public class SideToolbar extends FrameLayout {
     }
 
     protected void onShadowLayout() {
-        if (!isShadowLayoutChanged) return;
-
-        int left = mShadowView.getLeft();
-        int top = mShadowView.getTop();
-        int right = left + mShadowView.getWidth();
-        int bottom = top + mShadowView.getHeight();
-        Log.i("haha", "onShadowLayout----->" + left + " " + top + " " + right + " " + bottom);
-        mShadowView.layout(left, top, right, bottom);
+        Log.i("HAHA", "------>onShadowLayout");
+        mShadowView.layout(mShadowOffsetLeft, mShadowOffsetTop, mShadowOffsetLeft + mShadowWidth, mShadowOffsetTop + mShadowHeight);
     }
-
 
     /**
      * Refresh layout changes, in some way, it's equivalent to requestLayout(), because onMeasure() method isn't
@@ -340,12 +362,14 @@ public class SideToolbar extends FrameLayout {
      * layout animation or layout change.
      */
     public void requestGlobalLayout() {
+        Log.i("HAHA", "------>requestGlobalLayout");
         onViewHoldersMeasure();
         requestLayout();
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        Log.i("HAHA", "------>onLayout");
         //super.onLayout(changed, l, t, r, b);
         onViewHolderLayout();
         onShadowLayout();
@@ -380,7 +404,13 @@ public class SideToolbar extends FrameLayout {
         });
     }
 
+    // TODO: synchronize ViewPager init position
+    public void setStartPosition(int position) {
+        mCurrentPosition = position;
+    }
+
     public void setCurrentItem(int position) {
+        Log.i("HAHA", "------>setCurrentItem");
         mCurrentPosition = position;
         correctWeight(mCurrentPosition);
         requestGlobalLayout();
@@ -460,6 +490,7 @@ public class SideToolbar extends FrameLayout {
     private class FocusChangeSynchronizer implements ViewPager.OnPageChangeListener {
 
         public int mTriggerMode = MODE_TOUCH_SCROLL;
+        public int mScrollState = SCROLL_STATE_IDLE;
 
         public WeakReference<ViewPager> pagerWeakReference;
         public FocusChangedAnimator mItemAnimator;
@@ -537,29 +568,19 @@ public class SideToolbar extends FrameLayout {
         }
 
         public void moveShadow(int position, float positionOffset) {
-//            int targetPos = (position == mCurrentPosition) ? position + 1 : position;
-//            View targetItem = mHolderList[targetPos].itemView;
-//            if (mOrientation == HORIZONTAL) {
-//                int left = targetItem.getLeft() + integerize(positionOffset * targetItem.getWidth());
-//                mShadowView.setTop(0);
-//                mShadowView.setRight(mShadowView.getLeft() + mShadowView.getWidth());
-//                mShadowView.setBottom(mShadowView.getTop() + mShadowView.getHeight());
-//                Log.i("haha", "moveShadow----->" + mShadowView.getLeft() + " " + mShadowView.getTop() + " " + mShadowView.getRight
-//                        () + " " + mShadowView.getBottom() + " " + mShadowView.getWidth() + " " + mShadowView.getHeight());
-//                requestGlobalLayout();
-//                mShadowView.setLeft(left);
-//            } else if (mOrientation == VERTICAL) {
-//                int top = targetItem.getTop() + integerize(positionOffset * targetItem.getHeight());
-//                mShadowView.setTop(top);
-//            }
-
-
+            if (mOrientation == HORIZONTAL) {
+                mShadowOffsetLeft = mHolderList[position].itemView.getLeft() + integerize(widthNoFocus *
+                        positionOffset);
+            } else {
+                mShadowOffsetTop = mHolderList[position].itemView.getTop() + integerize(heightNoFocus * positionOffset);
+            }
+            requestGlobalLayout();
         }
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             // when page is scrolled by touch event, make shadow follow the scrolling
-            if (mTriggerMode == MODE_TOUCH_SCROLL) {
+            if (mTriggerMode == MODE_TOUCH_SCROLL && mScrollState == SCROLL_STATE_DRAGGING) {
                 moveShadow(position, positionOffset);
             }
         }
@@ -578,6 +599,7 @@ public class SideToolbar extends FrameLayout {
 
         @Override
         public void onPageScrollStateChanged(int state) {
+            mScrollState = state;
             if (state == SCROLL_STATE_DRAGGING)
                 mTriggerMode = MODE_TOUCH_SCROLL;
         }
@@ -618,12 +640,10 @@ public class SideToolbar extends FrameLayout {
         public void initShadowAnimation() {
             int nbItemsBeforeTarget = targetPosition;
             if (mOrientation == HORIZONTAL) {
-                startPoint = mShadowView.getLeft();
-                int widthNoFocus = integerize((double) getWidth() * mWeightNoFocus / mWeightCount);
+                startPoint = mShadowOffsetLeft;
                 targetPoint = nbItemsBeforeTarget * widthNoFocus;
             } else if (mOrientation == VERTICAL) {
-                startPoint = mShadowView.getTop();
-                int heightNoFocus = integerize((double) getHeight() * mWeightNoFocus / mWeightCount);
+                startPoint = mShadowOffsetTop;
                 targetPoint = nbItemsBeforeTarget * heightNoFocus;
             }
             distance = targetPoint - startPoint;
@@ -637,6 +657,11 @@ public class SideToolbar extends FrameLayout {
         @Override
         public void onAnimationEnd(Animator animation) {
             setCurrentItem(targetPosition);
+            if (mOrientation == HORIZONTAL) {
+                mShadowOffsetLeft = targetPoint;
+            } else {
+                mShadowOffsetTop = targetPoint;
+            }
         }
 
         @Override
@@ -660,8 +685,6 @@ public class SideToolbar extends FrameLayout {
             float fraction = animation.getAnimatedFraction();
             onShadowAnimation(fraction);
 
-            Log.i("haha", "-------> onAnimate:" + delta + "   " + currentPosition + "    " + targetPosition + " " +
-                    "Fraction" + fraction);
             requestGlobalLayout();
         }
 
@@ -673,9 +696,9 @@ public class SideToolbar extends FrameLayout {
         public void onShadowAnimation(float fraction) {
             int delta = integerize(fraction * distance);
             if (mOrientation == HORIZONTAL) {
-                mShadowView.setLeft(startPoint + delta);
-            } else if (mOrientation == VERTICAL) {
-                mShadowView.setTop(startPoint + delta);
+                mShadowOffsetLeft = startPoint + delta;
+            } else {
+                mShadowOffsetTop = startPoint + delta;
             }
         }
     }

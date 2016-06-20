@@ -66,6 +66,7 @@ public class BottomToolBarActivity extends FragmentActivity {
         pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         toolBar.bindViewPager(viewPager);
+        //toolBar.setCurrentItem(2);
         viewPager.addOnPageChangeListener(new MyPageChangedListener());
     }
 
