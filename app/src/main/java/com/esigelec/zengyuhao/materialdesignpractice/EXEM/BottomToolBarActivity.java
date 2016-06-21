@@ -57,16 +57,12 @@ public class BottomToolBarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bottom_tool_bar);
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        if (myToolbar != null) {
-            ColorDrawable drawable = (ColorDrawable) myToolbar.getBackground();
-            drawable.setAlpha(200);
-        }
         setSupportActionBar(myToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Sidebar");
-
         }
 
+        View view;
 
         // init BottomToolBar
         SideToolbar toolBar = (SideToolbar) findViewById(R.id.bottom_toolbar);
