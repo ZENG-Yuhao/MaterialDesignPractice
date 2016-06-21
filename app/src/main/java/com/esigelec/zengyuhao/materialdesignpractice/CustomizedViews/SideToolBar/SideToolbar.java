@@ -201,6 +201,7 @@ public class SideToolbar extends FrameLayout {
         FrameLayout.LayoutParams lp_shadow = new FrameLayout.LayoutParams(width, height);
         mShadowView.setLayoutParams(lp_shadow);
         //requestLayout();
+
     }
 
     /**
