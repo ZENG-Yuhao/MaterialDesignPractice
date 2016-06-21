@@ -1,12 +1,14 @@
 package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import com.esigelec.zengyuhao.materialdesignpractice.BuildConfig;
 import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolbar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-public class BottomToolBarActivity extends FragmentActivity {
+public class BottomToolBarActivity extends AppCompatActivity {
     private static final int[] IMG_SRC = {
             R.drawable.ic_assistant_black_24dp,
             R.drawable.ic_attach_file_black_24dp,
@@ -45,11 +49,23 @@ public class BottomToolBarActivity extends FragmentActivity {
     private final int NUM_PAGES = 5;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_tool_bar);
+
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        if (myToolbar != null) {
+            ColorDrawable drawable = (ColorDrawable) myToolbar.getBackground();
+            drawable.setAlpha(200);
+        }
+        setSupportActionBar(myToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Sidebar");
+
+        }
 
 
         // init BottomToolBar
@@ -137,7 +153,10 @@ public class BottomToolBarActivity extends FragmentActivity {
 
         @Override
         public void onPageSelected(int position) {
-            Log.i("haha", "onPageSelected--------------------------->" + position);
+            if (BuildConfig.DEBUG)
+                Log.i("haha", "onPageSelected--------------------------->" + position);
+            getSupportActionBar().setTitle(TITLE_STR[position]);
+
         }
 
         @Override

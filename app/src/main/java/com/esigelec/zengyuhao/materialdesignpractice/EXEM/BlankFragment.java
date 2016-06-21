@@ -2,7 +2,11 @@ package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,6 +49,13 @@ public class BlankFragment extends Fragment {
             pageName = getArguments().getString(ARG_PAGE_NAME);
             pageNumber = getArguments().getString(ARG_PAGE_NUMBER);
         }
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -59,4 +70,19 @@ public class BlankFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        if (Integer.valueOf(pageNumber) % 2 == 0) {
+            inflater.inflate(R.menu.menu_items, menu);
+
+        } else {
+            inflater.inflate(R.menu.menu_items1, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 }

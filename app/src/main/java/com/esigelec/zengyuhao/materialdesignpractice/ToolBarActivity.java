@@ -19,6 +19,7 @@ public class ToolBarActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("ToolBar");
+
     }
 
     @Override

@@ -109,7 +109,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     public void init() {
-        Log.i("HAHA", "------>init");
+        Log.i("SideToolbar", "------>init");
     }
 
     /**
@@ -171,12 +171,12 @@ public class SideToolbar extends FrameLayout {
 
 
     protected void inflateShadow() {
-        Log.i("HAHA", "------>inflateShadow");
+        Log.i("SideToolbar", "------>inflateShadow");
         mShadowView = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.side_toolbar_shadow, this, false);
     }
 
     protected void initShadowSize() {
-        Log.i("HAHA", "------>initShadowSize" + getMeasuredWidth() + " " + getMeasuredHeight() + " " + getWidth() + " " +
+        Log.i("SideToolbar", "------>initShadowSize" + getMeasuredWidth() + " " + getMeasuredHeight() + " " + getWidth() + " " +
                 "" + getHeight());
 
         int width, height;
@@ -194,7 +194,7 @@ public class SideToolbar extends FrameLayout {
             mShadowOffsetTop = mCurrentPosition * integerize((double) mHeight * mWeightNoFocus /
                     mWeightCount);
         }
-        Log.i("HAHA", "------>initShadowSize shadow" + mShadowView.getWidth() + " " + mShadowView.getHeight() + " " +
+        Log.i("SideToolbar", "------>initShadowSize shadow" + mShadowView.getWidth() + " " + mShadowView.getHeight() + " " +
                 "" + mShadowView.getMeasuredWidth() + " " + mShadowView.getMeasuredHeight());
         mShadowWidth = width;
         mShadowHeight = height;
@@ -210,7 +210,7 @@ public class SideToolbar extends FrameLayout {
      * @param adapter the adapter to be set.
      */
     public void setAdapter(Adapter<? extends ViewHolder> adapter) {
-        Log.i("HAHA", "------>setAdapter");
+        Log.i("SideToolbar", "------>setAdapter");
         mAdapter = adapter;
         isAdapterNewlySet = true;
 
@@ -243,7 +243,7 @@ public class SideToolbar extends FrameLayout {
      */
     // TODO: 2016/6/15 add OnGlobalLayoutListener to surveille incoming layout changes, and then adjust child-views size
     protected void initLayout() {
-        Log.i("HAHA", "------>initLayout");
+        Log.i("SideToolbar", "------>initLayout");
         // add views in mHolderList to the layout
         for (int i = 0; i < mItemCount; i++) {
             super.addView(mHolderList[i].itemView);
@@ -296,7 +296,7 @@ public class SideToolbar extends FrameLayout {
      * These measures must be done outside onMeasure() method and before requestLayout() or requestViewHolderLayout().
      */
     protected void onViewHoldersMeasure() {
-        Log.i("HAHA", "------>onViewHoldersMeasure");
+        Log.i("SideToolbar", "------>onViewHoldersMeasure");
         if (!isItemLayoutChanged) return;
 
         int width, height;
@@ -332,7 +332,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     protected void onViewHolderLayout() {
-        Log.i("HAHA", "------>onViewHolderLayout");
+        Log.i("SideToolbar", "------>onViewHolderLayout");
         if (!isItemLayoutChanged) return;
 
         ViewGroup.LayoutParams lp;
@@ -352,7 +352,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     protected void onShadowLayout() {
-        Log.i("HAHA", "------>onShadowLayout");
+        Log.i("SideToolbar", "------>onShadowLayout");
         mShadowView.layout(mShadowOffsetLeft, mShadowOffsetTop, mShadowOffsetLeft + mShadowWidth, mShadowOffsetTop + mShadowHeight);
     }
 
@@ -362,14 +362,14 @@ public class SideToolbar extends FrameLayout {
      * layout animation or layout change.
      */
     public void requestGlobalLayout() {
-        Log.i("HAHA", "------>requestGlobalLayout");
+        Log.i("SideToolbar", "------>requestGlobalLayout");
         onViewHoldersMeasure();
         requestLayout();
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        Log.i("HAHA", "------>onLayout");
+        Log.i("SideToolbar", "------>onLayout");
         //super.onLayout(changed, l, t, r, b);
         onViewHolderLayout();
         onShadowLayout();
@@ -410,7 +410,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     public void setCurrentItem(int position) {
-        Log.i("HAHA", "------>setCurrentItem");
+        Log.i("SideToolbar", "------>setCurrentItem");
         mCurrentPosition = position;
         correctWeight(mCurrentPosition);
         requestGlobalLayout();
@@ -582,7 +582,6 @@ public class SideToolbar extends FrameLayout {
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             // when page is scrolled by touch event, make shadow follow the scrolling
             if (mTriggerMode == MODE_TOUCH_SCROLL && !mItemAnimator.isRunning()) {
-                Log.i("haha", "----->onPage-scroll");
                 moveShadow(position, positionOffset);
             }
         }
@@ -696,7 +695,6 @@ public class SideToolbar extends FrameLayout {
         }
 
         public void onShadowAnimation(float fraction) {
-            Log.i("haha", "----->onPage-animation");
             int delta = integerize(fraction * distance);
             if (mOrientation == HORIZONTAL) {
                 mShadowOffsetLeft = startPoint + delta;
