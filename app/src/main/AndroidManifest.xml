@@ -26,7 +26,6 @@
             android:label="DrawerLayout"
             android:logo="@drawable/ic_arrow_back_black_24dp"/>
         <activity android:name=".NotificationActivity"/>
-        <activity android:name=".CapturingPhotoActivity"/>
         <activity android:name=".SnackerBarActivity"/>
         <activity android:name=".CustomViewActivity"/>
         <activity android:name=".IntentServiceActivity"/>
@@ -58,6 +57,10 @@
         <activity android:name=".EXEM.BottomToolBarActivity">
         </activity>
         <activity android:name=".EXEM.NavigationEXEMActivity">
+        </activity>
+        <activity android:name=".EXEM.ExemWelcomeActivity">
+        </activity>
+        <activity android:name=".SceneAndTransitionActivity">
         </activity>
     </application>
 

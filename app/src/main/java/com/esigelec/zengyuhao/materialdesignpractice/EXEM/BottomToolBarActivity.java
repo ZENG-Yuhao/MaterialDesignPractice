@@ -1,6 +1,6 @@
 package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
-import android.graphics.drawable.ColorDrawable;
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -103,7 +104,7 @@ public class BottomToolBarActivity extends AppCompatActivity {
         public void onBindViewHolder(MyHolder holder, int position) {
             holder.img.setImageResource(IMG_SRC[position]);
             holder.txt.setText(TITLE_STR[position]);
-            //holder.view.setElevation(position * 8);
+            holder.view.setElevation(2);
             holder.view.setBackgroundColor(getResources().getColor(BACKGROUND_COLOR[position]));
         }
 
@@ -149,6 +150,14 @@ public class BottomToolBarActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
+//
+//            double half_width = 0;
+//            int finalRadius = (int) Math.hypot(half_width, myToolbar.getHeight());
+//            Animator animator = ViewAnimationUtils.createCircularReveal(myToolbar, (int)half_width, myToolbar
+//                    .getHeight(), 0, finalRadius);
+//            animator.setDuration(200);
+//            animator.start();
+
             if (BuildConfig.DEBUG)
                 Log.i("haha", "onPageSelected--------------------------->" + position);
             getSupportActionBar().setTitle(TITLE_STR[position]);

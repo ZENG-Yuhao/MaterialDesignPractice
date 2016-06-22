@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
+ *
  */
 public class SideToolbar extends FrameLayout {
     private int mWidth;
@@ -200,6 +201,7 @@ public class SideToolbar extends FrameLayout {
         mShadowHeight = height;
         FrameLayout.LayoutParams lp_shadow = new FrameLayout.LayoutParams(width, height);
         mShadowView.setLayoutParams(lp_shadow);
+
         //requestLayout();
 
     }
@@ -310,14 +312,14 @@ public class SideToolbar extends FrameLayout {
                 height = integerize((double) mHeight * mHolderList[i].weight / mWeightCount);
                 width = mWidth;
             }
-            if (isAdapterNewlySet) {
-                lp = new FrameLayout.LayoutParams(width, height);
-                mHolderList[i].itemView.setLayoutParams(lp);
-            } else {
+           // if (isAdapterNewlySet) {
+           //     lp = new FrameLayout.LayoutParams(width, height);
+           //     mHolderList[i].itemView.setLayoutParams(lp);
+           // } else {
                 lp = mHolderList[i].itemView.getLayoutParams();
                 lp.width = width;
                 lp.height = height;
-            }
+            //}
         }
         isAdapterNewlySet = false;
     }
@@ -447,6 +449,7 @@ public class SideToolbar extends FrameLayout {
             itemView = view;
             // for that the holder can be re retrieved by the view
             itemView.setTag(this);
+
         }
 
         public final int getAdapterPosition() {
@@ -569,6 +572,14 @@ public class SideToolbar extends FrameLayout {
                 pagerWeakReference.get().setCurrentItem(position);
         }
 
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            // when page is scrolled by touch event, make shadow follow the scrolling
+            if (mTriggerMode == MODE_TOUCH_SCROLL && !mItemAnimator.isRunning()) {
+                moveShadow(position, positionOffset);
+            }
+        }
+
         public void moveShadow(int position, float positionOffset) {
             if (mOrientation == HORIZONTAL) {
                 mShadowOffsetLeft = mHolderList[position].itemView.getLeft() + integerize(widthNoFocus *
@@ -579,17 +590,8 @@ public class SideToolbar extends FrameLayout {
             requestGlobalLayout();
         }
 
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            // when page is scrolled by touch event, make shadow follow the scrolling
-            if (mTriggerMode == MODE_TOUCH_SCROLL && !mItemAnimator.isRunning()) {
-                moveShadow(position, positionOffset);
-            }
-        }
-
         // This method will be invoked when ViewPager.setCurrentItem() or after onPageScrollStateChanged() with
         // a state that equals 2 (SCROLL_STATE_SETTING)
-
         @Override
         public void onPageSelected(int position) {
             // add mode filter to avoid cycle call of onItemSelected(), if scrolling is triggered by clicking
