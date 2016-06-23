@@ -14,13 +14,18 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 /**
+ * <p>
  * A layout supporting swiping-to-left effect, there are two modes STICKY and NON-STICKY for user. With STICKY mode,
  * layout will swipe automatically to origin position or to target position, with NON-STICKY mode, layout can stop at
  * any intermediate position between initial position and final position.
- * <p/>
+ * <p>
  * For now this layout can only be initialized in XML file and only support horizontal swipe-to-left effect, it will
  * take two first children as its top layer and bottom layer.
- * <p/>
+ * <p>
+ * Attention: This layout does not take charge of actions of each view, it handles only the swiping effect. Since
+ * view are inflated by XML file, so all element can be retrieved by their id, all actions can be defined at other
+ * place.
+ * <p>
  * Created by ZENG Yuhao on 23/06/16.
  * Contact: enzo.zyh@gmail.com
  */
