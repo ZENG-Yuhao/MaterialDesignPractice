@@ -8,7 +8,7 @@ import android.view.ViewGroup;
  * Contact: enzo.zyh@gmail.com
  */
 public class ViewWrapper {
-    private View targetView;
+    public View targetView;
 
     public ViewWrapper(View target) {
         this.targetView = target;
@@ -55,5 +55,15 @@ public class ViewWrapper {
     public int getBottomMargin() {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(targetView.getLayoutParams());
         return params.bottomMargin;
+    }
+
+    public void setRightMargin(int rightMargin) {
+        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(targetView.getLayoutParams());
+        params.rightMargin = rightMargin;
+    }
+
+    public int getRightMargin() {
+        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(targetView.getLayoutParams());
+        return params.rightMargin;
     }
 }
