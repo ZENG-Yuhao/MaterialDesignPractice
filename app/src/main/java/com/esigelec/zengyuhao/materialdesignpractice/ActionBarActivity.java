@@ -13,7 +13,6 @@ public class ActionBarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action_bar);
         getActionBar().setTitle("ActionBar");
-
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
