@@ -1,23 +1,28 @@
 package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolBar;
+
+import com.esigelec.zengyuhao.materialdesignpractice.BuildConfig;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolbar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-public class BottomToolBarActivity extends FragmentActivity {
+public class BottomToolBarActivity extends AppCompatActivity {
     private static final int[] IMG_SRC = {
             R.drawable.ic_assistant_black_24dp,
             R.drawable.ic_attach_file_black_24dp,
@@ -45,17 +50,25 @@ public class BottomToolBarActivity extends FragmentActivity {
     private final int NUM_PAGES = 5;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_tool_bar);
 
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Sidebar");
+        }
+
+        View view;
 
         // init BottomToolBar
-        SideToolBar toolBar = (SideToolBar) findViewById(R.id.bottom_toolbar);
+        SideToolbar toolBar = (SideToolbar) findViewById(R.id.bottom_toolbar);
         toolBar.setAdapter(new MyAdapter());
-        toolBar.setOnItemClickListener(new SideToolBar.OnItemClickListener() {
+        toolBar.setOnItemClickListener(new SideToolbar.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
             }
@@ -65,13 +78,12 @@ public class BottomToolBarActivity extends FragmentActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-        viewPager.addOnPageChangeListener(new MyPageChangedListener());
-
-
         toolBar.bindViewPager(viewPager);
+        //toolBar.setCurrentItem(2);
+        viewPager.addOnPageChangeListener(new MyPageChangedListener());
     }
 
-    public class MyAdapter extends SideToolBar.Adapter<MyAdapter.MyHolder> {
+    public class MyAdapter extends SideToolbar.Adapter<MyAdapter.MyHolder> {
 
         @Override
         public int getItemCount() {
@@ -92,11 +104,11 @@ public class BottomToolBarActivity extends FragmentActivity {
         public void onBindViewHolder(MyHolder holder, int position) {
             holder.img.setImageResource(IMG_SRC[position]);
             holder.txt.setText(TITLE_STR[position]);
-            holder.view.setElevation(position * 8);
+            holder.view.setElevation(2);
             holder.view.setBackgroundColor(getResources().getColor(BACKGROUND_COLOR[position]));
         }
 
-        public class MyHolder extends SideToolBar.ViewHolder {
+        public class MyHolder extends SideToolbar.ViewHolder {
             public View view;
             public ImageView img;
             public TextView txt;
@@ -138,7 +150,18 @@ public class BottomToolBarActivity extends FragmentActivity {
 
         @Override
         public void onPageSelected(int position) {
-            Log.i("haha", "onPageSelected--------------------------->" + position);
+//
+//            double half_width = 0;
+//            int finalRadius = (int) Math.hypot(half_width, myToolbar.getHeight());
+//            Animator animator = ViewAnimationUtils.createCircularReveal(myToolbar, (int)half_width, myToolbar
+//                    .getHeight(), 0, finalRadius);
+//            animator.setDuration(200);
+//            animator.start();
+
+            if (BuildConfig.DEBUG)
+                Log.i("haha", "onPageSelected--------------------------->" + position);
+            getSupportActionBar().setTitle(TITLE_STR[position]);
+
         }
 
         @Override

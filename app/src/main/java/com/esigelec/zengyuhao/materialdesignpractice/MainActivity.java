@@ -21,6 +21,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActiv
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
             "WaveScanner UI",
+            "Scene and Transition",
             "Dialog",
             "Hardware Acceleration",
             "ToolBar",
@@ -44,6 +45,7 @@ public class MainActivity extends Activity {
 
     final private static Class[] xActivityClasses = new Class[]{
             NavigationEXEMActivity.class,
+            SceneAndTransitionActivity.class,
             DialogActivity.class,
             HardwareAccelerationActivity.class,
             ToolBarActivity.class,
