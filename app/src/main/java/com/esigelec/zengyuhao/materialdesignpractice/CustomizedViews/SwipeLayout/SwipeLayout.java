@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
  * take two first children as its top layer and bottom layer.
  * <p>
  * Attention: This layout does not take charge of actions of each view, it handles only the swiping effect. Since
- * view are inflated by XML file, so all element can be retrieved by their id, all actions can be defined at other
+ * view are inflated by XML file, so all element can be retrieved by their Ids, all actions can be defined at other
  * place.
  * <p>
  * Created by ZENG Yuhao on 23/06/16.
