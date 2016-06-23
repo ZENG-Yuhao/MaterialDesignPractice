@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SwipeLayout.SwipeLayout;
 import com.esigelec.zengyuhao.materialdesignpractice.EXEM.NavigationEXEMActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login2Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login3Activity;
@@ -22,6 +23,7 @@ public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
             "WaveScanner UI",
             "Scene and Transition",
+            "SwipeLayout",
             "Dialog",
             "Hardware Acceleration",
             "ToolBar",
@@ -46,6 +48,7 @@ public class MainActivity extends Activity {
     final private static Class[] xActivityClasses = new Class[]{
             NavigationEXEMActivity.class,
             SceneAndTransitionActivity.class,
+            SwipeLayoutActivity.class,
             DialogActivity.class,
             HardwareAccelerationActivity.class,
             ToolBarActivity.class,

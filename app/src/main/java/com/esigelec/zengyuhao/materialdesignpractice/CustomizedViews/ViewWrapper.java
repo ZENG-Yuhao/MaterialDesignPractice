@@ -66,4 +66,6 @@ public class ViewWrapper {
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(targetView.getLayoutParams());
         return params.rightMargin;
     }
+
+
 }
