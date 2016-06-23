@@ -1,10 +1,8 @@
 package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SwipeLayout;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.renderscript.Sampler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,9 +12,14 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.ViewWrapper;
-
 /**
+ * A layout supporting swiping-to-left effect, there are two modes STICKY and NON-STICKY for user. With STICKY mode,
+ * layout will swipe automatically to origin position or to target position, with NON-STICKY mode, layout can stop at
+ * any intermediate position between initial position and final position.
+ * <p/>
+ * For now this layout can only be initialized in XML file and only support horizontal swipe-to-left effect, it will
+ * take two first children as its top layer and bottom layer.
+ * <p/>
  * Created by ZENG Yuhao on 23/06/16.
  * Contact: enzo.zyh@gmail.com
  */
@@ -32,21 +35,25 @@ public class SwipeLayout extends FrameLayout {
     private static final int GOING_RIGHT = 1;
     private static final int STAYING = 2;
     /**
-     * Threshold percentage in relation to width of this layout. When user release the swiping, this value is used to
-     * judge whether the top layer should continue swipe to target position (swiping-offset >= threshold) or it should
-     * swipe back to its initial position (swiping-offset < threshold).
+     * Threshold percentage in relation to width of this layout. With STICKY mode when user release the swiping, this
+     * value is used to judge whether the top layer should continue swipe to target position (swiping-offset >=
+     * threshold) or it should swipe back to its initial position (swiping-offset < threshold).
      */
     private double mTriggerThreshold = 0.05;
-    private int mTriggerThresholdPixels;
+    private int mTriggerThresholdPixels; // mTriggerThresholdPixels = mTriggerThreshold * width;
+    /**
+     * Max offset of left bound in percentage. In this layout, position of layer is controlled by {@link View#setX(float)}
+     * when layer reached the left boundary, getX() = -maxLeftOffsetPixels, when layer reached the right boundary,
+     * getX() = 0;
+     */
     private double maxLeftOffset = 0.30;
-    private int maxLeftOffsetPixels;
+    private int maxLeftOffsetPixels; // maxLeftOffsetPixels = maxLeftOffset * width;
 
     /* touch event*/
-    private int X0, Y0;
-    private int lastX, lastY;
+    private int lastX;
 
     private View mTopLayer, mBottomLayer;
-    private int mWidth, mHeight;
+    private int mWidth;
     private int mode = MODE_STICKY;
     private ValueAnimator mAnimator;
     private OpenAndCloseListener mListener;
@@ -73,6 +80,12 @@ public class SwipeLayout extends FrameLayout {
         init(context);
     }
 
+
+    /**
+     * Initialization before layout is inflated.
+     *
+     * @param context activity context or application context
+     */
     private void init(Context context) {
         Log.i(TAG, "------>init");
         // register listener to get width and height once layout finished.
@@ -82,7 +95,6 @@ public class SwipeLayout extends FrameLayout {
                 @Override
                 public void onGlobalLayout() {
                     mWidth = getWidth();
-                    mHeight = getHeight();
                     mTriggerThresholdPixels = (int) (mTriggerThreshold * mWidth);
                     maxLeftOffsetPixels = (int) (maxLeftOffset * mWidth);
 
@@ -124,6 +136,17 @@ public class SwipeLayout extends FrameLayout {
         mBottomLayer.setElevation(2);
     }
 
+    /**
+     * <p>
+     * On <b>NON-STICKY</b> mode, there are only min boundary and max boundary check.
+     * <p>
+     * On <b>STICK</b> mode, if top layer's getX() locates in <b>(-maxLeftOffsetPixels, leftThreshold)</b> or in
+     * <b>(rightThreshold, 0)</b>, top layer will swipe back to the closest position, otherwise next swiping action
+     * will take account of {@link #flag} state.
+     *
+     * @param event The motion event.
+     * @return True if the event was handled, false otherwise.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int currX = (int) event.getRawX();
@@ -132,7 +155,6 @@ public class SwipeLayout extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 Log.i(TAG, "------>ACTION_DOWN");
                 stopAnimation();
-                X0 = currX;
                 lastX = currX;
                 return true;
 
@@ -155,12 +177,12 @@ public class SwipeLayout extends FrameLayout {
             case MotionEvent.ACTION_UP:
                 Log.i(TAG, "------>ACTION_UP");
                 if (mode == MODE_STICKY) {
-                    int leftBound = -(maxLeftOffsetPixels - mTriggerThresholdPixels);
-                    int rightBound = -mTriggerThresholdPixels;
+                    int leftThreshold = -(maxLeftOffsetPixels - mTriggerThresholdPixels);
+                    int rightThreshold = -mTriggerThresholdPixels;
 
-                    if (mTopLayer.getX() <= leftBound && mTopLayer.getX() >= -maxLeftOffsetPixels)
+                    if (mTopLayer.getX() <= leftThreshold && mTopLayer.getX() >= -maxLeftOffsetPixels)
                         open();
-                    else if (mTopLayer.getX() <= 0 && mTopLayer.getX() >= rightBound)
+                    else if (mTopLayer.getX() <= 0 && mTopLayer.getX() >= rightThreshold)
                         close();
                     else {
                         if (flag == GOING_LEFT)
@@ -175,11 +197,17 @@ public class SwipeLayout extends FrameLayout {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * Top layer swipe to the most left side, as if it was opened.
+     */
     public void open() {
         Log.i(TAG, "------>open");
         startAnimation(-maxLeftOffsetPixels, "open");
     }
 
+    /**
+     * Top layer swipe to the most right side, as if it was closed.
+     */
     public void close() {
         Log.i(TAG, "------>close");
         startAnimation(0, "close");
@@ -226,6 +254,9 @@ public class SwipeLayout extends FrameLayout {
         mAnimator.start();
     }
 
+    /**
+     * If there is a new action coming in, stop the ancient animation.
+     */
     private void stopAnimation() {
         if (mAnimator != null && mAnimator.isRunning()) {
             mAnimator.cancel();
@@ -237,6 +268,9 @@ public class SwipeLayout extends FrameLayout {
             mListener = listener;
     }
 
+    /**
+     * Listener to listener open and close state.
+     */
     public interface OpenAndCloseListener {
         void onOpened();
 
