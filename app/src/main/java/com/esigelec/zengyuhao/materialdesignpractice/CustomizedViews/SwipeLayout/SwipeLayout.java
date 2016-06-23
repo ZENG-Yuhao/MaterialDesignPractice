@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 /**
@@ -39,7 +40,7 @@ public class SwipeLayout extends FrameLayout {
      * value is used to judge whether the top layer should continue swipe to target position (swiping-offset >=
      * threshold) or it should swipe back to its initial position (swiping-offset < threshold).
      */
-    private double mTriggerThreshold = 0.05;
+    private double mTriggerThreshold = 0.08;
     private int mTriggerThresholdPixels; // mTriggerThresholdPixels = mTriggerThreshold * width;
     /**
      * Max offset of left bound in percentage. In this layout, position of layer is controlled by {@link View#setX(float)}
@@ -215,7 +216,7 @@ public class SwipeLayout extends FrameLayout {
 
     private void startAnimation(int targetPosition, final String sender) {
         mAnimator = ValueAnimator.ofInt((int) mTopLayer.getX(), targetPosition);
-        mAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mAnimator.setInterpolator(new DecelerateInterpolator());
         mAnimator.setDuration(150);
 
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
