@@ -24,6 +24,10 @@ import com.esigelec.zengyuhao.materialdesignpractice.EXEM.BottomToolBarActivity;
 import java.util.Collections;
 import java.util.Random;
 
+
+/**
+ * REFERENCE: http://www.jianshu.com/p/12ec590f6c76
+ */
 public class RecyclerViewActivity extends AppCompatActivity {
     public static int[] IMG_SRC = {R.drawable.img0, R.drawable.img1, R.drawable.img2, R.drawable.img3, R.drawable
             .img4, R.drawable.img5};
@@ -65,7 +69,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             ImageView img = (ImageView) holder.itemView.findViewById(R.id.img);
             TextView txt = (TextView) holder.itemView.findViewById(R.id.txt);
             Random rd = new Random();
@@ -75,6 +79,12 @@ public class RecyclerViewActivity extends AppCompatActivity {
                     ], 75, 75, EfficientBitmap.DecoderAsyncTask.MODE_MEMORY_CACHE);
 
             txt.setText("IMG-" + position);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.notifyItemMoved(holder.getAdapterPosition(), holder.getAdapterPosition() + 1);
+                }
+            });
         }
 
         @Override
@@ -100,7 +110,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
             int dragFlags = 0, swipeFlags = 0;
             if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
                 dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                //swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
             }
             return makeMovementFlags(dragFlags, swipeFlags);
         }
@@ -119,23 +129,20 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         }
 
-        //当item拖拽开始时调用
         @Override
         public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
             super.onSelectedChanged(viewHolder, actionState);
             if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                viewHolder.itemView.setBackgroundColor(Color.LTGRAY);//拖拽时设置背景色为灰色
+                viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
             }
         }
 
-        //当item拖拽完成时调用
         @Override
         public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             super.clearView(recyclerView, viewHolder);
-            viewHolder.itemView.setBackgroundColor(Color.WHITE);//拖拽停止时设置背景色为白色
+            viewHolder.itemView.setBackgroundColor(Color.WHITE);
         }
 
-        //当item视图变化时调用
         @Override
         public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
