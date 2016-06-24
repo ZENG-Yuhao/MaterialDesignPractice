@@ -111,11 +111,11 @@ public class SwipeLayout extends FrameLayout {
         return mTriggerThreshold;
     }
 
-    public void setCurrentMode(int mode) {
+    public void setMode(int mode) {
         this.mode = mode;
     }
 
-    public int getCurrentMode() {
+    public int getMode() {
         return mode;
     }
 
