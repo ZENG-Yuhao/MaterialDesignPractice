@@ -12,6 +12,7 @@ import android.transition.Scene;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionManager;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,32 +30,37 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 public class ExemWelcomeActivity extends Activity {
     private ImageView img_logo, img_welcome;
     private ProgressBar progressBar;
-    private ViewGroup scene_root;
-    private Scene scene1, scene2;
-    private Slide slide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        setContentView(R.layout.activity_exem_welcome1);
+        setContentView(R.layout.activity_exem_welcome);
 
         img_logo = (ImageView) findViewById(R.id.img_logo);
         img_welcome = (ImageView) findViewById(R.id.img_welcome);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
-
-        scene_root = (ViewGroup) findViewById(R.id.scene_root);
-
-        scene1 = Scene.getSceneForLayout(scene_root, R.layout.activity_exem_welcome1, this);
-        scene2 = Scene.getSceneForLayout(scene_root, R.layout.activity_exem_welcome, this);
-        //TransitionManager.go(scene2);
-        TransitionManager.go(scene2, new Fade().setDuration(1500).setInterpolator(new DecelerateInterpolator()));
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int windowHeight = metrics.heightPixels;
+        ObjectAnimator anim_logo = ObjectAnimator.ofInt(img_logo, "top", windowHeight, img_logo.getTop());
+        anim_logo.setDuration(500);
+        anim_logo.setInterpolator(new DecelerateInterpolator());
+
+        ObjectAnimator anim_welcome = ObjectAnimator.ofInt(img_welcome, "top", windowHeight, img_welcome.getTop());
+        anim_welcome.setDuration(500);
+        anim_welcome.setInterpolator(new DecelerateInterpolator());
+        anim_welcome.setStartDelay(250);
+
+        anim_logo.start();
+        anim_welcome.start();
+
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
