@@ -31,6 +31,12 @@ import android.widget.FrameLayout;
 public class SwipeLayout extends FrameLayout {
     private static final String TAG = "SwipeLayout";
 
+    // STATE
+    public static final int STATE_OPENED = 0;
+    public static final int STATE_CLOSED = 1;
+    public static final int STATE_TRANSIT = 2;
+    public static final int STATE_DRAGGING = 3;
+
     // MODE
     public static final int MODE_STICKY = 0;
     public static final int MODE_NON_STICKY = 1;
@@ -63,7 +69,7 @@ public class SwipeLayout extends FrameLayout {
     private ValueAnimator mAnimator;
     private OpenAndCloseListener mListener;
     private int flag = STAYING;  // direction flag
-
+    private int mState = STATE_CLOSED;
 
     public SwipeLayout(Context context) {
         super(context);
@@ -111,6 +117,10 @@ public class SwipeLayout extends FrameLayout {
 
     public int getCurrentMode() {
         return mode;
+    }
+
+    public int getState() {
+        return mState;
     }
 
     /**
@@ -191,6 +201,7 @@ public class SwipeLayout extends FrameLayout {
                 return true;
 
             case MotionEvent.ACTION_MOVE:
+                mState = STATE_DRAGGING;
                 int dtX = currX - lastX;
                 flag = (dtX < 0) ? GOING_LEFT : GOING_RIGHT;
 
@@ -260,16 +271,20 @@ public class SwipeLayout extends FrameLayout {
         mAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                mState = STATE_TRANSIT;
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (mListener == null) return;
-                if (sender.equals("open"))
+                if (sender.equals("open")) {
+                    mState = STATE_OPENED;
                     mListener.onOpened();
-                else if (sender.equals("close"))
+                } else if (sender.equals("close")) {
+                    mState = STATE_CLOSED;
                     mListener.onClosed();
+
+                }
             }
 
             @Override
