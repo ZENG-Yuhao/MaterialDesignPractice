@@ -13,18 +13,18 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 /**
- * <p>
+ * <p/>
  * A layout supporting swiping-to-left effect, there are two modes STICKY and NON-STICKY for user. With STICKY mode,
  * layout will swipe automatically to left or to right, with NON-STICKY mode, layout can stop at
  * any intermediate position between the most left position and the most right position.
- * <p>
+ * <p/>
  * For now this layout can only be initialized in XML file and only support horizontal swipe-to-left effect, it will
  * take two first children as its top layer and bottom layer.
- * <p>
+ * <p/>
  * Attention: This layout does not take charge of actions of each view, it handles only the swiping effect. Since
  * view are inflated by XML file, so all elements can be retrieved by their Ids, all actions can be defined at other
  * place.
- * <p>
+ * <p/>
  * Created by ZENG Yuhao on 23/06/16.
  * Contact: enzo.zyh@gmail.com
  */
@@ -32,8 +32,8 @@ public class SwipeLayout extends FrameLayout {
     private static final String TAG = "SwipeLayout";
 
     // MODE
-    private static final int MODE_STICKY = 0;
-    private static final int MODE_NON_STICKY = 1;
+    public static final int MODE_STICKY = 0;
+    public static final int MODE_NON_STICKY = 1;
 
     // DIRECTION FLAG
     private static final int GOING_LEFT = 0;
@@ -85,6 +85,33 @@ public class SwipeLayout extends FrameLayout {
         init(context);
     }
 
+    public void setMaxLeftOffset(double fraction) {
+        if (fraction > 0 && fraction <= 1) {
+            maxLeftOffset = fraction;
+        }
+    }
+
+    public double getMaxLeftOffset() {
+        return maxLeftOffset;
+    }
+
+    public void setTriggerThreshold(double fraction) {
+        if (fraction > 0 && fraction <= 1) {
+            mTriggerThreshold = fraction;
+        }
+    }
+
+    public double getTriggerThreshold() {
+        return mTriggerThreshold;
+    }
+
+    public void setCurrentMode(int mode) {
+        this.mode = mode;
+    }
+
+    public int getCurrentMode() {
+        return mode;
+    }
 
     /**
      * Initialization before layout is inflated.
@@ -142,9 +169,9 @@ public class SwipeLayout extends FrameLayout {
     }
 
     /**
-     * <p>
+     * <p/>
      * On <b>NON-STICKY</b> mode, there are only min boundary and max boundary check.
-     * <p>
+     * <p/>
      * On <b>STICK</b> mode, if top layer's getX() locates in <b>(-maxLeftOffsetPixels, leftThreshold)</b> or in
      * <b>(rightThreshold, 0)</b>, top layer will swipe back to the closest position, otherwise next swiping action
      * will take account of {@link #flag} state.
