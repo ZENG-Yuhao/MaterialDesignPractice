@@ -73,22 +73,17 @@ public class SwipeLayout extends FrameLayout {
 
     public SwipeLayout(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public SwipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public SwipeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    public SwipeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
+        init();
     }
 
     public void setMaxLeftOffset(double fraction) {
@@ -125,10 +120,8 @@ public class SwipeLayout extends FrameLayout {
 
     /**
      * Initialization before layout is inflated.
-     *
-     * @param context activity context or application context
      */
-    private void init(Context context) {
+    private void init() {
         Log.i(TAG, "------>init");
         // register listener to get width and height once layout finished.
         ViewTreeObserver observer = getViewTreeObserver();
