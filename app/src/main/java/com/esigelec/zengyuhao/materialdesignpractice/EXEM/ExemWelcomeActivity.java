@@ -22,6 +22,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -65,7 +66,7 @@ public class ExemWelcomeActivity extends Activity {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-
+                        progressBar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -91,11 +92,12 @@ public class ExemWelcomeActivity extends Activity {
             @Override
             public void onGlobalLayout() {
 
-                ObjectAnimator anim_welcome = ObjectAnimator.ofFloat(img_welcome, "translationY", windowHeight,
-                        img_welcome.getTranslationY());
-                anim_welcome.setDuration(700);
-                anim_welcome.setInterpolator(new DecelerateInterpolator());
-                anim_welcome.setStartDelay(300);
+//                ObjectAnimator anim_welcome = ObjectAnimator.ofFloat(img_welcome, "translationY", windowHeight,
+//                        img_welcome.getTranslationY());
+                ObjectAnimator anim_welcome = ObjectAnimator.ofFloat(img_welcome, "alpha", 0f, 1f);
+                anim_welcome.setDuration(2000);
+                anim_welcome.setInterpolator(new AccelerateInterpolator());
+                anim_welcome.setStartDelay(700);
                 anim_welcome.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
@@ -106,7 +108,6 @@ public class ExemWelcomeActivity extends Activity {
                     @Override
                     public void onAnimationEnd(Animator animation) {
 
-                        progressBar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
