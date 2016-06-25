@@ -16,6 +16,7 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnimationUtils;
@@ -29,6 +30,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class ExemWelcomeActivity extends Activity {
     private ImageView img_logo, img_welcome;
+    private int windowHeight;
     private ProgressBar progressBar;
 
     @Override
@@ -41,27 +43,90 @@ public class ExemWelcomeActivity extends Activity {
         img_welcome = (ImageView) findViewById(R.id.img_welcome);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int windowHeight = metrics.heightPixels;
-        ObjectAnimator anim_logo = ObjectAnimator.ofInt(img_logo, "top", windowHeight, img_logo.getTop());
-        anim_logo.setDuration(500);
-        anim_logo.setInterpolator(new DecelerateInterpolator());
+        windowHeight = metrics.heightPixels;
 
-        ObjectAnimator anim_welcome = ObjectAnimator.ofInt(img_welcome, "top", windowHeight, img_welcome.getTop());
-        anim_welcome.setDuration(500);
-        anim_welcome.setInterpolator(new DecelerateInterpolator());
-        anim_welcome.setStartDelay(250);
+        ViewTreeObserver observer = img_logo.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                ObjectAnimator anim_logo = ObjectAnimator.ofFloat(img_logo, "translationY", windowHeight, img_logo
+                        .getTranslationY());
+                anim_logo.setDuration(700);
+                anim_logo.setInterpolator(new DecelerateInterpolator());
+                anim_logo.setStartDelay(200);
+                anim_logo.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        img_logo.bringToFront();
+                        img_logo.setVisibility(View.VISIBLE);
+                    }
 
-        anim_logo.start();
-        anim_welcome.start();
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
 
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+                anim_logo.start();
+
+                ViewTreeObserver observer1 = img_logo.getViewTreeObserver();
+                observer1.removeOnGlobalLayoutListener(this);
+            }
+        });
+
+        ViewTreeObserver observer2 = img_welcome.getViewTreeObserver();
+        observer2.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                ObjectAnimator anim_welcome = ObjectAnimator.ofFloat(img_welcome, "translationY", windowHeight,
+                        img_welcome.getTranslationY());
+                anim_welcome.setDuration(700);
+                anim_welcome.setInterpolator(new DecelerateInterpolator());
+                anim_welcome.setStartDelay(300);
+                anim_welcome.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        img_welcome.bringToFront();
+                        img_welcome.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+                anim_welcome.start();
+
+                ViewTreeObserver observer3 = img_welcome.getViewTreeObserver();
+                observer3.removeOnGlobalLayoutListener(this);
+            }
+        });
     }
+
 
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
