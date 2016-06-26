@@ -169,21 +169,16 @@ public class SwipeLayout extends FrameLayout {
         // reset elevation to make sure top layer is on the top of bottom layer
         mTopLayer.setElevation(3);
         mBottomLayer.setElevation(2);
+
+        mTopLayer.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return onLayerTouch(v, event);
+            }
+        });
     }
 
-    /**
-     * <p/>
-     * On <b>NON-STICKY</b> mode, there are only min boundary and max boundary check.
-     * <p/>
-     * On <b>STICK</b> mode, if top layer's getX() locates in <b>(-maxLeftOffsetPixels, leftThreshold)</b> or in
-     * <b>(rightThreshold, 0)</b>, top layer will swipe back to the closest position, otherwise next swiping action
-     * will take account of {@link #flag} state.
-     *
-     * @param event The motion event.
-     * @return True if the event was handled, false otherwise.
-     */
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    private boolean onLayerTouch(View v, MotionEvent event){
         int currX = (int) event.getRawX();
 
         switch (event.getAction()) {
@@ -228,10 +223,71 @@ public class SwipeLayout extends FrameLayout {
                     }
                 }
                 return true;
-
         }
-        return super.onTouchEvent(event);
+        return false;
     }
+
+//    /**
+//     * <p/>
+//     * On <b>NON-STICKY</b> mode, there are only min boundary and max boundary check.
+//     * <p/>
+//     * On <b>STICK</b> mode, if top layer's getX() locates in <b>(-maxLeftOffsetPixels, leftThreshold)</b> or in
+//     * <b>(rightThreshold, 0)</b>, top layer will swipe back to the closest position, otherwise next swiping action
+//     * will take account of {@link #flag} state.
+//     *
+//     * @param event The motion event.
+//     * @return True if the event was handled, false otherwise.
+//     */
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        int currX = (int) event.getRawX();
+//
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                Log.i(TAG, "------>ACTION_DOWN");
+//                stopAnimation();
+//                lastX = currX;
+//                break;
+//
+//            case MotionEvent.ACTION_MOVE:
+//                mState = STATE_DRAGGING;
+//                int dtX = currX - lastX;
+//                flag = (dtX < 0) ? GOING_LEFT : GOING_RIGHT;
+//
+//                // getX() should always be in the section [-maxLeftOffsetPixels, 0]
+//                if (mTopLayer.getX() + dtX < -maxLeftOffsetPixels)
+//                    mTopLayer.setX(-maxLeftOffsetPixels);
+//                else if (mTopLayer.getX() + dtX > 0)
+//                    mTopLayer.setX(0);
+//                else
+//                    mTopLayer.setX(mTopLayer.getX() + dtX);
+//
+//                // record x, y
+//                lastX = currX;
+//                break;
+//
+//            case MotionEvent.ACTION_UP:
+//                Log.i(TAG, "------>ACTION_UP");
+//                if (mode == MODE_STICKY) {
+//                    int leftThreshold = -(maxLeftOffsetPixels - mTriggerThresholdPixels);
+//                    int rightThreshold = -mTriggerThresholdPixels;
+//
+//                    if (mTopLayer.getX() <= leftThreshold && mTopLayer.getX() >= -maxLeftOffsetPixels)
+//                        open();
+//                    else if (mTopLayer.getX() <= 0 && mTopLayer.getX() >= rightThreshold)
+//                        close();
+//                    else {
+//                        if (flag == GOING_LEFT)
+//                            open();
+//                        else if (flag == GOING_RIGHT)
+//                            close();
+//                    }
+//                }
+//                break;
+//
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
     /**
      * Top layer swipe to the most left side, as if it was opened.
