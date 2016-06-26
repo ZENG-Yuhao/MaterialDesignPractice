@@ -24,11 +24,11 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class BottomToolBarActivity extends AppCompatActivity {
     private static final int[] IMG_SRC = {
-            R.drawable.ic_assistant_black_24dp,
-            R.drawable.ic_attach_file_black_24dp,
-            R.drawable.ic_assignment_ind_black_24dp,
-            R.drawable.ic_assignment_late_black_24dp,
-            R.drawable.ic_backup_black_24dp,
+            R.drawable.ic_information_white,
+            R.drawable.ic_antenne_white,
+            R.drawable.ic_localization_white,
+            R.drawable.ic_antenne_casb_white,
+            R.drawable.ic_scanner_white,
     };
 
     private static final String[] TITLE_STR = {
@@ -94,16 +94,17 @@ public class BottomToolBarActivity extends AppCompatActivity {
         public MyHolder onCreateViewHolder(ViewGroup parent) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bottom_tool_bar, parent, false);
 
-            TextView txt = (TextView) view.findViewById(R.id.tab_title);
+            //TextView txt = (TextView) view.findViewById(R.id.tab_title);
             ImageView img = (ImageView) view.findViewById(R.id.tab_icon);
-            MyHolder holder = new MyHolder(view, img, txt);
+            //MyHolder holder = new MyHolder(view, img, txt);
+            MyHolder holder = new MyHolder(view, img, null);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(MyHolder holder, int position) {
             holder.img.setImageResource(IMG_SRC[position]);
-            holder.txt.setText(TITLE_STR[position]);
+            //holder.txt.setText(TITLE_STR[position]);
             holder.view.setElevation(2);
             holder.view.setBackgroundColor(getResources().getColor(BACKGROUND_COLOR[position]));
         }
