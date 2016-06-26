@@ -12,6 +12,13 @@
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.EXEM.NavigationEXEMActivity">
 
     <Button
+        android:id="@+id/btn_welcome_screen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome Screen"
+        android:textAllCaps="false"/>
+
+    <Button
         android:id="@+id/btn_bottom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,9 +26,9 @@
         android:textAllCaps="false"/>
 
     <Button
-        android:id="@+id/btn_welcome_screen"
+        android:id="@+id/btn_swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome Screen"
+        android:text="SwipeLayout"
         android:textAllCaps="false"/>
 </LinearLayout>

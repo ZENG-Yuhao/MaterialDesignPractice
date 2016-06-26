@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.esigelec.zengyuhao.materialdesignpractice.R;
+import com.esigelec.zengyuhao.materialdesignpractice.SwipeLayoutActivity;
 
 
 public class NavigationEXEMActivity extends Activity {
     private Button btn_bottom_toolbar;
     private Button btn_welcome_screen;
+    private Button btn_swipe_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,15 @@ public class NavigationEXEMActivity extends Activity {
                         "transition_image").toBundle();
                 Intent intent = new Intent(NavigationEXEMActivity.this, ExemWelcomeActivity.class);
                 startActivity(intent, bundle);
+            }
+        });
+
+        btn_swipe_layout = (Button) findViewById(R.id.btn_swipe_layout);
+        btn_swipe_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NavigationEXEMActivity.this, SwipeLayoutActivity.class);
+                startActivity(intent);
             }
         });
     }
