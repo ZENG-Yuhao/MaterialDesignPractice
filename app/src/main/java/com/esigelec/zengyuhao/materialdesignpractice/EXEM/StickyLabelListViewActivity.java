@@ -9,11 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolbar;
 import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.StickyLabelListView.StickyLabelListView;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
-
-import org.w3c.dom.Text;
 
 public class StickyLabelListViewActivity extends Activity {
     private StickyLabelListView mStickyLabelListView;
@@ -35,11 +32,11 @@ public class StickyLabelListViewActivity extends Activity {
             RecyclerView.ViewHolder holder = null;
             View view = null;
             if (viewType == MyItemHolder.VIEW_TYPE) {
-                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layer_bottom_swipelayout,
+                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_sticky_listview,
                         parent, false);
                 holder = new MyItemHolder(view);
             } else if (viewType == MyLabelHolder.VIEW_TYPE) {
-                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_text_view, parent, false);
+                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.label_sticky_listview, parent, false);
                 holder = new MyLabelHolder(view);
             }
             return holder;
@@ -48,13 +45,13 @@ public class StickyLabelListViewActivity extends Activity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof MyLabelHolder) {
-                ((MyLabelHolder) holder).mBtn.setText("LABEL " + position);
+                ((MyLabelHolder) holder).textView.setText("LABEL " + position);
             }
         }
 
         @Override
         public int getItemCount() {
-            return 30;
+            return 50;
         }
 
         @Override
@@ -73,11 +70,11 @@ public class StickyLabelListViewActivity extends Activity {
 
     private class MyLabelHolder extends RecyclerView.ViewHolder {
         public static final int VIEW_TYPE = 1;
-        public Button mBtn;
+        public TextView textView;
 
         public MyLabelHolder(View itemView) {
             super(itemView);
-            mBtn = (Button) itemView;
+            textView = (TextView) itemView;
         }
     }
 

@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.esigelec.zengyuhao.materialdesignpractice.BuildConfig;
@@ -30,6 +31,7 @@ public class StickyLabelListView extends FrameLayout {
     private RecyclerView.Adapter mAdapter;
     private int mLabelViewType = 1;
     private ShadowLayout mShadowLabel;
+    private View buffView;
 
     public StickyLabelListView(Context context) {
         super(context);
@@ -70,8 +72,9 @@ public class StickyLabelListView extends FrameLayout {
         mRecyclerView.setAdapter(adapter);
         mAdapter = adapter;
         setLabelViewType(labelViewType);
-
-        View shadowView = adapter.onCreateViewHolder(this, labelViewType).itemView;
+        RecyclerView.ViewHolder holder = adapter.onCreateViewHolder(this, labelViewType);
+        mAdapter.onBindViewHolder(holder, 0);
+        View shadowView = holder.itemView;
         mShadowLabel.setContentView(shadowView);
     }
 
@@ -90,15 +93,41 @@ public class StickyLabelListView extends FrameLayout {
 //                if (DEBUG) Log.i(TAG, "onScrolled--> Label detected.");
 //            }
 
+
             int pos = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
             if (DEBUG) Log.i(TAG, "onScrolled--> firstVisibleItemPosition " + pos);
             if (mAdapter.getItemViewType(pos) == mLabelViewType)
                 if (DEBUG) Log.i(TAG, "onScrolled--> Label detected.");
+
+            int pos_next = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+
+            View currView = mRecyclerView.getLayoutManager().findViewByPosition(pos);
+            int currViewType = mRecyclerView.getLayoutManager().getItemViewType(currView);
+
+            View nextView = mRecyclerView.getLayoutManager().findViewByPosition(pos_next);
+            if (DEBUG) Log.i(TAG, "onScrolled--> View:" + mRecyclerView.getLayoutManager()
+                    .getItemViewType(nextView));
+
+            int nextViewType = mRecyclerView.getLayoutManager()
+                    .getItemViewType(nextView);
+
+            if (nextViewType == mLabelViewType) {
+                mShadowLabel.setHeight(nextView.getTop());
+                if (nextView.getTop() - dy < 0) {
+                    RecyclerView.ViewHolder holder = mAdapter.onCreateViewHolder(mShadowLabel, mLabelViewType);
+                    mAdapter.onBindViewHolder(holder, pos_next);
+                    View shadowView = holder.itemView;
+                    mShadowLabel.setContentView(shadowView);
+                }
+            } else if (currViewType == mLabelViewType) {
+            }
         }
     }
 
     private class ShadowLayout extends FrameLayout {
         public View contentView;
+        public int mInitHeight;
 
         public ShadowLayout(Context context) {
             super(context);
@@ -112,6 +141,16 @@ public class StickyLabelListView extends FrameLayout {
 
             contentView = view;
             addView(contentView);
+
+//            ViewTreeObserver observer = getViewTreeObserver();
+//            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    mInitHeight = contentView.getHeight();
+//
+//                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                }
+//            });
         }
 
         public void setHeight(int height) {

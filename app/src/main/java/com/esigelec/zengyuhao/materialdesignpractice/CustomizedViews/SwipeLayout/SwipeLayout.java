@@ -235,7 +235,7 @@ public class SwipeLayout extends FrameLayout {
                 }
                 return true;
         }
-        return false;
+        return true;
     }
 
     /**
