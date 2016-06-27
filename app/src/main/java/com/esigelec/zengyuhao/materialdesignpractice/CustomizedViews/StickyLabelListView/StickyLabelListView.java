@@ -107,20 +107,39 @@ public class StickyLabelListView extends FrameLayout {
 
             View nextView = mRecyclerView.getLayoutManager().findViewByPosition(pos_next);
             if (DEBUG) Log.i(TAG, "onScrolled--> View:" + mRecyclerView.getLayoutManager()
-                    .getItemViewType(nextView));
+                    .getItemViewType(nextView) + " dy:" + dy + " nextview top:" + nextView.getTop());
 
             int nextViewType = mRecyclerView.getLayoutManager()
                     .getItemViewType(nextView);
 
-            if (nextViewType == mLabelViewType) {
-                mShadowLabel.setHeight(nextView.getTop());
-                if (nextView.getTop() - dy < 0) {
-                    RecyclerView.ViewHolder holder = mAdapter.onCreateViewHolder(mShadowLabel, mLabelViewType);
-                    mAdapter.onBindViewHolder(holder, pos_next);
-                    View shadowView = holder.itemView;
-                    mShadowLabel.setContentView(shadowView);
+//            if (nextViewType == mLabelViewType) {
+//                mShadowLabel.setHeight(nextView.getTop());
+//                if (nextView.getTop() - dy < 0) {
+//                    RecyclerView.ViewHolder holder = mAdapter.onCreateViewHolder(mShadowLabel, mLabelViewType);
+//                    mAdapter.onBindViewHolder(holder, pos_next);
+//                    View shadowView = holder.itemView;
+//                    mShadowLabel.setContentView(shadowView);
+//                }
+//            } else if (currViewType == mLabelViewType) {
+//            }
+
+            // scroll up
+            if (dy > 0) {
+                if (currViewType == mLabelViewType && nextViewType != mLabelViewType) {
+
+                } else if (currViewType == mLabelViewType && nextViewType == mLabelViewType) {
+
+                } else if (nextViewType == mLabelViewType) {
+
                 }
-            } else if (currViewType == mLabelViewType) {
+            } else {
+                if (currViewType == mLabelViewType && nextViewType != mLabelViewType) {
+
+                } else if (currViewType == mLabelViewType && nextViewType == mLabelViewType) {
+
+                } else if (nextViewType == mLabelViewType) {
+
+                }
             }
         }
     }
