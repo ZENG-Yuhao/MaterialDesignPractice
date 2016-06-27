@@ -16,6 +16,7 @@ public class NavigationEXEMActivity extends Activity {
     private Button btn_bottom_toolbar;
     private Button btn_welcome_screen;
     private Button btn_swipe_layout;
+    private Button btn_sticky_label_list_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,15 @@ public class NavigationEXEMActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NavigationEXEMActivity.this, SwipeLayoutActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_sticky_label_list_view = (Button) findViewById(R.id.btn_sticky_label_list_view);
+        btn_sticky_label_list_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NavigationEXEMActivity.this, StickyLabelListViewActivity.class);
                 startActivity(intent);
             }
         });

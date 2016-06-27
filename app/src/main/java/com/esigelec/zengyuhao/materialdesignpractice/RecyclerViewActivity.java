@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,6 +71,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
+
             ImageView img = (ImageView) holder.itemView.findViewById(R.id.img);
             TextView txt = (TextView) holder.itemView.findViewById(R.id.txt);
             Random rd = new Random();
@@ -82,7 +84,8 @@ public class RecyclerViewActivity extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter.notifyItemMoved(holder.getAdapterPosition(), holder.getAdapterPosition() + 1);
+                    //mAdapter.notifyItemMoved(holder.getAdapterPosition(), holder.getAdapterPosition() + 1);
+                    Log.i("HAHA", "---->HOLDER CLICK" + holder.getAdapterPosition());
                 }
             });
         }
