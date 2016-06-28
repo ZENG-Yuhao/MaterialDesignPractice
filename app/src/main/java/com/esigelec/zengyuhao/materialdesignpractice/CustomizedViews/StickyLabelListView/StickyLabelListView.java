@@ -31,7 +31,6 @@ public class StickyLabelListView extends FrameLayout {
     private RecyclerView.Adapter mAdapter;
     private int mLabelViewType = 1;
     private ShadowLayout mShadowLabel;
-    private View buffView;
     private LinearLayoutManager mLayoutManager;
 
     public StickyLabelListView(Context context) {
