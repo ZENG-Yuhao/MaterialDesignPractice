@@ -1,8 +1,6 @@
 package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.StickyLabelListView;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -13,11 +11,6 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.esigelec.zengyuhao.materialdesignpractice.BuildConfig;
-import com.esigelec.zengyuhao.materialdesignpractice.EXEM.BottomToolBarActivity;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ZENG Yuhao on 27/06/16.
@@ -27,11 +20,19 @@ public class StickyLabelListView extends FrameLayout {
     private static final String TAG = "StickyLabelListView";
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
+    /* shadow state */
+    private static final int SHADOW_STAY = 0;
+    private static final int SHADOW_FOLLOW = 1;
+    private static final int SHADOW_HIDE = 2;
+    private static final int SCROLLING_UP = 0;
+    private static final int SCROLLING_DOWN = 1;
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private int mLabelViewType = 1;
     private ShadowLayout mShadowLabel;
     private View buffView;
+    private LinearLayoutManager mLayoutManager;
 
     public StickyLabelListView(Context context) {
         super(context);
@@ -58,13 +59,12 @@ public class StickyLabelListView extends FrameLayout {
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
                 .LayoutParams.MATCH_PARENT);
         mRecyclerView.setLayoutParams(lp);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mLayoutManager = new LinearLayoutManager(context);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addOnScrollListener(new ScrollListener());
         addView(mRecyclerView);
 
         mShadowLabel = new ShadowLayout(context);
-//        lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-//        mShadowLabel.setLayoutParams(lp);
         addView(mShadowLabel);
     }
 
@@ -72,10 +72,8 @@ public class StickyLabelListView extends FrameLayout {
         mRecyclerView.setAdapter(adapter);
         mAdapter = adapter;
         setLabelViewType(labelViewType);
-        RecyclerView.ViewHolder holder = adapter.onCreateViewHolder(this, labelViewType);
-        mAdapter.onBindViewHolder(holder, 0);
-        View shadowView = holder.itemView;
-        mShadowLabel.setContentView(shadowView);
+        View shadowView = createShadowFromPosition(0, labelViewType);
+        mShadowLabel.setContentView(shadowView, 0);
     }
 
     public void setLabelViewType(int type) {
@@ -86,100 +84,179 @@ public class StickyLabelListView extends FrameLayout {
     private class ScrollListener extends RecyclerView.OnScrollListener {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//            View firstVisibleView = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findViewByPosition(0);
-//            if (firstVisibleView == null) return;
-//            RecyclerView.ViewHolder firstVisibleViewHolder = mRecyclerView.getChildViewHolder(firstVisibleView);
-//            if (firstVisibleViewHolder.getItemViewType() == mLabelViewType) {
-//                if (DEBUG) Log.i(TAG, "onScrolled--> Label detected.");
-//            }
-
-
-            int pos = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-            if (DEBUG) Log.i(TAG, "onScrolled--> firstVisibleItemPosition " + pos);
-            if (mAdapter.getItemViewType(pos) == mLabelViewType)
-                if (DEBUG) Log.i(TAG, "onScrolled--> Label detected.");
-
-            int pos_next = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-
-            View currView = mRecyclerView.getLayoutManager().findViewByPosition(pos);
-            int currViewType = mRecyclerView.getLayoutManager().getItemViewType(currView);
-
-            View nextView = mRecyclerView.getLayoutManager().findViewByPosition(pos_next);
-            if (DEBUG) Log.i(TAG, "onScrolled--> View:" + mRecyclerView.getLayoutManager()
-                    .getItemViewType(nextView) + " dy:" + dy + " nextview top:" + nextView.getTop());
-
-            int nextViewType = mRecyclerView.getLayoutManager()
-                    .getItemViewType(nextView);
-
-//            if (nextViewType == mLabelViewType) {
-//                mShadowLabel.setHeight(nextView.getTop());
-//                if (nextView.getTop() - dy < 0) {
-//                    RecyclerView.ViewHolder holder = mAdapter.onCreateViewHolder(mShadowLabel, mLabelViewType);
-//                    mAdapter.onBindViewHolder(holder, pos_next);
-//                    View shadowView = holder.itemView;
-//                    mShadowLabel.setContentView(shadowView);
-//                }
-//            } else if (currViewType == mLabelViewType) {
-//            }
-
-            // scroll up
-            if (dy > 0) {
-                if (currViewType == mLabelViewType && nextViewType != mLabelViewType) {
-
-                } else if (currViewType == mLabelViewType && nextViewType == mLabelViewType) {
-
-                } else if (nextViewType == mLabelViewType) {
-
-                }
-            } else {
-                if (currViewType == mLabelViewType && nextViewType != mLabelViewType) {
-
-                } else if (currViewType == mLabelViewType && nextViewType == mLabelViewType) {
-
-                } else if (nextViewType == mLabelViewType) {
-
-                }
-            }
+            mShadowLabel.update(dy);
         }
     }
 
+    private View findViewByPosition(int position) {
+        return mLayoutManager.findViewByPosition(position);
+    }
+
+    private int getItemViewType(View view) {
+        return mLayoutManager.getItemViewType(view);
+    }
+
+    private int getItemViewType(int position) {
+        return mAdapter.getItemViewType(position);
+    }
+
+    /* last invisible item*/
+    private int getLastInvisibleItemPosition() {
+        return getFirstVisibleItemPosition() - 1;
+    }
+
+    private int getLastInvisibleItemViewType() {
+        return getItemViewType(getLastInvisibleItemPosition());
+    }
+
+
+    /* first visible item */
+    private int getFirstVisibleItemPosition() {
+        return mLayoutManager.findFirstVisibleItemPosition();
+    }
+
+    private View getFirstVisibleItem() {
+        return findViewByPosition(getFirstVisibleItemPosition());
+    }
+
+    private int getFirstVisibleItemViewType() {
+        return getItemViewType(getFirstVisibleItemPosition());
+    }
+
+    /* first completely visible item */
+    private int getFirstCompletelyVisibleItemPosition() {
+        return mLayoutManager.findFirstCompletelyVisibleItemPosition();
+    }
+
+    private View getFirstCompletelyVisibleItem() {
+        return findViewByPosition(getFirstCompletelyVisibleItemPosition());
+    }
+
+    private int getFirstCompletelyVisibleItemViewType() {
+        return getItemViewType(getFirstCompletelyVisibleItemPosition());
+    }
+
+    /* closest label */
+    private int getClosestPreviousLabelPosition(int currPosition) {
+        int posPrevious = currPosition;
+        while (getItemViewType(posPrevious) != mLabelViewType && posPrevious > 0)
+            posPrevious--;
+        return posPrevious;
+    }
+
+    private int getClosestFollowingLabelPosition(int currPosition) {
+        int posFollowing = currPosition;
+        while (getItemViewType(posFollowing) != mLabelViewType && posFollowing < mAdapter.getItemCount())
+            posFollowing++;
+        return posFollowing;
+    }
+
+    /* shadow */
+    private View createShadowFromPosition(int position, int type) {
+        RecyclerView.ViewHolder holder = mAdapter.onCreateViewHolder(mShadowLabel, type);
+        mAdapter.onBindViewHolder(holder, position);
+        return holder.itemView;
+    }
+
     private class ShadowLayout extends FrameLayout {
-        public View contentView;
+        public View shadowView;
+        public int shadowOf;
         public int mInitHeight;
+        public int currState = SHADOW_STAY;
 
         public ShadowLayout(Context context) {
             super(context);
         }
 
-        public void setContentView(View view) {
+        public void init() {
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup
+                    .LayoutParams.WRAP_CONTENT);
+            setLayoutParams(lp);
+        }
+
+        public void setContentView(View view, int position) {
             if (view == null) {
                 if (DEBUG) Log.i(TAG, "setContentView-->Skipped: view cannot be null.");
                 return;
             }
+            removeAllViews();
+            shadowView = view;
+            shadowOf = position;
+            addView(shadowView);
 
-            contentView = view;
-            addView(contentView);
+            ViewTreeObserver observer = getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mInitHeight = shadowView.getHeight();
 
-//            ViewTreeObserver observer = getViewTreeObserver();
-//            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                @Override
-//                public void onGlobalLayout() {
-//                    mInitHeight = contentView.getHeight();
-//
-//                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                }
-//            });
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
         }
 
-        public void setHeight(int height) {
-            if (height < 0) {
-                if (DEBUG) Log.i(TAG, "setHeight-->Skipped: height cannot be negative.");
-                return;
-            }
+        public void update(int dy) {
+            updateState((dy > 0) ? SCROLLING_UP : SCROLLING_DOWN);
+            setMarginTop(-(mInitHeight - getFirstCompletelyVisibleItem().getTop()));
+        }
 
+        public boolean updateState(int scrollState) {
+            boolean isStateChanged;
+            int newState = SHADOW_STAY;
+            if (scrollState == SCROLLING_UP) {
+                if (getFirstVisibleItemViewType() == mLabelViewType) {
+                    int pos = getFirstVisibleItemPosition();
+                    if (shadowOf != pos) {
+                        View newShadowView = createShadowFromPosition(pos, mLabelViewType);
+                        setContentView(newShadowView, pos);
+                    }
+                    newState = SHADOW_STAY;
+                }
+
+                if (getFirstCompletelyVisibleItemViewType() == mLabelViewType) {
+                    if (getFirstCompletelyVisibleItem().getTop() <= mInitHeight)
+                        newState = SHADOW_FOLLOW;
+                }
+            } else if (scrollState == SCROLLING_DOWN) {
+                if (getFirstCompletelyVisibleItemViewType() == mLabelViewType) {
+                    int pos = getClosestPreviousLabelPosition(getFirstVisibleItemPosition());
+                    if (shadowOf != pos) {
+                        View newShadowView = createShadowFromPosition(pos, mLabelViewType);
+                        setContentView(newShadowView, pos);
+                    }
+                    newState = SHADOW_FOLLOW;
+
+                    if (getFirstCompletelyVisibleItem().getTop() > mInitHeight)
+                        newState = SHADOW_STAY;
+                }
+            }
+            isStateChanged = (newState == currState);
+            currState = newState;
+            return isStateChanged;
+        }
+
+        public int getMarginTop() {
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) getLayoutParams();
-            lp.height = height;
+            return lp.topMargin;
+        }
+
+        public void setMarginTop(int topMargin) {
+            switch (currState) {
+                case SHADOW_STAY:
+                    if (getMarginTop() == 0) return;
+                    else topMargin = 0;
+                    break;
+                case SHADOW_FOLLOW:
+                    if (topMargin > 0) topMargin = 0;
+                    else if (topMargin < -mInitHeight) topMargin = -mInitHeight;
+                    break;
+                case SHADOW_HIDE:
+                    if (getMarginTop() == -mInitHeight) return;
+                    else topMargin = -mInitHeight;
+                    break;
+            }
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) getLayoutParams();
+            lp.topMargin = topMargin;
             requestLayout();
         }
     }
