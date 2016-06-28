@@ -24,7 +24,6 @@ import java.lang.reflect.Field;
 
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
- *
  */
 public class SideToolbar extends FrameLayout {
     private int mWidth;
@@ -94,6 +93,7 @@ public class SideToolbar extends FrameLayout {
         init();
     }
 
+    // TODO: get width and height form attrs rather than get them through ViewTreeObserver to avoid extra work
     public SideToolbar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -110,7 +110,7 @@ public class SideToolbar extends FrameLayout {
     }
 
     public void init() {
-        Log.i("SideToolbar", "------>init");
+        Log.i("SideToolbar", "------>init SideToolbar:" + System.currentTimeMillis());
     }
 
     /**
@@ -199,8 +199,11 @@ public class SideToolbar extends FrameLayout {
                 "" + mShadowView.getMeasuredWidth() + " " + mShadowView.getMeasuredHeight());
         mShadowWidth = width;
         mShadowHeight = height;
-        FrameLayout.LayoutParams lp_shadow = new FrameLayout.LayoutParams(width, height);
-        mShadowView.setLayoutParams(lp_shadow);
+        //FrameLayout.LayoutParams lp_shadow = new FrameLayout.LayoutParams(width, height);
+        //mShadowView.setLayoutParams(lp_shadow);
+        FrameLayout.LayoutParams lp_shadow = (FrameLayout.LayoutParams) mShadowView.getLayoutParams();
+        lp_shadow.width = width;
+        lp_shadow.height = height;
 
         //requestLayout();
 
@@ -249,11 +252,11 @@ public class SideToolbar extends FrameLayout {
         Log.i("SideToolbar", "------>initLayout");
         // add views in mHolderList to the layout
         for (int i = 0; i < mItemCount; i++) {
-            super.addView(mHolderList[i].itemView);
+            super.addViewInLayout(mHolderList[i].itemView, -1, mHolderList[i].itemView.getLayoutParams(), true);
         }
         // add shadow
         inflateShadow();
-        super.addView(mShadowView);
+        super.addViewInLayout(mShadowView, -1, mShadowView.getLayoutParams(), true);
 
         // if height and width get 0 before the first load of the layout, register listener to obtain height and
         // width when onLayout() finished.
@@ -262,12 +265,14 @@ public class SideToolbar extends FrameLayout {
             observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
+                    Log.i("SideToolbar", "------>onGlobalLayout");
                     mWidth = getWidth();
                     mHeight = getHeight();
                     widthNoFocus = integerize((double) mWidth * mWeightNoFocus / mWeightCount);
                     heightNoFocus = integerize((double) mHeight * mWeightNoFocus / mWeightCount);
 
-                    requestGlobalLayout();
+                    //requestGlobalLayout(); use twos methods below can reduce once requestLayout();
+                    onViewHoldersMeasure();
                     initShadowSize();
 
                     // once height and width got, unregister the listener
@@ -312,13 +317,13 @@ public class SideToolbar extends FrameLayout {
                 height = integerize((double) mHeight * mHolderList[i].weight / mWeightCount);
                 width = mWidth;
             }
-           // if (isAdapterNewlySet) {
-           //     lp = new FrameLayout.LayoutParams(width, height);
-           //     mHolderList[i].itemView.setLayoutParams(lp);
-           // } else {
-                lp = mHolderList[i].itemView.getLayoutParams();
-                lp.width = width;
-                lp.height = height;
+            // if (isAdapterNewlySet) {
+            //     lp = new FrameLayout.LayoutParams(width, height);
+            //     mHolderList[i].itemView.setLayoutParams(lp);
+            // } else {
+            lp = mHolderList[i].itemView.getLayoutParams();
+            lp.width = width;
+            lp.height = height;
             //}
         }
         isAdapterNewlySet = false;

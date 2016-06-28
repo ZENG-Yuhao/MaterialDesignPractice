@@ -182,7 +182,7 @@ public class StickyLabelListView extends FrameLayout {
             removeAllViews();
             shadowView = view;
             shadowOf = position;
-            addView(shadowView);
+            addViewInLayout(shadowView, -1, shadowView.getLayoutParams(), true);
 
             ViewTreeObserver observer = getViewTreeObserver();
             observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -206,6 +206,7 @@ public class StickyLabelListView extends FrameLayout {
             if (scrollState == SCROLLING_UP) {
                 if (getFirstVisibleItemViewType() == mLabelViewType) {
                     int pos = getFirstVisibleItemPosition();
+                    // the first time the label come to current position update shadowView
                     if (shadowOf != pos) {
                         View newShadowView = createShadowFromPosition(pos, mLabelViewType);
                         setContentView(newShadowView, pos);
@@ -213,6 +214,7 @@ public class StickyLabelListView extends FrameLayout {
                     newState = SHADOW_STAY;
                 }
 
+                // next label (the item below the current) is coming, overwrite newState
                 if (getFirstCompletelyVisibleItemViewType() == mLabelViewType) {
                     if (getFirstCompletelyVisibleItem().getTop() <= mInitHeight)
                         newState = SHADOW_FOLLOW;
@@ -220,12 +222,14 @@ public class StickyLabelListView extends FrameLayout {
             } else if (scrollState == SCROLLING_DOWN) {
                 if (getFirstCompletelyVisibleItemViewType() == mLabelViewType) {
                     int pos = getClosestPreviousLabelPosition(getFirstVisibleItemPosition());
+                    // the first time the label come to current position update shadowView
                     if (shadowOf != pos) {
                         View newShadowView = createShadowFromPosition(pos, mLabelViewType);
                         setContentView(newShadowView, pos);
                     }
                     newState = SHADOW_FOLLOW;
 
+                    // next label (the item above the current) is coming, overwrite newState
                     if (getFirstCompletelyVisibleItem().getTop() > mInitHeight)
                         newState = SHADOW_STAY;
                 }

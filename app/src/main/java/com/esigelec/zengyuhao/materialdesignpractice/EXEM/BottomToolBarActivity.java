@@ -55,32 +55,36 @@ public class BottomToolBarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("SideToolbar", "------>start oncreate:" + System.currentTimeMillis());
         setContentView(R.layout.activity_bottom_tool_bar);
+        Log.i("SideToolbar", "------>finish setContentView:" + System.currentTimeMillis());
+        // init BottomToolBar
+        MyAdapter adapter = new MyAdapter();
+        Log.i("SideToolbar", "------>finish createAdapter:" + System.currentTimeMillis());
+        SideToolbar toolBar = (SideToolbar) findViewById(R.id.bottom_toolbar);
+        toolBar.setAdapter(adapter);
+        Log.i("SideToolbar", "------>finish setAdapter:" + System.currentTimeMillis());
+        toolBar.setOnItemClickListener(new SideToolbar.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+            }
+        });
+        Log.i("SideToolbar", "------>finish setOnItemClick:" + System.currentTimeMillis());
+        // init ViewPager
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        toolBar.bindViewPager(viewPager);
+        Log.i("SideToolbar", "------>finish bindViewPager:" + System.currentTimeMillis());
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Sidebar");
         }
-
-        View view;
-
-        // init BottomToolBar
-        SideToolbar toolBar = (SideToolbar) findViewById(R.id.bottom_toolbar);
-        toolBar.setAdapter(new MyAdapter());
-        toolBar.setOnItemClickListener(new SideToolbar.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-            }
-        });
-
-        // init ViewPager
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
         pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-        toolBar.bindViewPager(viewPager);
         //toolBar.setCurrentItem(2);
         viewPager.addOnPageChangeListener(new MyPageChangedListener());
+        Log.i("SideToolbar", "------>finish onCreate:" + System.currentTimeMillis());
     }
 
     public class MyAdapter extends SideToolbar.Adapter<MyAdapter.MyHolder> {
