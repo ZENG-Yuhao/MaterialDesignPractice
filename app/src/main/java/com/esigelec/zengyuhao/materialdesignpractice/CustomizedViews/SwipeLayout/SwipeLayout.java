@@ -50,7 +50,7 @@ public class SwipeLayout extends FrameLayout {
      * value is used to judge whether the top layer should continue swipe to target position (swiping-offset >=
      * threshold) or it should swipe back to its initial position (swiping-offset < threshold).
      */
-    private double mTriggerThreshold = 0.08;
+    private double mTriggerThreshold = 0.02;
     private int mTriggerThresholdPixels; // mTriggerThresholdPixels = mTriggerThreshold * width;
     /**
      * Max offset of left bound in percentage. In this layout, position of layer is controlled by {@link View#setX(float)}
@@ -61,7 +61,7 @@ public class SwipeLayout extends FrameLayout {
     private int maxLeftOffsetPixels; // maxLeftOffsetPixels = maxLeftOffset * width;
 
     /* touch event*/
-    private int lastX;
+    private int lastX, lastY;
 
     private View mTopLayer, mBottomLayer;
     private int mWidth;
@@ -189,19 +189,25 @@ public class SwipeLayout extends FrameLayout {
      * @param event The motion event.
      * @return True if the event was handled, false otherwise.
      */
-    private boolean onLayerTouch(View v, MotionEvent event){
+    private boolean onLayerTouch(View v, MotionEvent event) {
         int currX = (int) event.getRawX();
+        int currY = (int) event.getRawY();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.i(TAG, "------>ACTION_DOWN");
                 stopAnimation();
                 lastX = currX;
+                lastY = currY;
                 return true;
 
             case MotionEvent.ACTION_MOVE:
                 mState = STATE_DRAGGING;
                 int dtX = currX - lastX;
+                int dtY = currY - lastY;
+
+                // to have a better reaction when this layout is in a scrollable layout.
+                //if (Math.abs(dtY) > 100 * Math.abs(dtX)) return false;
                 flag = (dtX < 0) ? GOING_LEFT : GOING_RIGHT;
 
                 // getX() should always be in the section [-maxLeftOffsetPixels, 0]
@@ -214,9 +220,11 @@ public class SwipeLayout extends FrameLayout {
 
                 // record x, y
                 lastX = currX;
+                lastY = currY;
                 return true;
 
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
                 Log.i(TAG, "------>ACTION_UP");
                 if (mode == MODE_STICKY) {
                     int leftThreshold = -(maxLeftOffsetPixels - mTriggerThresholdPixels);
@@ -235,7 +243,7 @@ public class SwipeLayout extends FrameLayout {
                 }
                 return true;
         }
-        return true;
+        return false;
     }
 
     /**

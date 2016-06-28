@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SwipeLayout.SwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:layout_margin="5dp"
+    android:layout_height="88dp"
     android:background="@drawable/shape_rect"
+    android:layout_marginBottom="2dp"
     android:elevation="2dp">
 
     <include layout="@layout/layer_top_swipelayout"/>
-</LinearLayout>
+    <include layout="@layout/layer_bottom_swipelayout"/>
+</com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SwipeLayout.SwipeLayout>
