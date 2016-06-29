@@ -56,6 +56,8 @@ public class SiteInfoActivity extends Activity {
 
         mDataList = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PersonneAdapter(this);
         recyclerView.setAdapter(mAdapter);
