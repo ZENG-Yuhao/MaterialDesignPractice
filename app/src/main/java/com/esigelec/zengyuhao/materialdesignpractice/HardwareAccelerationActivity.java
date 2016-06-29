@@ -9,7 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.CircleProgressBar.CircleProgressBar;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleProgressBar.CircleProgressBar;
 
 public class HardwareAccelerationActivity extends Activity {
     private CircleProgressBar circleProgressBar;

@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SideToolBar;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;

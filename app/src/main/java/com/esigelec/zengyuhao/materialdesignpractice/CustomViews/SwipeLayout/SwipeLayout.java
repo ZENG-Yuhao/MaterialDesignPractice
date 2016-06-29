@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SwipeLayout;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;

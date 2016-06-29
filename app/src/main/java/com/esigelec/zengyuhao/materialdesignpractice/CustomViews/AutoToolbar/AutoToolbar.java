@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.AutoToolbar;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomViews.AutoToolbar;
 
 import android.content.Context;
 import android.util.AttributeSet;

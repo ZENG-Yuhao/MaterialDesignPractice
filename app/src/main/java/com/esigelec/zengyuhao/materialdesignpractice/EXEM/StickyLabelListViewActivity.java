@@ -6,10 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.StickyLabelListView.StickyLabelListView;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.StickyLabelListView.StickyLabelListView;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class StickyLabelListViewActivity extends Activity {

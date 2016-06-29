@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.SeekBar;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.CircleProgressBar.CircleProgressBar;
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.CircleProgressBar.CircleProgressBarView;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleProgressBar.CircleProgressBar;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleProgressBar.CircleProgressBarView;
 
 public class CustomViewActivity extends Activity {
 

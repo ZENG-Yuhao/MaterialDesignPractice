@@ -1,6 +1,5 @@
 package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 
-import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,14 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.esigelec.zengyuhao.materialdesignpractice.BuildConfig;
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SideToolBar.SideToolbar;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SideToolBar.SideToolbar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class BottomToolBarActivity extends AppCompatActivity {

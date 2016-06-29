@@ -3,11 +3,10 @@ package com.esigelec.zengyuhao.materialdesignpractice;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews.SwipeLayout.SwipeLayout;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout.SwipeLayout;
 
 public class SwipeLayoutActivity extends Activity {
 

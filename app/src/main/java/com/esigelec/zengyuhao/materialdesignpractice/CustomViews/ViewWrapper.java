@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.CustomizedViews;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomViews;
 
 import android.view.View;
 import android.view.ViewGroup;
