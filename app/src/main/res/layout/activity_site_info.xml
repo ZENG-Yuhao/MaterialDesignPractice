@@ -15,7 +15,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         >
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="40dp"
             android:text="EXEM"
             android:textSize="16sp"/>
 
@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="62dp"
+            android:layout_marginBottom="32dp"
             android:text="Prologue 1 - 815 La Pyrénéenne 31670 Labège"
             android:textSize="16sp"/>
 
