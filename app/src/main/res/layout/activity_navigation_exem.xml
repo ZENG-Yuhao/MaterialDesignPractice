@@ -34,7 +34,15 @@
 
     <Button
         android:id="@+id/btn_sticky_label_list_view"
-        android:text="StickyLabelListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="StickyLabelListView"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/btn_site_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Site Info"
+        android:textAllCaps="false"/>
 </LinearLayout>

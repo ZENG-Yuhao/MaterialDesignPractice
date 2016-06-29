@@ -68,6 +68,8 @@
         </activity>
         <activity android:name=".EXEM.StickyLabelListViewActivity">
         </activity>
+        <activity android:name=".EXEM.SiteInfoActivity">
+        </activity>
     </application>
 
 </manifest>
