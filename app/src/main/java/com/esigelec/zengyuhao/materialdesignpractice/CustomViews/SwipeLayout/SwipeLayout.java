@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
@@ -193,6 +194,14 @@ public class SwipeLayout extends FrameLayout {
         int currX = (int) event.getRawX();
         int currY = (int) event.getRawY();
 
+        ViewConfiguration vConfig = ViewConfiguration.get(v.getContext());
+        /*
+            "Touch slop" refers to the distance in pixels a user's touch can wander before the gesture is interpreted
+             as scrolling. Touch slop is typically used to prevent accidental scrolling when the user is performing
+             some other touch operation, such as touching on-screen elements.
+         */
+        int mTouchSlop = vConfig.getScaledTouchSlop();
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.i(TAG, "------>ACTION_DOWN");
@@ -206,8 +215,9 @@ public class SwipeLayout extends FrameLayout {
                 int dtX = currX - lastX;
                 int dtY = currY - lastY;
 
-                // to have a better reaction when this layout is in a scrollable layout.
-                //if (Math.abs(dtY) > 100 * Math.abs(dtX)) return false;
+
+                // if (Math.abs(dtX) <= mTouchSlop) return false;
+
                 flag = (dtX < 0) ? GOING_LEFT : GOING_RIGHT;
 
                 // getX() should always be in the section [-maxLeftOffsetPixels, 0]
