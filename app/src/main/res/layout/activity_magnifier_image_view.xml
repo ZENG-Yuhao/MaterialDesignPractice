@@ -10,4 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.MagnifierImageViewActivity">
 
+    <ImageView
+        android:src="@drawable/ic_placeholder_picture_black"
+        android:background="@drawable/shape_circle"
+        android:scaleType="centerInside"
+        android:layout_width="60dp"
+        android:layout_height="60dp"/>
 </RelativeLayout>
