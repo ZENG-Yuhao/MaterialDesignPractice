@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActiv
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
             "WaveScanner UI",
+            "ViewGroupOverlay",
             "RecyclerView",
             "Scene and Transition",
             "SwipeLayout",
@@ -46,6 +47,7 @@ public class MainActivity extends Activity {
 
     final private static Class[] xActivityClasses = new Class[]{
             NavigationEXEMActivity.class,
+            ViewGroupOverlayActivity.class,
             RecyclerViewActivity.class,
             SceneAndTransitionActivity.class,
             SwipeLayoutActivity.class,
