@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.CustomViews.StickyLabelListView;
+package com.esigelec.zengyuhao.materialdesignpractice.CustomViews;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;

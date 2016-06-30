@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout.SwipeLayout;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout;
 
 public class SwipeLayoutActivity extends Activity {
 

@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.SwipeLayoutActivity">
 
-    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout.SwipeLayout
+    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:background="@drawable/shape_rect"
@@ -19,5 +19,5 @@
 
         <include layout="@layout/layer_top_swipelayout" />
         <include layout ="@layout/layer_bottom_swipelayout" />
-    </com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout.SwipeLayout>
+    </com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SwipeLayout>
 </RelativeLayout>

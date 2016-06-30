@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 
 import com.esigelec.zengyuhao.materialdesignpractice.BuildConfig;
-import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SideToolBar.SideToolbar;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.SideToolbar;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class BottomToolBarActivity extends AppCompatActivity {
