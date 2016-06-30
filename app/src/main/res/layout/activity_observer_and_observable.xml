@@ -4,40 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.ObserverAndObservableActivity">
 
 
     <Button
-        android:id="@+id/btn_obs"
-        android:text="Change MyObservable"
+        android:id="@+id/btn_1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Observable --- Observer"/>
 
     <Button
-        android:id="@+id/btn_obs_arg"
-        android:text="Change MyObservableWithArg"
+        android:id="@+id/btn_2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    
-    <TextView
-        android:text="Console:"
+        android:layout_height="wrap_content"
+        android:text="Observable --- Observer Arg"/>
+
+    <Button
+        android:id="@+id/btn_3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Observable Arg --- Observer"/>
+
+    <Button
+        android:id="@+id/btn_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Observable Arg --- Observer Arg"/>
+
     <TextView
-        android:text="============= Basic line ============="
-        android:textColor="@android:color/holo_red_light"
-        android:gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Console:"/>
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="============= Basic line ============="
+        android:textColor="@android:color/holo_red_light"/>
+
     <TextView
         android:id="@+id/txt_log"
         android:layout_width="match_parent"
-        android:singleLine="false"
+        android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:layout_height="match_parent"/>
+        android:singleLine="false"/>
 </LinearLayout>

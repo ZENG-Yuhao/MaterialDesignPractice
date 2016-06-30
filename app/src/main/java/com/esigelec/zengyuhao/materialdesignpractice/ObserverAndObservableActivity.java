@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class ObserverAndObservableActivity extends Activity {
     private TextView txt_log;
-    private Button btn_obs, btn_obs_arg;
+    private Button btn_1, btn_2, btn_3, btn_4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,29 +25,65 @@ public class ObserverAndObservableActivity extends Activity {
         txt_log.setMovementMethod(new ScrollingMovementMethod());
 
         MyObserver mObserver = new MyObserver();
+        MyObserver mObserver1 = new MyObserver();
         MyObserverWithArg mObserverArg = new MyObserverWithArg();
+        MyObserverWithArg mObserverArg1 = new MyObserverWithArg();
 
         final MyObservable observable = new MyObservable();
+        final MyObservable observable1 = new MyObservable();
         final MyObservableWithArg observableWithArg = new MyObservableWithArg();
+        final MyObservableWithArg observableWithArg1 = new MyObservableWithArg();
 
         observable.addObserver(mObserver);
-        observable.addObserver(mObserverArg);
+        observable1.addObserver(mObserverArg);
         observableWithArg.addObserver(mObserver);
-        observableWithArg.addObserver(mObserverArg);
+        observableWithArg1.addObserver(mObserverArg1);
 
-        btn_obs = (Button) findViewById(R.id.btn_obs);
-        btn_obs.setOnClickListener(new View.OnClickListener() {
+//        btn_obs = (Button) findViewById(R.id.btn_obs);
+//        btn_obs.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                observable.setData(new Random().nextInt());
+//            }
+//        });
+//
+//        btn_obs_arg = (Button) findViewById(R.id.btn_obs_arg);
+//        btn_obs_arg.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                observableWithArg.setData(new Random().nextInt());
+//            }
+//        });
+
+        btn_1 = (Button) findViewById(R.id.btn_1);
+        btn_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 observable.setData(new Random().nextInt());
             }
         });
 
-        btn_obs_arg = (Button) findViewById(R.id.btn_obs_arg);
-        btn_obs_arg.setOnClickListener(new View.OnClickListener() {
+        btn_2 = (Button) findViewById(R.id.btn_2);
+        btn_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                observable1.setData(new Random().nextInt());
+            }
+        });
+
+        btn_3 = (Button) findViewById(R.id.btn_3);
+        btn_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 observableWithArg.setData(new Random().nextInt());
+            }
+        });
+
+        btn_4 = (Button) findViewById(R.id.btn_4);
+        btn_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                observableWithArg1.setData(new Random().nextInt());
             }
         });
     }
@@ -69,8 +105,9 @@ public class ObserverAndObservableActivity extends Activity {
     public class MyObserver implements Observer {
 
         @Override
-        public void update(Observable observable, Object data) {
+        public void update(Observable observable, Object arg) {
             appendText(txt_log, "MyObserver ----> " + ((MyObservable) observable).getData() + "\n");
+            appendText(txt_log, "\n");
         }
     }
 
@@ -88,11 +125,12 @@ public class ObserverAndObservableActivity extends Activity {
     public class MyObserverWithArg implements Observer {
 
         @Override
-        public void update(Observable observable, Object data) {
-            if (data instanceof String) {
-                String flag = (String) data;
-                appendText(txt_log, "MyObserverWithArg ----> WITH FLAG :" + ((MyObservable) observable).getData
-                        () + "\n");
+        public void update(Observable observable, Object arg) {
+            if (arg instanceof String) {
+                String flag = (String) arg;
+                appendText(txt_log, "MyObserverWithArg ----> WITH FLAG :" + flag + " DATA:" + ((MyObservable) observable)
+                        .getData() + "\n");
+                appendText(txt_log, "\n");
             }
         }
     }
