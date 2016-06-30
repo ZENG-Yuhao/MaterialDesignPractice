@@ -72,6 +72,8 @@
         </activity>
         <activity android:name=".ViewGroupOverlayActivity">
         </activity>
+        <activity android:name=".MagnifierImageViewActivity">
+        </activity>
     </application>
 
 </manifest>
