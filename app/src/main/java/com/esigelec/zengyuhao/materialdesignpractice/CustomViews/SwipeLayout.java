@@ -93,6 +93,12 @@ public class SwipeLayout extends FrameLayout {
         }
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = w;
+    }
+
     public double getMaxLeftOffset() {
         return maxLeftOffset;
     }

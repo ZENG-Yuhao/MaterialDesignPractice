@@ -156,6 +156,13 @@ public class SideToolbar extends FrameLayout {
         this.mWeightNoFocus = weightNoFocus > 0 ? weightNoFocus : 1;
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = w;
+        mHeight = h;
+    }
+
     /**
      * After doing layout animations, there may be errors of widths, use this method can fix it.
      *
