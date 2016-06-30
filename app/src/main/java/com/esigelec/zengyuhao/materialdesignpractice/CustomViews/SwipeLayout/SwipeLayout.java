@@ -24,7 +24,7 @@ import android.widget.FrameLayout;
  * <p/>
  * Attention: This layout does not take charge of actions of each view, it handles only the swiping effect. Since
  * view are inflated by XML file, so all elements can be retrieved by their Ids, all actions can be defined at other
- * place.
+ * place (in Activity for example).
  * <p/>
  * Created by ZENG Yuhao on 23/06/16.
  * Contact: enzo.zyh@gmail.com
