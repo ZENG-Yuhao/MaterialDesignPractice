@@ -27,12 +27,12 @@ public class ViewGroupOverlayActivity extends Activity {
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                animateNinjaEfffect(v, parent);
+                animateNinjaEffect(v, parent);
             }
         });
     }
 
-    public static void animateNinjaEfffect(final View target, final ViewGroup parent) {
+    public static void animateNinjaEffect(final View target, final ViewGroup parent) {
         View rootView = target.getRootView();
         if (rootView != null && rootView instanceof ViewGroup) {
             final ViewGroupOverlay overlay = ((ViewGroup) rootView).getOverlay();
