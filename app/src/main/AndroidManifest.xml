@@ -74,6 +74,8 @@
         </activity>
         <activity android:name=".MagnifierImageViewActivity">
         </activity>
+        <activity android:name=".TEST.CircleImageViewActivity">
+        </activity>
     </application>
 
 </manifest>
