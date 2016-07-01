@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -11,9 +12,18 @@
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.MagnifierImageViewActivity">
 
     <ImageView
-        android:src="@drawable/ic_placeholder_picture_black"
-        android:background="@drawable/shape_circle"
-        android:scaleType="centerInside"
-        android:layout_width="60dp"
-        android:layout_height="60dp"/>
-</RelativeLayout>
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:elevation="8dp"
+        android:maxHeight="1000dp"
+        android:maxWidth="1000dp"
+        android:padding="10dp"
+        android:src="@drawable/img3"/>
+
+    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:elevation="8dp"
+        android:padding="10dp"
+        android:src="@drawable/img3"/>
+</LinearLayout>
