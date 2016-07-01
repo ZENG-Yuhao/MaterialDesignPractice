@@ -27,7 +27,7 @@ public class CircleImageView extends ImageView {
     private Bitmap mBitmap;
     private Shader mShader;
     private BitmapShader mBitmapShader;
-    private Drawable mDrawable;
+    private Drawable mDrawable, mDrawableCompared;
     private Path mCirclePath;
     private int mDrawableWidth, mDrawableHeight;
     private Matrix mDrawMatrix;
@@ -64,11 +64,16 @@ public class CircleImageView extends ImageView {
     }
 
     public void setup() {
-        int w = getWidth();
-        int h = getHeight();
-        int r = Math.min(w, h) / 3;
-        mCirclePath = new Path();
-        mCirclePath.addCircle(w / 2, h / 2, r, Path.Direction.CW);
+        mLeft = getLeft();
+        mTop = getTop();
+        mRight = getRight();
+        mBottom = getBottom();
+        mPaddingLeft = getPaddingLeft();
+        mPaddingTop = getPaddingTop();
+        mPaddingRight = getPaddingRight();
+        mPaddingBottom = getPaddingBottom();
+
+        float centerX, centerY, radius;
     }
 
     @Override
@@ -79,11 +84,40 @@ public class CircleImageView extends ImageView {
 
 
     protected void onPreDraw() {
+        mDrawable = getDrawable();
+        mDrawableWidth = mDrawable.getIntrinsicWidth();
+        mDrawableHeight = mDrawable.getIntrinsicHeight();
+        mDrawMatrix = getImageMatrix();
+
+        // variables below are hidden in source code, so these attachment are added by conjecture, they do work fine,
+        // but they may not reliable.
+        mScrollX = getScrollX();
+        mScrollY = getScrollY();
+        mCropToPadding = getCropToPadding();
+        /*
+          #variables below are get in setup()#
+          mLeft = getLeft();
+          mTop = getTop();
+          mRight = getRight();
+          mBottom = getBottom();
+          mPaddingLeft = getPaddingLeft();
+          mPaddingTop = getPaddingTop();
+          mPaddingRight = getPaddingRight();
+          mPaddingBottom = getPaddingBottom();
+        */
 
     }
 
+    /**
+     * Most parts of this method are directly copied from {@link ImageView#onDraw(Canvas)} for keeping as many as
+     * possible features of ImageView.  because there are many variables are defined as private in ImageView, so
+     * {@link #onPreDraw()} is added to make those variables being attached.
+     *
+     * @param canvas the canvas on which the background will be drawn
+     */
     @Override
     protected void onDraw(Canvas canvas) {
+        onPreDraw();
         if (mDrawable == null) {
             return; // couldn't resolve the URI
         }
@@ -93,7 +127,8 @@ public class CircleImageView extends ImageView {
         }
 
         if (mDrawMatrix == null && mPaddingTop == 0 && mPaddingLeft == 0) {
-            mDrawable.draw(canvas);
+             //mDrawable.draw(canvas);  //-- replaced by startDrawing()
+            startDrawing(canvas);
         } else {
             int saveCount = canvas.getSaveCount();
             canvas.save();
@@ -101,20 +136,40 @@ public class CircleImageView extends ImageView {
             if (mCropToPadding) {
                 final int scrollX = mScrollX;
                 final int scrollY = mScrollY;
-                canvas.clipRect(scrollX + mPaddingLeft, scrollY + mPaddingTop,
-                        scrollX + mRight - mLeft - mPaddingRight,
-                        scrollY + mBottom - mTop - mPaddingBottom);
+                canvas.clipRect(scrollX + mPaddingLeft, scrollY + mPaddingTop, scrollX + mRight - mLeft -
+                        mPaddingRight, scrollY + mBottom - mTop - mPaddingBottom);
             }
-
+            // Panning from origin of coordinate system to new origin
             canvas.translate(mPaddingLeft, mPaddingTop);
 
             if (mDrawMatrix != null) {
                 canvas.concat(mDrawMatrix);
             }
-            mDrawable.draw(canvas);
+             //mDrawable.draw(canvas);  //-- replaced by startDrawing()
+            startDrawing(canvas);
             canvas.restoreToCount(saveCount);
         }
 
+    }
+
+    protected void startDrawing(Canvas canvas) {
+        Log.i(TAG, "onDraw");
+        if (mDrawable != mDrawableCompared) {
+            Log.i(TAG, "onDraw: " + "mDrawable!=mDrawableCompared");
+            Log.i(TAG, "onDraw: " + getWidth() + " " + getHeight() + " " + mDrawableWidth + " " + mDrawableHeight);
+            mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
+            //mBitmap = Bitmap.createScaledBitmap(mBitmap, getWidth(), getHeight(), false);
+            mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            mPaint.setShader(mBitmapShader);
+            // update reference
+            mDrawableCompared = mDrawable;
+        }
+
+        // because we have moved the coordinate system by translate(), drawing coordinate system and canvas/view
+        // coordinate system are no longer the same, we must apply intrinsic width and height to calculate circle
+        // center.
+        canvas.drawCircle(mDrawableWidth / 2, mDrawableHeight / 2, Math.min(mDrawableWidth / 2, mDrawableHeight / 2),
+                mPaint);
     }
 
     public void onDrawTemp(Canvas canvas) {
@@ -127,7 +182,9 @@ public class CircleImageView extends ImageView {
             //treatBitmap(mBitmap);
             mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
             mPaint.setShader(mBitmapShader);
+
         }
+
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, Math.min(getWidth(), getHeight()) / 4, mPaint);
 //
 //        if (mDrawable == null || getDrawable() != mDrawable) {

@@ -23,7 +23,8 @@
     <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleImageView
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:background="@android:color/holo_orange_dark"
         android:elevation="8dp"
         android:padding="10dp"
-        android:src="@drawable/img3"/>
+        android:src="@drawable/ic_placeholder_picture_black"/>
 </LinearLayout>
