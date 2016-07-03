@@ -25,10 +25,8 @@ public class CircleImageView extends ImageView {
     private static final String TAG = "CircleImageView";
     private Paint mPaint;
     private Bitmap mBitmap;
-    private Shader mShader;
     private BitmapShader mBitmapShader;
     private Drawable mDrawable, mDrawableCompared;
-    private Path mCirclePath;
     private int mDrawableWidth, mDrawableHeight;
     private Matrix mDrawMatrix;
     private int mPaddingTop, mPaddingLeft, mPaddingRight, mPaddingBottom;
@@ -73,7 +71,6 @@ public class CircleImageView extends ImageView {
         mPaddingRight = getPaddingRight();
         mPaddingBottom = getPaddingBottom();
 
-        float centerX, centerY, radius;
     }
 
     @Override
@@ -95,7 +92,7 @@ public class CircleImageView extends ImageView {
         mScrollY = getScrollY();
         mCropToPadding = getCropToPadding();
         /*
-          #variables below are get in setup()#
+          #variables below are got in setup()#
           mLeft = getLeft();
           mTop = getTop();
           mRight = getRight();
@@ -165,9 +162,6 @@ public class CircleImageView extends ImageView {
             mDrawableCompared = mDrawable;
         }
 
-        // because we have moved the coordinate system by translate(), drawing coordinate system and canvas/view
-        // coordinate system are no longer the same, we must apply intrinsic width and height to calculate circle
-        // center.
         canvas.drawCircle(mDrawableWidth / 2, mDrawableHeight / 2, Math.min(mDrawableWidth / 2, mDrawableHeight / 2),
                 mPaint);
     }
