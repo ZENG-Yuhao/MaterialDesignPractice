@@ -18,6 +18,9 @@ import android.util.Log;
 import android.widget.ImageView;
 
 /**
+ * An custom ImageView that draws drawables/bitmaps in circle. Unlike most of custom views of this kind, this view
+ * modifies onDraw() to draw circle rather than overriding it, thus, almost all features of ImageView are kept.
+ *
  * Created by ZENG Yuhao on 01/07/16.
  * Contact: enzo.zyh@gmail.com
  */
@@ -124,13 +127,14 @@ public class CircleImageView extends ImageView {
         }
 
         if (mDrawMatrix == null && mPaddingTop == 0 && mPaddingLeft == 0) {
-             //mDrawable.draw(canvas);  //-- replaced by startDrawing()
+            //mDrawable.draw(canvas);  //-- replaced by startDrawing()
             startDrawing(canvas);
         } else {
             int saveCount = canvas.getSaveCount();
             canvas.save();
 
             if (mCropToPadding) {
+                Log.i(TAG, "onDraw: " + "mCropToPadding=" + mCropToPadding);
                 final int scrollX = mScrollX;
                 final int scrollY = mScrollY;
                 canvas.clipRect(scrollX + mPaddingLeft, scrollY + mPaddingTop, scrollX + mRight - mLeft -
@@ -142,7 +146,7 @@ public class CircleImageView extends ImageView {
             if (mDrawMatrix != null) {
                 canvas.concat(mDrawMatrix);
             }
-             //mDrawable.draw(canvas);  //-- replaced by startDrawing()
+            //mDrawable.draw(canvas);  //-- replaced by startDrawing()
             startDrawing(canvas);
             canvas.restoreToCount(saveCount);
         }
@@ -162,6 +166,11 @@ public class CircleImageView extends ImageView {
             mDrawableCompared = mDrawable;
         }
 
+        // Inside ImageView, the difference between view's size and canvas/drawable's size was already calculated and
+        // relative adaptive changes are reflected in mDrawMatrix, so we don't have to care about paddings, pannings
+        // etc. the only thing we have to do is simply taking intrinsic width and height, and using them to calculate
+        // center of the circle, that's why we use mDrawableWidth & mDrawableHeight rather than getWidth() &
+        // getHeight().
         canvas.drawCircle(mDrawableWidth / 2, mDrawableHeight / 2, Math.min(mDrawableWidth / 2, mDrawableHeight / 2),
                 mPaint);
     }
