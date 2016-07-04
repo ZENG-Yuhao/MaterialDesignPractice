@@ -8,12 +8,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.MagnifierImageView;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.MagnifierView;
 
 public class MagnifierImageViewActivity extends Activity {
     private static final String TAG = "MagnifierImageView";
     private ImageView img;
-    private MagnifierImageView.Magnifier magnifier;
+    private MagnifierView magnifier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +21,10 @@ public class MagnifierImageViewActivity extends Activity {
         setContentView(R.layout.activity_magnifier_image_view);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.linear_layout);
-        magnifier = new MagnifierImageView.Magnifier(this);
+        magnifier = new MagnifierView(this);
         magnifier.setSize(500, 500);
-        magnifier.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+        //magnifier.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+        //magnifier.setElevation(8);
         layout.addView(magnifier);
 
 
