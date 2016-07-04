@@ -11,11 +11,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.MagnifierImageViewActivity">
 
-    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleImageView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:background="@android:color/holo_orange_dark"
-        android:elevation="8dp"
-        android:padding="16dp"
-        android:src="@drawable/img3"/>
+    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.MagnifierImageView.Magnifier
+        android:id="@+id/magnifier"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="40dp"/>
+
+    <ImageView
+        android:id="@+id/img1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/img5"/>
+
+
 </LinearLayout>
