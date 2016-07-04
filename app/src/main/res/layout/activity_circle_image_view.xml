@@ -8,9 +8,26 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.esigelec.zengyuhao.materialdesignpractice.TEST.CircleImageViewActivity">
+    tools:context=".CircleImageViewActivity">
 
-    <android.support.v4.widget.CircleImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
+    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleImageView
+        android:id="@+id/circle_image_view"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:elevation="8dp"
+        android:padding="16dp"
+        android:src="@drawable/img3"/>
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_above="@id/circle_image_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/shape_rect"
+        android:elevation="8dp"
+        android:padding="16dp"
+        android:src="@drawable/img3"/>
 </RelativeLayout>
