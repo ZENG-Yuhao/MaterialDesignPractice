@@ -111,6 +111,7 @@ public class MagnifierImageView extends ImageView {
         }
 
         protected void update() {
+            if (mBitmap == null) return;
             mScaleMatrix.setTranslate(-absoluteCentX, -absoluteCentY);
             mScaleMatrix.postScale(mScale, mScale);
             mBitmapPaint.getShader().setLocalMatrix(mScaleMatrix);
