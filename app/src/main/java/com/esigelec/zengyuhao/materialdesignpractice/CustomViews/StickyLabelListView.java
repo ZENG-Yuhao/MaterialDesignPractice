@@ -13,8 +13,10 @@ import android.widget.FrameLayout;
 import com.esigelec.zengyuhao.materialdesignpractice.BuildConfig;
 
 /**
- * Created by ZENG Yuhao on 27/06/16.
+ * <p>
+ * Created by ZENG Yuhao on 27/06/16. <br>
  * Contact: enzo.zyh@gmail.com
+ * </p>
  */
 public class StickyLabelListView extends FrameLayout {
     private static final String TAG = "StickyLabelListView";

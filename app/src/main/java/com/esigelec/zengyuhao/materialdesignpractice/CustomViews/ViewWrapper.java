@@ -4,8 +4,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by ZENG Yuhao on 22/06/16.
+ * <p>
+ * Created by ZENG Yuhao on 22/06/16. <br>
  * Contact: enzo.zyh@gmail.com
+ * </p>
  */
 public class ViewWrapper {
     public View targetView;

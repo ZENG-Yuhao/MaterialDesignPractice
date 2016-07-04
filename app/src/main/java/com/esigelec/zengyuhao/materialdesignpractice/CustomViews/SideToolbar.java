@@ -24,6 +24,10 @@ import java.lang.reflect.Field;
 
 /**
  * A bottom tool bar that can receive a list of tabs and their appropriate actions.
+ * <p>
+ * Created by ZENG Yuhao on 01/07/16. <br>
+ * Contact: enzo.zyh@gmail.com
+ * </p>
  */
 public class SideToolbar extends FrameLayout {
     private int mWidth;

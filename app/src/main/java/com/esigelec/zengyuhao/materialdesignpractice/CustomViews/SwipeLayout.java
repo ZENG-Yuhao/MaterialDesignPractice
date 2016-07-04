@@ -14,20 +14,21 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 /**
- * <p/>
- * A layout supporting swiping-to-left effect, there are two modes STICKY and NON-STICKY for user. With STICKY mode,
- * layout will swipe automatically to left or to right, with NON-STICKY mode, layout can stop at
- * any intermediate position between the most left position and the most right position.
- * <p/>
+ * <p>
+ * A layout supporting swiping-to-left effect, there are two modes STICKY and NON-STICKY for user. With STICKY
+ * mode, layout will swipe automatically to left or to right, with NON-STICKY mode, layout can stop at  any
+ * intermediate position between the most left position and the most right position.
+ * <p>
  * For now this layout can only be initialized in XML file and only support horizontal swipe-to-left effect, it will
  * take two first children as its top layer and bottom layer.
- * <p/>
+ * <p>
  * Attention: This layout does not take charge of actions of each view, it handles only the swiping effect. Since
  * view are inflated by XML file, so all elements can be retrieved by their Ids, all actions can be defined at other
  * place (in Activity for example).
- * <p/>
- * Created by ZENG Yuhao on 23/06/16.
+ * <p>
+ * Created by ZENG Yuhao on 23/06/16. <br>
  * Contact: enzo.zyh@gmail.com
+ * </p>
  */
 public class SwipeLayout extends FrameLayout {
     private static final String TAG = "SwipeLayout";
