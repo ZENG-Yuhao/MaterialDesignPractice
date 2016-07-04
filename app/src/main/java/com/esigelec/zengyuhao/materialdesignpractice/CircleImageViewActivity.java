@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.TEST;
+package com.esigelec.zengyuhao.materialdesignpractice;
 
 import android.app.Activity;
 import android.os.Bundle;

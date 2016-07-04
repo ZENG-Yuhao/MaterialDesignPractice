@@ -7,12 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import android.widget.ImageView;
 /**
  * An custom ImageView that draws drawables/bitmaps in circle. Unlike most of custom views of this kind, this view
  * modifies onDraw() to draw circle rather than overriding it, thus, almost all features of ImageView are kept.
- *
+ * <p/>
  * Created by ZENG Yuhao on 01/07/16.
  * Contact: enzo.zyh@gmail.com
  */
@@ -57,14 +58,24 @@ public class CircleImageView extends ImageView {
         init(context);
     }
 
-    public void init(Context context) {
+    protected void init(Context context) {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         //mPaint.setColor(Color.TRANSPARENT);
 //        PorterDuffXfermode mode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
 //        mPaint.setXfermode(mode);
+
+        initShape();
     }
 
-    public void setup() {
+    protected void initShape(){
+        OvalShape shape_circle = new OvalShape();
+        ShapeDrawable shapeDrawable = new ShapeDrawable();
+        shapeDrawable.setShape(shape_circle);
+        shapeDrawable.getPaint().setColor(getResources().getColor(android.R.color.white));
+        this.setBackground(shapeDrawable);
+    }
+
+    protected void setup() {
         mLeft = getLeft();
         mTop = getTop();
         mRight = getRight();
