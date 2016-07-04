@@ -1,17 +1,17 @@
 package com.esigelec.zengyuhao.materialdesignpractice;
 
 import android.app.Activity;
-import android.media.Image;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.renderscript.Float2;
-import android.util.EventLogTags;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.MagnifierImageView;
 
 public class MagnifierImageViewActivity extends Activity {
+    private static final String TAG = "MagnifierImageView";
     private ImageView img;
     private MagnifierImageView.Magnifier magnifier;
 
@@ -20,7 +20,11 @@ public class MagnifierImageViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_magnifier_image_view);
 
-        magnifier = (MagnifierImageView.Magnifier) findViewById(R.id.magnifier);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.linear_layout);
+        magnifier = new MagnifierImageView.Magnifier(this);
+        magnifier.setSize(500, 500);
+        magnifier.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+        layout.addView(magnifier);
 
         img = (ImageView) findViewById(R.id.img1);
         img.setOnTouchListener(new View.OnTouchListener() {
@@ -32,14 +36,20 @@ public class MagnifierImageViewActivity extends Activity {
                     case MotionEvent.ACTION_UP:
                         float x = event.getX();
                         float y = event.getY();
+                        //Log.i(TAG, "onTouch---->:" + x + " " + y);
                         float relativeX = x / img.getWidth();
                         float relativeY = y / img.getHeight();
+                        //Log.i(TAG, "onTouch---->:" + relativeX + " ## " + relativeY);
+                        magnifier.bindBitmap(((BitmapDrawable) img.getDrawable()).getBitmap());
                         magnifier.updateCenterByRelativeVals(relativeX, relativeY);
                         return true;
                 }
                 return false;
             }
         });
+
+        ImageView img2 = (ImageView) findViewById(R.id.img2);
+        img2.setImageBitmap(((BitmapDrawable) img.getDrawable()).getBitmap());
 
     }
 }

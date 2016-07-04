@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,18 +12,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.MagnifierImageViewActivity">
 
-    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.MagnifierImageView.Magnifier
-        android:id="@+id/magnifier"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginBottom="40dp"/>
 
     <ImageView
         android:id="@+id/img1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/img5"/>
 
+    <ImageView
+        android:id="@+id/img2"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
 
 </LinearLayout>
