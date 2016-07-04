@@ -26,6 +26,7 @@ public class MagnifierImageViewActivity extends Activity {
         magnifier.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
         layout.addView(magnifier);
 
+
         img = (ImageView) findViewById(R.id.img1);
         img.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -40,14 +41,14 @@ public class MagnifierImageViewActivity extends Activity {
                         float relativeX = x / img.getWidth();
                         float relativeY = y / img.getHeight();
                         //Log.i(TAG, "onTouch---->:" + relativeX + " ## " + relativeY);
-                        magnifier.bindBitmap(((BitmapDrawable) img.getDrawable()).getBitmap());
                         magnifier.updateCenterByRelativeVals(relativeX, relativeY);
                         return true;
                 }
                 return false;
             }
         });
-
+        magnifier.bindBitmap(((BitmapDrawable) img.getDrawable()).getBitmap());
+        magnifier.updateCenterByRelativeVals(0.5, 0.5);
         ImageView img2 = (ImageView) findViewById(R.id.img2);
         img2.setImageBitmap(((BitmapDrawable) img.getDrawable()).getBitmap());
 

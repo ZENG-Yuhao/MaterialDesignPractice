@@ -44,7 +44,7 @@ public class MagnifierImageView extends ImageView {
         private Paint mBitmapPaint, mCenterPaint;
         private BitmapShader mBitmapShader;
         private float absoluteCentX, absoluteCentY, absoluteR;
-        private float mScale = 2f;
+        private float mScale = 1.5f;
         private Matrix mScaleMatrix;
         private Matrix mCanvasMatrix;
 
@@ -68,7 +68,7 @@ public class MagnifierImageView extends ImageView {
             init(context);
         }
 
-        public void init(Context context) {
+        protected void init(Context context) {
             mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mCenterPaint.setColor(getResources().getColor(android.R.color.holo_red_light));
@@ -83,6 +83,9 @@ public class MagnifierImageView extends ImageView {
 
             //translate canvas origin point to the middle of this view
             mCanvasMatrix.setTranslate(w / 2, h / 2);
+
+            absoluteCentX = w / 2;
+            absoluteCentY = h / 2;
         }
 
         public void updateCenterByRelativeVals(double centX, double centY) {
@@ -91,7 +94,6 @@ public class MagnifierImageView extends ImageView {
 
             if (centY < 0) centY = 0;
             else if (centY > 1) centY = 1;
-            Log.i(TAG, "-->updateCenterByRelativeVals" + "  " + mBitmap.getWidth() + " " + mBitmap.getHeight());
             float absCentX = (float) (mBitmap.getWidth() * centX);
             float absCentY = (float) (mBitmap.getHeight() * centY);
             updateCenterByAbsoluteVals(absCentX, absCentY);
@@ -100,7 +102,6 @@ public class MagnifierImageView extends ImageView {
         public void updateCenterByAbsoluteVals(float absCentX, float absCentY) {
             absoluteCentX = absCentX;
             absoluteCentY = absCentY;
-            Log.i(TAG, "-->updateCenterByAbsoluteVals" + "  " + absoluteCentX + " " + absoluteCentY);
             update();
         }
 
@@ -109,7 +110,7 @@ public class MagnifierImageView extends ImageView {
             update();
         }
 
-        public void update() {
+        protected void update() {
             mScaleMatrix.setTranslate(-absoluteCentX, -absoluteCentY);
             mScaleMatrix.postScale(mScale, mScale);
             mBitmapPaint.getShader().setLocalMatrix(mScaleMatrix);
@@ -118,19 +119,10 @@ public class MagnifierImageView extends ImageView {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            Log.i(TAG, "onDraw" + absoluteCentX + " ## " + absoluteCentY + " ## " + absoluteR);
             if (mBitmap == null) return;
 
             // translate to middle of the view
             canvas.concat(mCanvasMatrix);
-            //canvas.translate(getWidth() / 2, getHeight() / 2);
-            // draw
-//            mBitmap = Bitmap.createScaledBitmap(mBitmap, getWidth(), getHeight(), false);
-//            mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-//            mScaleMatrix.setTranslate(-mBitmap.getWidth() / 2, -mBitmap.getHeight() / 2);
-//            mScaleMatrix.postScale(2f, 2f);
-//            mBitmapShader.setLocalMatrix(mScaleMatrix);
-//            mBitmapPaint.setShader(mBitmapShader);
             canvas.drawCircle(0, 0, absoluteR, mBitmapPaint);
             canvas.drawCircle(0, 0, 5, mCenterPaint);
 
