@@ -1,5 +1,9 @@
 package com.esigelec.zengyuhao.materialdesignpractice.CustomViews;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -13,6 +17,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * <p>
@@ -24,12 +31,16 @@ public class MagnifierView extends View {
     public static final String TAG = "Magnifier";
 
     private Bitmap mBitmap;
-    private Paint mBitmapPaint, mCenterPaint;
+    private Paint mBitmapPaint, mCenterPaint, mSidelinePaint;
     private BitmapShader mBitmapShader;
     private float absoluteCentX, absoluteCentY, absoluteR;
-    private float mScale = 1f;
+    private float backupAbsoluteR;
+    private float mScale = 1.5f;
     private Matrix mScaleMatrix;
     private Matrix mCanvasMatrix;
+    private int mSidelineWidth = 3;
+    private OnAppearDisappearListener mOnAppearDisappearListener;
+    private AnimatorSet mAppearDisappearAnim;
 
     public MagnifierView(Context context) {
         super(context);
@@ -52,11 +63,16 @@ public class MagnifierView extends View {
     }
 
     protected void init(Context context) {
-        mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBitmapPaint = new Paint();
         mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCenterPaint.setColor(getResources().getColor(android.R.color.holo_red_light));
         mScaleMatrix = new Matrix();
         mCanvasMatrix = new Matrix();
+
+        mSidelinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mSidelinePaint.setStyle(Paint.Style.STROKE);
+        mSidelinePaint.setStrokeWidth(mSidelineWidth);
+        mSidelinePaint.setColor(getResources().getColor(android.R.color.darker_gray));
 
         initShape();
     }
@@ -65,15 +81,37 @@ public class MagnifierView extends View {
         OvalShape shape_circle = new OvalShape();
         ShapeDrawable shapeDrawable = new ShapeDrawable();
         shapeDrawable.setShape(shape_circle);
-        shapeDrawable.getPaint().setColor(getResources().getColor(android.R.color.white));
+        shapeDrawable.getPaint().setColor(getResources().getColor(android.R.color.transparent));
         this.setBackground(shapeDrawable);
         setElevation(12);
+    }
+
+    public void setSidelineWidth(int width) {
+        mSidelineWidth = width;
+    }
+
+    public int getSidelineWidth() {
+        return mSidelineWidth;
+    }
+
+    public void setAbsoluteR(float R) {
+        absoluteR = R;
+        postInvalidateOnAnimation();
+
+    }
+
+    public float getAbsoluteR() {
+        return absoluteR;
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
+            mAppearDisappearAnim.cancel();
+        }
         absoluteR = Math.min(w, h) / 2;
+        backupAbsoluteR = absoluteR;
 
         //translate canvas origin point to the middle of this view
         mCanvasMatrix.setTranslate(w / 2, h / 2);
@@ -109,7 +147,7 @@ public class MagnifierView extends View {
         mScaleMatrix.setTranslate(-absoluteCentX, -absoluteCentY);
         mScaleMatrix.postScale(mScale, mScale);
         mBitmapPaint.getShader().setLocalMatrix(mScaleMatrix);
-        invalidate();
+        postInvalidateOnAnimation();
     }
 
     @Override
@@ -118,9 +156,15 @@ public class MagnifierView extends View {
 
         // translate to middle of the view
         canvas.concat(mCanvasMatrix);
+
+        // draw bitmap in the circle
         canvas.drawCircle(0, 0, absoluteR, mBitmapPaint);
+
+        // draw center point
         canvas.drawCircle(0, 0, 5, mCenterPaint);
 
+        //draw side line
+        canvas.drawCircle(0, 0, absoluteR - mSidelineWidth / 2, mSidelinePaint);
     }
 
     public void bindBitmap(Bitmap bitmap) {
@@ -150,7 +194,7 @@ public class MagnifierView extends View {
             lp.width = width;
             lp.height = height;
         }
-        requestLayout();
+        postInvalidateOnAnimation();
     }
 
     public void setWidth(int width) {
@@ -175,6 +219,100 @@ public class MagnifierView extends View {
         requestLayout();
     }
 
+    /**
+     * appear without animations
+     */
+    public void appearFast() {
+        setAlpha(1);
+        setAbsoluteR(backupAbsoluteR);
+    }
+
+    /**
+     * disappear without animations
+     */
+    public void disappearFast() {
+        setAlpha(0);
+        setAbsoluteR(0);
+    }
+
+    private void prepareAppearDisappearAnim(Animator animR, Animator animAlpha) {
+        mAppearDisappearAnim = new AnimatorSet();
+        mAppearDisappearAnim.setDuration(150);
+        mAppearDisappearAnim.setInterpolator(new DecelerateInterpolator());
+        mAppearDisappearAnim.playTogether(animR, animAlpha);
+    }
+
+    /**
+     * appear with animations
+     */
+    public void appear() {
+        // only one animation is allowed at the same moment.
+        if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
+            mAppearDisappearAnim.cancel();
+        }
+        Animator animR = ObjectAnimator.ofFloat(this, "absoluteR", getAbsoluteR(), backupAbsoluteR);
+        Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 1);
+        prepareAppearDisappearAnim(animR, animAlpha);
+        mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (mOnAppearDisappearListener != null) {
+                    mOnAppearDisappearListener.onBeforeAppear();
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (mOnAppearDisappearListener != null) {
+                    mOnAppearDisappearListener.onAppeared();
+                }
+            }
+        });
+        mAppearDisappearAnim.start();
+    }
+
+    /**
+     * disappear with animations
+     */
+    public void disappear() {
+        // only one animation is allowed at the same moment.
+        if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
+            mAppearDisappearAnim.cancel();
+        }
+        Animator animR = ObjectAnimator.ofFloat(this, "absoluteR", getAbsoluteR(), 0);
+        Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 0);
+        prepareAppearDisappearAnim(animR, animAlpha);
+        mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (mOnAppearDisappearListener != null) {
+                    mOnAppearDisappearListener.onBeforeDisappear();
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (mOnAppearDisappearListener != null) {
+                    mOnAppearDisappearListener.onDisappeared();
+                }
+            }
+        });
+        mAppearDisappearAnim.start();
+    }
+
+    public void setOnAppearDisappearListener(OnAppearDisappearListener listener) {
+        mOnAppearDisappearListener = listener;
+    }
+
+    public interface OnAppearDisappearListener {
+        void onBeforeAppear();
+
+        void onBeforeDisappear();
+
+        void onAppeared();
+
+        void onDisappeared();
+    }
 
 }
 
