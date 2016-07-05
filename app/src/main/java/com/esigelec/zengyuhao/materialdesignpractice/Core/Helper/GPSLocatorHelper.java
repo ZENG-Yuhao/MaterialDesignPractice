@@ -104,12 +104,14 @@ public class GPSLocatorHelper {
             this.locatorView = locatorView;
             this.pivotX = pivotX;
             this.pivotY = pivotY;
+            mPivotGravity = USER_CUSTOM;
         }
 
         public Locator(View locatorView, int pxPivotX, int pxPivotY) {
             this.locatorView = locatorView;
             this.pxPivotX = pxPivotX;
             this.pxPivotY = pxPivotY;
+            mPivotGravity = USER_CUSTOM;
         }
 
         public int getPivotGravity(){
