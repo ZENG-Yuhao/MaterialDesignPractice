@@ -196,6 +196,10 @@ public class MagnifierView extends View {
         mOnAppearDisappearListener = listener;
     }
 
+    public void removeOnAppearDisappearListener() {
+        mOnAppearDisappearListener = null;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
