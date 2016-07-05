@@ -3,7 +3,6 @@ package com.esigelec.zengyuhao.materialdesignpractice.Core.Helper;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -67,16 +66,70 @@ public class GPSLocatorHelper {
 
     public static class Locator {
         /**
-         * relative values of pivot(X,Y)
+         * pivot position mPivotGravity
          */
-        public float pivotX, pivotY;
+        public static final int LEFT_TOP = 0;
+        public static final int LEFT_CENTER = 1;
+        public static final int LEFT_BOTTOM = 2;
+        public static final int TOP_CENTER = 3;
+        public static final int RIGHT_TOP = 4;
+        public static final int RIGHT_CENTER = 5;
+        public static final int RIGHT_BOTTOM = 6;
+        public static final int CENTER = 7;
+        public static final int USER_CUSTOM = 8;
 
-        public int pxPivotX, pxPivotY;
+        private int mPivotGravity = CENTER;
+        /**
+         * relative values of pivot(X,Y), these values are available only when
+         * {@link #mPivotGravity}={@link #USER_CUSTOM}. <br>
+         * [0, 1] --- pivot is inside the locatorView <br>
+         * (1, infinite+) --- pivot is outside the locatorView <br>
+         * -1 --- invalid value
+         */
+        private float pivotX = -1, pivotY = -1;
 
-        public View locatorView;
+        /**
+         * pivot(X, Y) in pixels, these values are available only when {@link #mPivotGravity}={@link #USER_CUSTOM}.
+         */
+        private int pxPivotX = -1, pxPivotY = -1;
 
-        public Locator() {
+        private View locatorView;
 
+        public Locator(View locatorView, int gravity) {
+            this.locatorView = locatorView;
+            this.mPivotGravity = gravity;
+        }
+
+        public Locator(View locatorView, float pivotX, float pivotY) {
+            this.locatorView = locatorView;
+            this.pivotX = pivotX;
+            this.pivotY = pivotY;
+        }
+
+        public Locator(View locatorView, int pxPivotX, int pxPivotY) {
+            this.locatorView = locatorView;
+            this.pxPivotX = pxPivotX;
+            this.pxPivotY = pxPivotY;
+        }
+
+        public int getPivotGravity(){
+            return mPivotGravity;
+        }
+
+        public float getPivotX(){
+            return pivotX;
+        }
+
+        public float getPivotY(){
+            return pivotY;
+        }
+
+        public int getPxPivotX(){
+            return pxPivotX;
+        }
+
+        public int getPxPivotY(){
+            return pxPivotY;
         }
     }
 }
