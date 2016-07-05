@@ -78,7 +78,7 @@ public class GPSLocatorHelper {
         public static final int CENTER = 7;
         public static final int USER_CUSTOM = 8;
 
-        private int mPivotGravity = CENTER;
+        private int mPivotGravity;
         /**
          * relative values of pivot(X,Y), these values are available only when
          * {@link #mPivotGravity}={@link #USER_CUSTOM}. <br>
