@@ -66,8 +66,13 @@ public class GPSLocatorHelper {
     }
 
     public static class Locator {
-        // pivot
+        /**
+         * pivot (X, Y)
+         */
         public float pivotX, pivotY;
+
+        public int pxPivotX, pxPivotY;
+
         public View locatorView;
 
         public Locator() {

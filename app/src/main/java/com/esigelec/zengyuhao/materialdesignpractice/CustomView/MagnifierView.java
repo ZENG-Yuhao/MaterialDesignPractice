@@ -37,14 +37,14 @@ public class MagnifierView extends View {
     private int mBackgroundColor;
 
     /**
-     * center (X, Y) in pixels
+     * center (X, Y) in absolute values
      */
-    private float pxCenterX, pxCenterY;
+    private float absCenterX, absCenterY;
 
     /**
-     * radius in pixels
+     * radius in absolute value
      */
-    private float pxRadius;
+    private float absRadius;
 
     /**
      * backup of radius, when animation is running on radius, this value is used to restore initial radius
@@ -118,14 +118,14 @@ public class MagnifierView extends View {
         return mSidelineWidth;
     }
 
-    public void setPxRadius(float R) {
-        pxRadius = R;
+    public void setAbsRadius(float R) {
+        absRadius = R;
         postInvalidateOnAnimation();
 
     }
 
-    public float getPxRadius() {
-        return pxRadius;
+    public float getAbsRadius() {
+        return absRadius;
     }
 
     public void setScaleRate(float scale) {
@@ -219,13 +219,13 @@ public class MagnifierView extends View {
         if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
             mAppearDisappearAnim.cancel();
         }
-        pxRadius = Math.min(w, h) / 2;
-        pxRadiusBackup = pxRadius;
+        absRadius = Math.min(w, h) / 2;
+        pxRadiusBackup = absRadius;
 
         //translate canvas origin point to the middle of this view
         mCanvasMatrix.setTranslate(w / 2, h / 2);
-        pxCenterX = w / 2;
-        pxCenterY = h / 2;
+        absCenterX = w / 2;
+        absCenterY = h / 2;
     }
 
 
@@ -242,14 +242,14 @@ public class MagnifierView extends View {
     }
 
     public void updateCenterByAbsoluteVals(float absX, float absY) {
-        pxCenterX = absX;
-        pxCenterY = absY;
+        absCenterX = absX;
+        absCenterY = absY;
         update();
     }
 
     protected void update() {
         if (mBitmap == null) return;
-        mScaleMatrix.setTranslate(-pxCenterX, -pxCenterY);
+        mScaleMatrix.setTranslate(-absCenterX, -absCenterY);
         mScaleMatrix.postScale(mScaleRate, mScaleRate);
         mBitmapPaint.getShader().setLocalMatrix(mScaleMatrix);
         postInvalidateOnAnimation();
@@ -263,14 +263,14 @@ public class MagnifierView extends View {
         canvas.concat(mCanvasMatrix);
 
         // draw bitmap in the circle
-        canvas.drawCircle(0, 0, pxRadius, mBitmapPaint);
+        canvas.drawCircle(0, 0, absRadius, mBitmapPaint);
 
         // draw center point
         if (isVisibleCenterEnabled)
             canvas.drawCircle(0, 0, 5, mCenterPaint);
 
         //draw side line
-        canvas.drawCircle(0, 0, pxRadius - mSidelineWidth / 2, mSidelinePaint);
+        canvas.drawCircle(0, 0, absRadius - mSidelineWidth / 2, mSidelinePaint);
     }
 
     /**
@@ -278,7 +278,7 @@ public class MagnifierView extends View {
      */
     public void appearFast() {
         setAlpha(1);
-        setPxRadius(pxRadiusBackup);
+        setAbsRadius(pxRadiusBackup);
     }
 
     /**
@@ -286,7 +286,7 @@ public class MagnifierView extends View {
      */
     public void disappearFast() {
         setAlpha(0);
-        setPxRadius(0);
+        setAbsRadius(0);
     }
 
     protected void prepareAppearDisappearAnim(Animator animR, Animator animAlpha) {
@@ -304,7 +304,7 @@ public class MagnifierView extends View {
         if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
             mAppearDisappearAnim.cancel();
         }
-        Animator animR = ObjectAnimator.ofFloat(this, "pxRadius", getPxRadius(), pxRadiusBackup);
+        Animator animR = ObjectAnimator.ofFloat(this, "absRadius", getAbsRadius(), pxRadiusBackup);
         Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 1);
         prepareAppearDisappearAnim(animR, animAlpha);
         mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
@@ -337,7 +337,7 @@ public class MagnifierView extends View {
         if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
             mAppearDisappearAnim.cancel();
         }
-        Animator animR = ObjectAnimator.ofFloat(this, "pxRadius", getPxRadius(), 0);
+        Animator animR = ObjectAnimator.ofFloat(this, "absRadius", getAbsRadius(), 0);
         Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 0);
         prepareAppearDisappearAnim(animR, animAlpha);
         mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
