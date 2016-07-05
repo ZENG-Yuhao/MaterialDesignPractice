@@ -13,12 +13,11 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 /**
@@ -33,14 +32,17 @@ public class MagnifierView extends View {
     private Bitmap mBitmap;
     private Paint mBitmapPaint, mCenterPaint, mSidelinePaint;
     private BitmapShader mBitmapShader;
+    private ShapeDrawable mBackgroundDrawable;
+    private int mBackgroundColor;
     private float absoluteCentX, absoluteCentY, absoluteR;
     private float backupAbsoluteR;
-    private float mScale = 1.5f;
+    private float mScaleRate = 1.5f;
     private Matrix mScaleMatrix;
     private Matrix mCanvasMatrix;
     private int mSidelineWidth = 3;
     private OnAppearDisappearListener mOnAppearDisappearListener;
     private AnimatorSet mAppearDisappearAnim;
+    private boolean showCenterPoint = true;
 
     public MagnifierView(Context context) {
         super(context);
@@ -62,7 +64,7 @@ public class MagnifierView extends View {
         init(context);
     }
 
-    protected void init(Context context) {
+    private void init(Context context) {
         mBitmapPaint = new Paint();
         mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCenterPaint.setColor(getResources().getColor(android.R.color.holo_red_light));
@@ -74,20 +76,25 @@ public class MagnifierView extends View {
         mSidelinePaint.setStrokeWidth(mSidelineWidth);
         mSidelinePaint.setColor(getResources().getColor(android.R.color.darker_gray));
 
-        initShape();
+        mBackgroundDrawable = new ShapeDrawable();
+        mBackgroundDrawable.setShape(new OvalShape());
+        setBackgroundColor(getResources().getColor(android.R.color.white));
     }
 
-    protected void initShape() {
-        OvalShape shape_circle = new OvalShape();
-        ShapeDrawable shapeDrawable = new ShapeDrawable();
-        shapeDrawable.setShape(shape_circle);
-        shapeDrawable.getPaint().setColor(getResources().getColor(android.R.color.transparent));
-        this.setBackground(shapeDrawable);
-        setElevation(12);
+    @Override
+    public void setBackgroundColor(@ColorInt int color) {
+        mBackgroundColor = color;
+        applyBackgroundColor(color);
+    }
+
+    private void applyBackgroundColor(@ColorInt int color) {
+        mBackgroundDrawable.getPaint().setColor(color);
+        setBackground(mBackgroundDrawable);
     }
 
     public void setSidelineWidth(int width) {
         mSidelineWidth = width;
+        postInvalidateOnAnimation();
     }
 
     public int getSidelineWidth() {
@@ -104,67 +111,13 @@ public class MagnifierView extends View {
         return absoluteR;
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
-            mAppearDisappearAnim.cancel();
-        }
-        absoluteR = Math.min(w, h) / 2;
-        backupAbsoluteR = absoluteR;
-
-        //translate canvas origin point to the middle of this view
-        mCanvasMatrix.setTranslate(w / 2, h / 2);
-
-        absoluteCentX = w / 2;
-        absoluteCentY = h / 2;
-    }
-
-    public void updateCenterByRelativeVals(double centX, double centY) {
-        if (centX < 0) centX = 0;
-        else if (centX > 1) centX = 1;
-
-        if (centY < 0) centY = 0;
-        else if (centY > 1) centY = 1;
-        float absCentX = (float) (mBitmap.getWidth() * centX);
-        float absCentY = (float) (mBitmap.getHeight() * centY);
-        updateCenterByAbsoluteVals(absCentX, absCentY);
-    }
-
-    public void updateCenterByAbsoluteVals(float absCentX, float absCentY) {
-        absoluteCentX = absCentX;
-        absoluteCentY = absCentY;
+    public void setScaleRate(float scale) {
+        mScaleRate = scale;
         update();
     }
 
-    public void setBitmapScale(float scale) {
-        mScale = scale;
-        update();
-    }
-
-    protected void update() {
-        if (mBitmap == null) return;
-        mScaleMatrix.setTranslate(-absoluteCentX, -absoluteCentY);
-        mScaleMatrix.postScale(mScale, mScale);
-        mBitmapPaint.getShader().setLocalMatrix(mScaleMatrix);
-        postInvalidateOnAnimation();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        if (mBitmap == null) return;
-
-        // translate to middle of the view
-        canvas.concat(mCanvasMatrix);
-
-        // draw bitmap in the circle
-        canvas.drawCircle(0, 0, absoluteR, mBitmapPaint);
-
-        // draw center point
-        canvas.drawCircle(0, 0, 5, mCenterPaint);
-
-        //draw side line
-        canvas.drawCircle(0, 0, absoluteR - mSidelineWidth / 2, mSidelinePaint);
+    public float getScaleRate() {
+        return mScaleRate;
     }
 
     public void bindBitmap(Bitmap bitmap) {
@@ -178,7 +131,7 @@ public class MagnifierView extends View {
             mBitmapPaint.setShader(mBitmapShader);
             Log.i(TAG, "-->bindBitmap");
         }
-        invalidate();
+        postInvalidateOnAnimation();
     }
 
     public Bitmap getBitmap() {
@@ -219,6 +172,78 @@ public class MagnifierView extends View {
         requestLayout();
     }
 
+    public void showCenterPoint() {
+        showCenterPoint = true;
+    }
+
+    public void hideCenterPoint() {
+        showCenterPoint = false;
+    }
+
+    public void setOnAppearDisappearListener(OnAppearDisappearListener listener) {
+        mOnAppearDisappearListener = listener;
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
+            mAppearDisappearAnim.cancel();
+        }
+        absoluteR = Math.min(w, h) / 2;
+        backupAbsoluteR = absoluteR;
+
+        //translate canvas origin point to the middle of this view
+        mCanvasMatrix.setTranslate(w / 2, h / 2);
+
+        absoluteCentX = w / 2;
+        absoluteCentY = h / 2;
+    }
+
+    public void updateCenterByRelativeVals(double centX, double centY) {
+        //if (centX < 0 || centX > 1 || centY < 0 || centY > 1) return false;
+        if (centX < 0) centX = 0;
+        else if (centX > 1) centX = 1;
+
+        if (centY < 0) centY = 0;
+        else if (centY > 1) centY = 1;
+        float absCentX = (float) (mBitmap.getWidth() * centX);
+        float absCentY = (float) (mBitmap.getHeight() * centY);
+        updateCenterByAbsoluteVals(absCentX, absCentY);
+    }
+
+    public void updateCenterByAbsoluteVals(float absCentX, float absCentY) {
+        absoluteCentX = absCentX;
+        absoluteCentY = absCentY;
+        update();
+    }
+
+    protected void update() {
+        if (mBitmap == null) return;
+        mScaleMatrix.setTranslate(-absoluteCentX, -absoluteCentY);
+        mScaleMatrix.postScale(mScaleRate, mScaleRate);
+        mBitmapPaint.getShader().setLocalMatrix(mScaleMatrix);
+        postInvalidateOnAnimation();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (mBitmap == null) return;
+
+        // translate to middle of the view
+        canvas.concat(mCanvasMatrix);
+
+        // draw bitmap in the circle
+        canvas.drawCircle(0, 0, absoluteR, mBitmapPaint);
+
+        // draw center point
+        if (showCenterPoint)
+            canvas.drawCircle(0, 0, 5, mCenterPaint);
+
+        //draw side line
+        canvas.drawCircle(0, 0, absoluteR - mSidelineWidth / 2, mSidelinePaint);
+    }
+
     /**
      * appear without animations
      */
@@ -254,8 +279,10 @@ public class MagnifierView extends View {
         Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 1);
         prepareAppearDisappearAnim(animR, animAlpha);
         mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
+
             @Override
             public void onAnimationStart(Animator animation) {
+                applyBackgroundColor(getResources().getColor(android.R.color.transparent));
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onBeforeAppear();
                 }
@@ -263,6 +290,7 @@ public class MagnifierView extends View {
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                applyBackgroundColor(mBackgroundColor);
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onAppeared();
                 }
@@ -285,6 +313,7 @@ public class MagnifierView extends View {
         mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
+                applyBackgroundColor(getResources().getColor(android.R.color.transparent));
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onBeforeDisappear();
                 }
@@ -292,16 +321,13 @@ public class MagnifierView extends View {
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                applyBackgroundColor(mBackgroundColor);
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onDisappeared();
                 }
             }
         });
         mAppearDisappearAnim.start();
-    }
-
-    public void setOnAppearDisappearListener(OnAppearDisappearListener listener) {
-        mOnAppearDisappearListener = listener;
     }
 
     public interface OnAppearDisappearListener {

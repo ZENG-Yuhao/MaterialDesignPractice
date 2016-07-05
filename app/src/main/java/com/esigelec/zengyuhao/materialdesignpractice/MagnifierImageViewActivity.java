@@ -35,7 +35,7 @@ public class MagnifierImageViewActivity extends Activity {
 
 
         magnifier = new MagnifierView(this);
-        magnifier.setSize(500, 500);
+        magnifier.setSize(600, 600);
         View rootView = img.getRootView();
         if (rootView != null && rootView instanceof ViewGroup) {
             ((ViewGroup) rootView).addView(magnifier);
@@ -79,20 +79,23 @@ public class MagnifierImageViewActivity extends Activity {
             float rawY = event.getRawY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                case MotionEvent.ACTION_MOVE:
-                    Log.i(TAG, "ACTION_DOWN");
                     magnifier.appear();
-                    magnifier.setX(rawX - magnifier.getWidth() / 2);
-                    magnifier.setY(rawY - magnifier.getHeight());
+                case MotionEvent.ACTION_MOVE:
+                    //Log.i(TAG, "ACTION_DOWN");
 
-                    Log.i(TAG, "ACTION_MOVE");
+
+                    //Log.i(TAG, "ACTION_MOVE");
                     float relativeX = x / img.getWidth();
                     float relativeY = y / img.getHeight();
-                    //Log.i(TAG, "onTouch---->:" + relativeX + " ## " + relativeY);
+                    Log.i(TAG, "onTouch---->:" + relativeX + " ## " + relativeY);
                     magnifier.updateCenterByRelativeVals(relativeX, relativeY);
+                    if (relativeX >= 0 && relativeX <= 1)
+                        magnifier.setX(rawX - magnifier.getWidth() / 2);
+                    if (relativeY >= 0 && relativeY <= 1)
+                        magnifier.setY(rawY - magnifier.getHeight());
                     return true;
                 case MotionEvent.ACTION_UP:
-                    Log.i(TAG, "ACTION_UP");
+                    //Log.i(TAG, "ACTION_UP");
                     magnifier.disappear();
                     return true;
             }
