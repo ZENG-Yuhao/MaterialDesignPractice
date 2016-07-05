@@ -35,7 +35,7 @@
         android:text="CircleImageView (same attributes with normal ImageView):"
         android:textSize="20sp"/>
 
-    <com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleImageView
+    <com.esigelec.zengyuhao.materialdesignpractice.CustomView.CircleImageView
         android:id="@+id/circle_image_view"
         android:layout_width="250dp"
         android:layout_height="250dp"

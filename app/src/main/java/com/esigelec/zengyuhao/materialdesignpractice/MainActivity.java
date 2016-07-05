@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.CircleImageView;
 import com.esigelec.zengyuhao.materialdesignpractice.EXEM.NavigationEXEMActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login2Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login3Activity;

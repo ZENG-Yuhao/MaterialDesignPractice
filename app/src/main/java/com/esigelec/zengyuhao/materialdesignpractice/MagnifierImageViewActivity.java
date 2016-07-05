@@ -12,9 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.MagnifierView;
-
-import org.w3c.dom.Text;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomView.MagnifierView;
 
 public class MagnifierImageViewActivity extends Activity {
     private static final String TAG = "MagnifierImageView";
@@ -40,6 +38,7 @@ public class MagnifierImageViewActivity extends Activity {
 
         magnifier = new MagnifierView(this);
         magnifier.setSize(600, 600);
+        magnifier.disableVisibleCenter();
         magnifier.setElevation(16);
         View rootView = img.getRootView();
         if (rootView != null && rootView instanceof ViewGroup) {
