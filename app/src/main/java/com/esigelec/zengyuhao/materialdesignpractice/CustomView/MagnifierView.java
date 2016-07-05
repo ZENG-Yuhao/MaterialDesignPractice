@@ -37,12 +37,12 @@ public class MagnifierView extends View {
     private int mBackgroundColor;
 
     /**
-     * center (X, Y) in absolute values
+     * absolute values of center(X,Y)
      */
     private float absCenterX, absCenterY;
 
     /**
-     * radius in absolute value
+     * absolute value of radius
      */
     private float absRadius;
 
