@@ -35,8 +35,21 @@ public class MagnifierView extends View {
     private BitmapShader mBitmapShader;
     private ShapeDrawable mBackgroundDrawable;
     private int mBackgroundColor;
-    private float absoluteCentX, absoluteCentY, absoluteR;
-    private float backupAbsoluteR;
+
+    /**
+     * center (X, Y) in pixels
+     */
+    private float pxCenterX, pxCenterY;
+
+    /**
+     * radius in pixels
+     */
+    private float pxRadius;
+
+    /**
+     * backup of radius, when animation is running on radius, this value is used to restore initial radius
+     */
+    private float pxRadiusBackup;
     private float mScaleRate = 1.5f;
     private Matrix mScaleMatrix;
     private Matrix mCanvasMatrix;
@@ -105,14 +118,14 @@ public class MagnifierView extends View {
         return mSidelineWidth;
     }
 
-    public void setAbsoluteR(float R) {
-        absoluteR = R;
+    public void setPxRadius(float R) {
+        pxRadius = R;
         postInvalidateOnAnimation();
 
     }
 
-    public float getAbsoluteR() {
-        return absoluteR;
+    public float getPxRadius() {
+        return pxRadius;
     }
 
     public void setScaleRate(float scale) {
@@ -206,13 +219,13 @@ public class MagnifierView extends View {
         if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
             mAppearDisappearAnim.cancel();
         }
-        absoluteR = Math.min(w, h) / 2;
-        backupAbsoluteR = absoluteR;
+        pxRadius = Math.min(w, h) / 2;
+        pxRadiusBackup = pxRadius;
 
         //translate canvas origin point to the middle of this view
         mCanvasMatrix.setTranslate(w / 2, h / 2);
-        absoluteCentX = w / 2;
-        absoluteCentY = h / 2;
+        pxCenterX = w / 2;
+        pxCenterY = h / 2;
     }
 
 
@@ -223,20 +236,20 @@ public class MagnifierView extends View {
 
         if (centY < 0) centY = 0;
         else if (centY > 1) centY = 1;
-        float absCentX = (float) (mBitmap.getWidth() * relatCentX);
-        float absCentY = (float) (mBitmap.getHeight() * centY);
-        updateCenterByAbsoluteVals(absCentX, absCentY);
+        float absX = (float) (mBitmap.getWidth() * relatCentX);
+        float absY = (float) (mBitmap.getHeight() * centY);
+        updateCenterByAbsoluteVals(absX, absY);
     }
 
-    public void updateCenterByAbsoluteVals(float absCentX, float absCentY) {
-        absoluteCentX = absCentX;
-        absoluteCentY = absCentY;
+    public void updateCenterByAbsoluteVals(float absX, float absY) {
+        pxCenterX = absX;
+        pxCenterY = absY;
         update();
     }
 
     protected void update() {
         if (mBitmap == null) return;
-        mScaleMatrix.setTranslate(-absoluteCentX, -absoluteCentY);
+        mScaleMatrix.setTranslate(-pxCenterX, -pxCenterY);
         mScaleMatrix.postScale(mScaleRate, mScaleRate);
         mBitmapPaint.getShader().setLocalMatrix(mScaleMatrix);
         postInvalidateOnAnimation();
@@ -250,14 +263,14 @@ public class MagnifierView extends View {
         canvas.concat(mCanvasMatrix);
 
         // draw bitmap in the circle
-        canvas.drawCircle(0, 0, absoluteR, mBitmapPaint);
+        canvas.drawCircle(0, 0, pxRadius, mBitmapPaint);
 
         // draw center point
         if (isVisibleCenterEnabled)
             canvas.drawCircle(0, 0, 5, mCenterPaint);
 
         //draw side line
-        canvas.drawCircle(0, 0, absoluteR - mSidelineWidth / 2, mSidelinePaint);
+        canvas.drawCircle(0, 0, pxRadius - mSidelineWidth / 2, mSidelinePaint);
     }
 
     /**
@@ -265,7 +278,7 @@ public class MagnifierView extends View {
      */
     public void appearFast() {
         setAlpha(1);
-        setAbsoluteR(backupAbsoluteR);
+        setPxRadius(pxRadiusBackup);
     }
 
     /**
@@ -273,7 +286,7 @@ public class MagnifierView extends View {
      */
     public void disappearFast() {
         setAlpha(0);
-        setAbsoluteR(0);
+        setPxRadius(0);
     }
 
     protected void prepareAppearDisappearAnim(Animator animR, Animator animAlpha) {
@@ -291,7 +304,7 @@ public class MagnifierView extends View {
         if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
             mAppearDisappearAnim.cancel();
         }
-        Animator animR = ObjectAnimator.ofFloat(this, "absoluteR", getAbsoluteR(), backupAbsoluteR);
+        Animator animR = ObjectAnimator.ofFloat(this, "pxRadius", getPxRadius(), pxRadiusBackup);
         Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 1);
         prepareAppearDisappearAnim(animR, animAlpha);
         mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
@@ -324,7 +337,7 @@ public class MagnifierView extends View {
         if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
             mAppearDisappearAnim.cancel();
         }
-        Animator animR = ObjectAnimator.ofFloat(this, "absoluteR", getAbsoluteR(), 0);
+        Animator animR = ObjectAnimator.ofFloat(this, "pxRadius", getPxRadius(), 0);
         Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 0);
         prepareAppearDisappearAnim(animR, animAlpha);
         mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
