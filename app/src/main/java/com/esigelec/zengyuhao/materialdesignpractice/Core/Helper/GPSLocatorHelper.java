@@ -67,7 +67,7 @@ public class GPSLocatorHelper {
 
     public static class Locator {
         /**
-         * pivot (X, Y)
+         * relative values of pivot(X,Y)
          */
         public float pivotX, pivotY;
 
