@@ -13,8 +13,11 @@
     tools:context="com.esigelec.zengyuhao.materialdesignpractice.MagnifierImageViewActivity">
 
     <TextView
+        android:id="@+id/text_view"
         android:text="Touch image to activate magnifier"
         android:textSize="24sp"
+        android:elevation="4dp"
+        android:background="@drawable/shape_rect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

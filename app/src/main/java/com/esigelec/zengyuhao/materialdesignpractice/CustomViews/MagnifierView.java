@@ -18,6 +18,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 /**
@@ -43,6 +44,7 @@ public class MagnifierView extends View {
     private OnAppearDisappearListener mOnAppearDisappearListener;
     private AnimatorSet mAppearDisappearAnim;
     private boolean showCenterPoint = true;
+    private int mAnimationDuration = 150;
 
     public MagnifierView(Context context) {
         super(context);
@@ -76,13 +78,15 @@ public class MagnifierView extends View {
         mSidelinePaint.setStrokeWidth(mSidelineWidth);
         mSidelinePaint.setColor(getResources().getColor(android.R.color.darker_gray));
 
+        mBackgroundColor = getResources().getColor(android.R.color.transparent);
         mBackgroundDrawable = new ShapeDrawable();
         mBackgroundDrawable.setShape(new OvalShape());
-        setBackgroundColor(getResources().getColor(android.R.color.white));
+        setDefaultBackgroundColor(mBackgroundColor);
+
+
     }
 
-    @Override
-    public void setBackgroundColor(@ColorInt int color) {
+    public void setDefaultBackgroundColor(@ColorInt int color) {
         mBackgroundColor = color;
         applyBackgroundColor(color);
     }
@@ -118,6 +122,14 @@ public class MagnifierView extends View {
 
     public float getScaleRate() {
         return mScaleRate;
+    }
+
+    public void setAnimationDuration(int duration) {
+        mAnimationDuration = duration;
+    }
+
+    public int getAnimationDuration() {
+        return mAnimationDuration;
     }
 
     public void bindBitmap(Bitmap bitmap) {
@@ -195,10 +207,10 @@ public class MagnifierView extends View {
 
         //translate canvas origin point to the middle of this view
         mCanvasMatrix.setTranslate(w / 2, h / 2);
-
         absoluteCentX = w / 2;
         absoluteCentY = h / 2;
     }
+
 
     public void updateCenterByRelativeVals(double centX, double centY) {
         //if (centX < 0 || centX > 1 || centY < 0 || centY > 1) return false;
@@ -262,8 +274,8 @@ public class MagnifierView extends View {
 
     private void prepareAppearDisappearAnim(Animator animR, Animator animAlpha) {
         mAppearDisappearAnim = new AnimatorSet();
-        mAppearDisappearAnim.setDuration(150);
-        mAppearDisappearAnim.setInterpolator(new DecelerateInterpolator());
+        mAppearDisappearAnim.setDuration(mAnimationDuration);
+        //mAppearDisappearAnim.setInterpolator(new DecelerateInterpolator());
         mAppearDisappearAnim.playTogether(animR, animAlpha);
     }
 
@@ -282,7 +294,7 @@ public class MagnifierView extends View {
 
             @Override
             public void onAnimationStart(Animator animation) {
-                applyBackgroundColor(getResources().getColor(android.R.color.transparent));
+                //applyBackgroundColor(getResources().getColor(android.R.color.transparent));
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onBeforeAppear();
                 }
@@ -290,12 +302,13 @@ public class MagnifierView extends View {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                applyBackgroundColor(mBackgroundColor);
+                //applyBackgroundColor(mBackgroundColor);
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onAppeared();
                 }
             }
         });
+        mAppearDisappearAnim.setInterpolator(new DecelerateInterpolator());
         mAppearDisappearAnim.start();
     }
 
@@ -313,7 +326,7 @@ public class MagnifierView extends View {
         mAppearDisappearAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                applyBackgroundColor(getResources().getColor(android.R.color.transparent));
+                //applyBackgroundColor(getResources().getColor(android.R.color.transparent));
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onBeforeDisappear();
                 }
@@ -321,12 +334,13 @@ public class MagnifierView extends View {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                applyBackgroundColor(mBackgroundColor);
+                //applyBackgroundColor(mBackgroundColor);
                 if (mOnAppearDisappearListener != null) {
                     mOnAppearDisappearListener.onDisappeared();
                 }
             }
         });
+        mAppearDisappearAnim.setInterpolator(new AccelerateInterpolator());
         mAppearDisappearAnim.start();
     }
 

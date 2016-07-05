@@ -10,14 +10,18 @@ import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.esigelec.zengyuhao.materialdesignpractice.CustomViews.MagnifierView;
+
+import org.w3c.dom.Text;
 
 public class MagnifierImageViewActivity extends Activity {
     private static final String TAG = "MagnifierImageView";
     private ImageView img;
     private MagnifierView magnifier;
     private ViewGroupOverlay overlay;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +30,7 @@ public class MagnifierImageViewActivity extends Activity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.linear_layout);
 
-        //magnifier.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+        //magnifier.setDefaultBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
         //magnifier.setElevation(8);
 
 
@@ -36,6 +40,7 @@ public class MagnifierImageViewActivity extends Activity {
 
         magnifier = new MagnifierView(this);
         magnifier.setSize(600, 600);
+        magnifier.setElevation(16);
         View rootView = img.getRootView();
         if (rootView != null && rootView instanceof ViewGroup) {
             ((ViewGroup) rootView).addView(magnifier);
@@ -49,7 +54,10 @@ public class MagnifierImageViewActivity extends Activity {
         magnifier.setOnAppearDisappearListener(new MagnifierView.OnAppearDisappearListener() {
             @Override
             public void onBeforeAppear() {
-                overlay.add(magnifier);
+//                overlay.add(magnifier);
+//                overlay.add(textView);
+//                magnifier.setElevation(8);
+//                textView.setElevation(8);
             }
 
             @Override
@@ -64,9 +72,13 @@ public class MagnifierImageViewActivity extends Activity {
 
             @Override
             public void onDisappeared() {
-                overlay.remove(magnifier);
+//                overlay.remove(magnifier);
             }
         });
+
+        textView = (TextView) findViewById(R.id.text_view);
+
+
     }
 
     private class MyOnTouchListener implements View.OnTouchListener {
