@@ -132,6 +132,7 @@ public class GPSLocatorHelper {
         mMagnifier = new MagnifierView(context);
         mMagnifier.setSize(mMagnifierWidth, mMagnifierHeight);
         mMagnifier.setElevation(16);
+        mMagnifier.bindBitmap(mBitmap);
         mMagnifier.disappearFast();
         ((ViewGroup) mRootView).addView(mMagnifier);
 
@@ -164,6 +165,7 @@ public class GPSLocatorHelper {
             }
         }
     }
+
 
     public static class Locator {
         /**
@@ -203,7 +205,7 @@ public class GPSLocatorHelper {
          */
         private float pxPivotX = -1, pxPivotY = -1;
 
-        private View locatorView;
+        protected View locatorView;
 
         /**
          * view attached to this locator, this view will show a location marker
