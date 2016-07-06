@@ -1,9 +1,11 @@
 package com.esigelec.zengyuhao.materialdesignpractice.Core.Helper;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -36,6 +38,9 @@ public class GPSLocatorHelper {
     private MagnifierView mMagnifier;
     private int mMagnifierWidth = 600, mMagnifierHeight = 600;
 
+    private ActionsCoordinator mActionsCoordinator;
+
+
     public GPSLocatorHelper(Context context, View attachedView, View... locatorViews) {
         this(context, attachedView, null, locatorViews);
     }
@@ -67,7 +72,7 @@ public class GPSLocatorHelper {
         init(context, attachedView, convertToLocators(locators));
     }
 
-    public ArrayList<Locator> convertToLocators(View[] views) {
+    public static ArrayList<Locator> convertToLocators(View[] views) {
         if (views == null) return null;
 
         ArrayList<Locator> locators = new ArrayList<>(views.length);
@@ -78,7 +83,7 @@ public class GPSLocatorHelper {
         return locators;
     }
 
-    public ArrayList<Locator> convertToLocators(ArrayList<View> views) {
+    public static ArrayList<Locator> convertToLocators(ArrayList<View> views) {
         if (views == null) return null;
 
         ArrayList<Locator> locators = new ArrayList<>(views.size());
@@ -89,7 +94,7 @@ public class GPSLocatorHelper {
         return locators;
     }
 
-    public ArrayList<Locator> convertToLocators(Locator[] locators) {
+    public static ArrayList<Locator> convertToLocators(Locator[] locators) {
         if (locators == null || locators.length <= 0) return null;
 
         ArrayList<Locator> list = new ArrayList<>(locators.length);
@@ -119,16 +124,19 @@ public class GPSLocatorHelper {
             throw new RuntimeException("If attachedView is not an ImageView, you should bind a Bitmap in " +
                     "constructor arguments.");
 
+        // view and locators
         mAttachedView = attachedView;
         mRootView = attachedView.getRootView();
         mLocators = locators;
         attach((ViewGroup) mRootView, mLocators);
 
+        // bitmap
         if (!useCustomBitmap) {
             Drawable drawable = ((ImageView) attachedView).getDrawable();
             mBitmap = ((BitmapDrawable) drawable).getBitmap();
         }
 
+        //  magnifier
         mMagnifier = new MagnifierView(context);
         mMagnifier.setSize(mMagnifierWidth, mMagnifierHeight);
         mMagnifier.setElevation(16);
@@ -136,6 +144,8 @@ public class GPSLocatorHelper {
         mMagnifier.disappearFast();
         ((ViewGroup) mRootView).addView(mMagnifier);
 
+        // coordinator
+        mActionsCoordinator = new ActionsCoordinator(this);
     }
 
 
@@ -166,6 +176,111 @@ public class GPSLocatorHelper {
         }
     }
 
+    public static class ActionsCoordinator {
+        private GPSLocatorHelper mGPSLocatorHelper;
+        private Locator mFocusLocator;
+        private int mIndexOfFocusLocator;
+
+        public ActionsCoordinator(GPSLocatorHelper helper) {
+            mGPSLocatorHelper = helper;
+        }
+
+        void focusOn(int index) {
+            mIndexOfFocusLocator = index;
+            mFocusLocator = mGPSLocatorHelper.mLocators.get(index);
+            focusOn(mFocusLocator, mIndexOfFocusLocator);
+
+        }
+
+        void focusOn(Locator locator) {
+            mFocusLocator = locator;
+            mIndexOfFocusLocator = mGPSLocatorHelper.mLocators.indexOf(locator);
+            focusOn(mFocusLocator, mIndexOfFocusLocator);
+        }
+
+        private void focusOn(Locator locator, int indexOfFocus) {
+            locator.hide();
+            locatorsDisappear();
+            mGPSLocatorHelper.mMagnifier.appear();
+            onFocused(locator, indexOfFocus);
+        }
+
+        void locatorsDisappear() {
+            int index = 0;
+            for (Locator locator : mGPSLocatorHelper.mLocators) {
+                if (locator != mFocusLocator) {
+                    onLocatorDisappear(locator, index);
+                }
+                index++;
+            }
+            onAllLocatorsDisappeared();
+        }
+
+
+        protected void onLocatorDisappear(Locator locator, int position) {
+            locator.hide();
+        }
+
+        protected void onAllLocatorsDisappeared() {
+
+        }
+
+        protected void onFocused(Locator focusLocator, int indexOfFocus) {
+
+        }
+
+        void clearFocus() {
+            mFocusLocator.show();
+            mGPSLocatorHelper.mMagnifier.disappear();
+            locatorsAppear();
+            onFocusCleared(mFocusLocator, mIndexOfFocusLocator);
+        }
+
+        void locatorsAppear() {
+            int index = 0;
+            for (Locator locator : mGPSLocatorHelper.mLocators) {
+                if (locator != mFocusLocator) {
+                    onLocatorAppear(locator, index);
+                }
+                index++;
+            }
+            onAllLocatorsAppeared();
+        }
+
+        protected void onLocatorAppear(Locator locator, int position) {
+            locator.show();
+        }
+
+        protected void onAllLocatorsAppeared() {
+
+        }
+
+        protected void onFocusCleared(Locator oldFocusLocator, int oldIndexOfFocus) {
+
+        }
+
+
+        void positionLocator(float rawX, float rawY) {
+            float[] pivot = Locator.calculatePivot(mFocusLocator);
+            if (pivot == null) return;
+            float offsetX = -pivot[0];
+            float offsetY = -pivot[1];
+            mFocusLocator.contentView.setX(rawX + offsetX);
+            mFocusLocator.contentView.setY(rawY + offsetY);
+        }
+
+        void moveMagnifier(float rawX, float rawY, float centX, float centY) {
+            MagnifierView magnifier = mGPSLocatorHelper.mMagnifier;
+            float offsetX = -magnifier.getWidth() / 2;
+            float offsetY = -magnifier.getHeight();
+            magnifier.setX(rawX + offsetX);
+            magnifier.setY(rawY + offsetY);
+            magnifier.updateCenterByRelativeVals(centX, centY);
+        }
+
+
+    }
+
 
     public static class Locator {
         /**
@@ -183,46 +298,46 @@ public class GPSLocatorHelper {
         public static final int GRAVITY_USER_CUSTOM = 9;
 
         /**
-         * gravity of position of pivot in {@link #locatorView}, with this attribute, the position of locator can be
+         * gravity of position of pivot in {@link #contentView}, with this attribute, the position of locator can be
          * easily set without specific pivot values.
          */
-        private int mPivotGravity;
+        protected int mPivotGravity;
 
         /**
          * relative values of pivot(X,Y), these values are available only when
          * {@link #mPivotGravity}={@link #GRAVITY_USER_CUSTOM}. <br>
-         * [0, 1] --- pivot is inside the locatorView <br>
-         * (1, infinite+) --- pivot is outside the locatorView <br>
-         * -1 --- invalid value
+         * [0, 1] --- pivot is inside the contentView <br>
+         * (1, infinite+) --- pivot is outside the contentView <br>
+         * (-infinite, 0) --- invalid value
          * <p/>
          * <b>A pivot is a reference point that represents the gravity center of this locator, in most case, this is
          * also the point that indicates the real location where this locator is.</b>
          */
-        private float pivotX = -1, pivotY = -1;
+        protected float pivotX = -1, pivotY = -1;
 
         /**
          * pivot(X, Y) in pixels, these values are available only when {@link #mPivotGravity}={@link #GRAVITY_USER_CUSTOM}.
          */
-        private float pxPivotX = -1, pxPivotY = -1;
+        protected float pxPivotX = -1, pxPivotY = -1;
 
-        protected View locatorView;
+        protected View contentView;
 
         /**
          * view attached to this locator, this view will show a location marker
          *
-         * @param locatorView
+         * @param contentView
          */
-        public Locator(View locatorView) {
-            this(locatorView, GRAVITY_CENTER);
+        public Locator(View contentView) {
+            this(contentView, GRAVITY_CENTER);
         }
 
         /**
-         * @param locatorView view attached to this locator, this view will show a location marker
-         * @param gravity     gravity of position of pivot in {@link #locatorView}, with this attribute,  the
+         * @param contentView view attached to this locator, this view will show a location marker
+         * @param gravity     gravity of position of pivot in {@link #contentView}, with this attribute,  the
          *                    position of locator can be easily set without specific pivot values.
          */
-        public Locator(View locatorView, int gravity) {
-            this.locatorView = locatorView;
+        public Locator(View contentView, int gravity) {
+            this.contentView = contentView;
             // GRAVITY_USER_CUSTOM setup without indicate pivot is not allowed, it will be set the pivot gravity to GRAVITY_CENTER
             if (gravity == GRAVITY_USER_CUSTOM)
                 this.mPivotGravity = GRAVITY_CENTER;
@@ -231,21 +346,14 @@ public class GPSLocatorHelper {
         }
 
         /**
-         * @param locatorView            view attached to this locator, this view will show a location marker
+         * @param contentView            view attached to this locator, this view will show a location marker
          * @param pivotX                 pivotX
          * @param pivotY                 pivotY
          * @param attachToRelativeValues whether the indicated pivot should be attached as relative values
          */
-        public Locator(View locatorView, float pivotX, float pivotY, boolean attachToRelativeValues) {
-            this.locatorView = locatorView;
-            if (attachToRelativeValues) {
-                this.pivotX = pivotX;
-                this.pivotY = pivotY;
-            } else {
-                this.pxPivotX = pivotX;
-                this.pxPivotY = pivotY;
-            }
-            mPivotGravity = GRAVITY_USER_CUSTOM;
+        public Locator(View contentView, float pivotX, float pivotY, boolean attachToRelativeValues) {
+            this.contentView = contentView;
+            setPivotGravity(GRAVITY_USER_CUSTOM, pivotX, pivotY, attachToRelativeValues);
         }
 
         public void setPivotGravity(int gravity) {
@@ -262,20 +370,44 @@ public class GPSLocatorHelper {
                 if (attachToRelativeValues) {
                     this.pivotX = pivotX;
                     this.pivotY = pivotY;
+
+                    // invalid the other pair of values
+                    this.pxPivotX = -1;
+                    this.pxPivotY = -1;
                 } else {
                     this.pxPivotX = pivotX;
                     this.pxPivotY = pivotY;
+
+                    // invalid the other pair of values
+                    this.pivotX = -1;
+                    this.pivotX = -1;
                 }
             }
         }
 
         public void attachTo(ViewGroup parent) {
             removeParent();
-            parent.addView(locatorView);
+            parent.addView(contentView);
         }
 
         public void removeParent() {
-            GPSLocatorHelper.removeParent(locatorView);
+            GPSLocatorHelper.removeParent(contentView);
+        }
+
+        public void addAnimation(Animator animator) {
+            animator.setTarget(contentView);
+        }
+
+        public void clearAnimation() {
+            contentView.clearAnimation();
+        }
+
+        public void show() {
+            contentView.setVisibility(View.VISIBLE);
+        }
+
+        public void hide() {
+            contentView.setVisibility(View.INVISIBLE);
         }
 
         public int getPivotGravity() {
@@ -299,19 +431,64 @@ public class GPSLocatorHelper {
         }
 
         public void setX(float x) {
-            locatorView.setX(x);
+            contentView.setX(x);
         }
 
         public float getX() {
-            return locatorView.getX();
+            return contentView.getX();
         }
 
         public void setY(float y) {
-            locatorView.setY(y);
+            contentView.setY(y);
         }
 
         public float getY() {
-            return locatorView.getY();
+            return contentView.getY();
+        }
+
+        public static float[] calculatePivot(Locator locator) {
+            if (locator == null || locator.contentView == null) return null;
+            ViewGroup.LayoutParams lp = locator.contentView.getLayoutParams();
+            if (lp == null) return null;
+
+            int width = lp.width;
+            int height = lp.height;
+
+            float[] pivot = new float[2];
+            switch (locator.mPivotGravity) {
+                case GRAVITY_LEFT_TOP:
+                    break;
+                case GRAVITY_LEFT_CENTER:
+                    break;
+                case GRAVITY_LEFT_BOTTOM:
+                    break;
+                case GRAVITY_RIGHT_TOP:
+                    break;
+                case GRAVITY_RIGHT_CENTER:
+                    break;
+                case GRAVITY_RIGHT_BOTTOM:
+                    break;
+                case GRAVITY_CENTER_TOP:
+                    break;
+                case GRAVITY_CENTER:
+                    break;
+                case GRAVITY_CENTER_BOTTOM:
+                    break;
+                case GRAVITY_USER_CUSTOM:
+                    if (locator.getPxPivotX() != -1 && locator.getPxPivotY() != -1) {
+                        pivot[0] = locator.getPxPivotX();
+                        pivot[1] = locator.getPxPivotX();
+                    } else if (locator.getPivotX() != -1 && locator.getPivotY() != -1) {
+                        pivot[0] = locator.getPivotX() * locator.contentView.getWidth();
+                        pivot[0] = locator.getPivotY() * locator.contentView.getHeight();
+                    } else {
+                        pivot = null;
+                    }
+                    break;
+                default:
+                    pivot = null;
+            }
+            return pivot;
         }
     }
 }
