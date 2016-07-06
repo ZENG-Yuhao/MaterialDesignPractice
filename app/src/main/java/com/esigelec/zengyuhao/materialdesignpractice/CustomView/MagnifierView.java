@@ -37,6 +37,15 @@ public class MagnifierView extends View {
     private int mBackgroundColor;
 
     /**
+     * backup of radius, when animation is running on radius, this value is used to restore initial radius
+     */
+    private float pxRadiusBackup;
+    private float mScaleRate = 1.5f;
+    private Matrix mScaleMatrix;
+    private Matrix mCanvasMatrix;
+    private int mSidelineWidth = 3;
+
+    /**
      * absolute values of center(X,Y)
      */
     private float absCenterX, absCenterY;
@@ -46,14 +55,6 @@ public class MagnifierView extends View {
      */
     private float absRadius;
 
-    /**
-     * backup of radius, when animation is running on radius, this value is used to restore initial radius
-     */
-    private float pxRadiusBackup;
-    private float mScaleRate = 1.5f;
-    private Matrix mScaleMatrix;
-    private Matrix mCanvasMatrix;
-    private int mSidelineWidth = 3;
     private OnAppearDisappearListener mOnAppearDisappearListener;
     private AnimatorSet mAppearDisappearAnim;
     private boolean isVisibleCenterEnabled = true;
@@ -172,7 +173,7 @@ public class MagnifierView extends View {
             lp.width = width;
             lp.height = height;
         }
-        postInvalidateOnAnimation();
+        requestLayout();
     }
 
     public void setWidth(int width) {
