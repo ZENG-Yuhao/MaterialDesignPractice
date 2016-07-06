@@ -65,7 +65,6 @@ public class GPSLocatorHelper {
         this(context, attachedView, null, locators);
     }
 
-
     public GPSLocatorHelper(Context context, View attachedView, Bitmap bitmap, Locator... locators) {
         mBitmap = bitmap;
         useCustomBitmap = true;
@@ -148,15 +147,11 @@ public class GPSLocatorHelper {
         mActionsCoordinator = new ActionsCoordinator(this);
     }
 
-
-    private static void attach(ViewGroup parent, ArrayList<Locator> locators) {
-        for (Locator locator : locators) {
-            locator.attachTo(parent);
-        }
-    }
-
     public Locator getLocatorAt(int position) {
-        return null;
+        if (mLocators != null && position >= 0 && position < mLocators.size())
+            return mLocators.get(position);
+        else
+            return null;
     }
 
     public void removeLocatorAt(int position) {
@@ -165,6 +160,12 @@ public class GPSLocatorHelper {
 
     public void setPivotGravityForAllLocators(int gravity) {
 
+    }
+
+    private static void attach(ViewGroup parent, ArrayList<Locator> locators) {
+        for (Locator locator : locators) {
+            locator.attachTo(parent);
+        }
     }
 
     public static void removeParent(View view) {
@@ -309,14 +310,15 @@ public class GPSLocatorHelper {
          * [0, 1] --- pivot is inside the contentView <br>
          * (1, infinite+) --- pivot is outside the contentView <br>
          * (-infinite, 0) --- invalid value
-         * <p/>
+         * <p>
          * <b>A pivot is a reference point that represents the gravity center of this locator, in most case, this is
          * also the point that indicates the real location where this locator is.</b>
          */
         protected float pivotX = -1, pivotY = -1;
 
         /**
-         * pivot(X, Y) in pixels, these values are available only when {@link #mPivotGravity}={@link #GRAVITY_USER_CUSTOM}.
+         * pivot(X, Y) in pixels, these values are available only when
+         * {@link #mPivotGravity}={@link #GRAVITY_USER_CUSTOM}.
          */
         protected float pxPivotX = -1, pxPivotY = -1;
 
@@ -338,7 +340,8 @@ public class GPSLocatorHelper {
          */
         public Locator(View contentView, int gravity) {
             this.contentView = contentView;
-            // GRAVITY_USER_CUSTOM setup without indicate pivot is not allowed, it will be set the pivot gravity to GRAVITY_CENTER
+            // GRAVITY_USER_CUSTOM setup without indicate pivot is not allowed, it will be set the pivot gravity to
+            // GRAVITY_CENTER
             if (gravity == GRAVITY_USER_CUSTOM)
                 this.mPivotGravity = GRAVITY_CENTER;
             else
@@ -457,30 +460,48 @@ public class GPSLocatorHelper {
             float[] pivot = new float[2];
             switch (locator.mPivotGravity) {
                 case GRAVITY_LEFT_TOP:
+                    pivot[0] = 0;
+                    pivot[1] = 0;
                     break;
                 case GRAVITY_LEFT_CENTER:
+                    pivot[0] = 0;
+                    pivot[1] = 0.5f * height;
                     break;
                 case GRAVITY_LEFT_BOTTOM:
+                    pivot[0] = 0;
+                    pivot[1] = height;
                     break;
                 case GRAVITY_RIGHT_TOP:
+                    pivot[0] = width;
+                    pivot[1] = 0;
                     break;
                 case GRAVITY_RIGHT_CENTER:
+                    pivot[0] = width;
+                    pivot[1] = 0.5f * height;
                     break;
                 case GRAVITY_RIGHT_BOTTOM:
+                    pivot[0] = width;
+                    pivot[1] = height;
                     break;
                 case GRAVITY_CENTER_TOP:
+                    pivot[0] = 0.5f * width;
+                    pivot[1] = 0;
                     break;
                 case GRAVITY_CENTER:
+                    pivot[0] = 0.5f * width;
+                    pivot[1] = 0.5f * height;
                     break;
                 case GRAVITY_CENTER_BOTTOM:
+                    pivot[0] = 0.5f * width;
+                    pivot[1] = height;
                     break;
                 case GRAVITY_USER_CUSTOM:
                     if (locator.getPxPivotX() != -1 && locator.getPxPivotY() != -1) {
                         pivot[0] = locator.getPxPivotX();
                         pivot[1] = locator.getPxPivotX();
                     } else if (locator.getPivotX() != -1 && locator.getPivotY() != -1) {
-                        pivot[0] = locator.getPivotX() * locator.contentView.getWidth();
-                        pivot[0] = locator.getPivotY() * locator.contentView.getHeight();
+                        pivot[0] = locator.getPivotX() * width;
+                        pivot[0] = locator.getPivotY() * height;
                     } else {
                         pivot = null;
                     }
