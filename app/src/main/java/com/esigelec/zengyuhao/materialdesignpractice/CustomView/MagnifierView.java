@@ -279,6 +279,7 @@ public class MagnifierView extends View {
     public void appearFast() {
         setAlpha(1);
         setAbsRadius(pxRadiusBackup);
+        bringToFront();
     }
 
     /**
@@ -304,6 +305,7 @@ public class MagnifierView extends View {
         if (mAppearDisappearAnim != null && mAppearDisappearAnim.isRunning()) {
             mAppearDisappearAnim.cancel();
         }
+        bringToFront();
         Animator animR = ObjectAnimator.ofFloat(this, "absRadius", getAbsRadius(), pxRadiusBackup);
         Animator animAlpha = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 1);
         prepareAppearDisappearAnim(animR, animAlpha);
