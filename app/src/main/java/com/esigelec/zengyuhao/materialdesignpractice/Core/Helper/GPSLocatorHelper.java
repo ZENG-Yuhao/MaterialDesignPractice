@@ -5,10 +5,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.esigelec.zengyuhao.materialdesignpractice.CustomView.MagnifierView;
@@ -36,13 +36,14 @@ public class GPSLocatorHelper {
 
     //private Context mContext;
     private MagnifierView mMagnifier;
-    private int mMagnifierWidth = 600, mMagnifierHeight = 600;
+    private int mMagnifierWidth = 700, mMagnifierHeight = 700;
 
     private ActionsCoordinator mActionsCoordinator;
 
 
     public GPSLocatorHelper(Context context, View attachedView, View... locatorViews) {
-        this(context, attachedView, null, locatorViews);
+        useCustomBitmap = false;
+        init(context, attachedView, convertToLocators(locatorViews));
     }
 
     public GPSLocatorHelper(Context context, View attachedView, Bitmap bitmap, View... locatorViews) {
@@ -52,7 +53,8 @@ public class GPSLocatorHelper {
     }
 
     public GPSLocatorHelper(Context context, View attachedView, ArrayList<View> locatorViews) {
-        this(context, attachedView, null, locatorViews);
+        useCustomBitmap = false;
+        init(context, attachedView, convertToLocators(locatorViews));
     }
 
     public GPSLocatorHelper(Context context, View attachedView, Bitmap bitmap, ArrayList<View> locatorViews) {
@@ -62,7 +64,9 @@ public class GPSLocatorHelper {
     }
 
     public GPSLocatorHelper(Context context, View attachedView, Locator... locators) {
-        this(context, attachedView, null, locators);
+        useCustomBitmap = false;
+
+        init(context, attachedView, convertToLocators(locators));
     }
 
     public GPSLocatorHelper(Context context, View attachedView, Bitmap bitmap, Locator... locators) {
@@ -113,37 +117,53 @@ public class GPSLocatorHelper {
         if (attachedView == null)
             throw new IllegalArgumentException("The attachedView cannot be null.");
 
-        if (!attachedView.isAttachedToWindow())
-            throw new RuntimeException("The attachedView should be attached to window");
+//        if (!attachedView.isAttachedToWindow())
+//            throw new RuntimeException("The attachedView should be attached to window");
 
         if (useCustomBitmap && mBitmap == null)
             throw new RuntimeException("Attached bitmap cannot be null");
 
         if (!useCustomBitmap && !(attachedView instanceof ImageView))
-            throw new RuntimeException("If attachedView is not an ImageView, you should bind a Bitmap in " +
+            throw new RuntimeException("If attachedView is" +
+                    " not an ImageView, you should bind a Bitmap in " +
                     "constructor arguments.");
 
         // view and locators
+        initLocators(attachedView, locators);
+
+        //  magnifier
+        initMagnifier(context, attachedView);
+
+        // coordinator
+        initCoordinator();
+    }
+
+
+    private void initLocators(View attachedView, ArrayList<Locator> locators) {
         mAttachedView = attachedView;
         mRootView = attachedView.getRootView();
         mLocators = locators;
         attach((ViewGroup) mRootView, mLocators);
+    }
 
-        // bitmap
+
+    private void initMagnifier(Context context, View attachedView) {
         if (!useCustomBitmap) {
             Drawable drawable = ((ImageView) attachedView).getDrawable();
             mBitmap = ((BitmapDrawable) drawable).getBitmap();
         }
 
-        //  magnifier
         mMagnifier = new MagnifierView(context);
         mMagnifier.setSize(mMagnifierWidth, mMagnifierHeight);
-        mMagnifier.setElevation(16);
+        mMagnifier.setElevation(32);
+        mMagnifier.setScaleRate(2f);
         mMagnifier.bindBitmap(mBitmap);
         mMagnifier.disappearFast();
         ((ViewGroup) mRootView).addView(mMagnifier);
 
-        // coordinator
+    }
+
+    private void initCoordinator() {
         mActionsCoordinator = new ActionsCoordinator(this);
     }
 
@@ -154,12 +174,33 @@ public class GPSLocatorHelper {
             return null;
     }
 
-    public void removeLocatorAt(int position) {
+    public void setPivotGravityForAllLocators(int gravity) {
 
     }
 
-    public void setPivotGravityForAllLocators(int gravity) {
+    public void setFocusLocator(Locator locator) {
+        if (mActionsCoordinator == null) return;
+        mActionsCoordinator.focusOn(locator);
+    }
 
+    public void setFocusLocator(int index) {
+        if (mActionsCoordinator == null) return;
+        mActionsCoordinator.focusOn(index);
+    }
+
+    public void clearFocus() {
+        if (mActionsCoordinator == null) return;
+        mActionsCoordinator.clearFocus();
+    }
+
+    public void positionLocator(float rawX, float rawY) {
+        if (mActionsCoordinator == null) return;
+        mActionsCoordinator.positionLocator(rawX, rawY);
+    }
+
+    public void moveMagnifier(float rawX, float rawY, float centX, float centY) {
+        if (mActionsCoordinator == null) return;
+        mActionsCoordinator.moveMagnifier(rawX, rawY, centX, centY);
     }
 
     private static void attach(ViewGroup parent, ArrayList<Locator> locators) {
@@ -177,6 +218,16 @@ public class GPSLocatorHelper {
         }
     }
 
+    /**
+     * Class that handles and coordinates actions for each locator and also for the magnifier.
+     * <p/>
+     * This class has just finished minimum necessary implementation. Create class that extends
+     * {@link ActionsCoordinator} and override these method below to define more powerful actions in your way:
+     * <li>1. {@link ActionsCoordinator#onLocatorDisappear(Locator, int, boolean)}</li>
+     * <li>2. {@link ActionsCoordinator#onPostLocatorsDisappear()}</li>
+     * <li>3. {@link ActionsCoordinator#onLocatorAppear(Locator, int, boolean)}</li>
+     * <li>4. {@link ActionsCoordinator#onPostLocatorsAppear()}</li>
+     */
     public static class ActionsCoordinator {
         private GPSLocatorHelper mGPSLocatorHelper;
         private Locator mFocusLocator;
@@ -187,77 +238,98 @@ public class GPSLocatorHelper {
         }
 
         void focusOn(int index) {
-            mIndexOfFocusLocator = index;
-            mFocusLocator = mGPSLocatorHelper.mLocators.get(index);
-            focusOn(mFocusLocator, mIndexOfFocusLocator);
+            focusOn(mGPSLocatorHelper.mLocators.get(index), index);
 
         }
 
         void focusOn(Locator locator) {
-            mFocusLocator = locator;
-            mIndexOfFocusLocator = mGPSLocatorHelper.mLocators.indexOf(locator);
-            focusOn(mFocusLocator, mIndexOfFocusLocator);
+            focusOn(locator, mGPSLocatorHelper.mLocators.indexOf(locator));
         }
 
-        private void focusOn(Locator locator, int indexOfFocus) {
-            locator.hide();
+        void focusOn(Locator locator, int index) {
+            // update focus
+            mIndexOfFocusLocator = index;
+            mFocusLocator = locator;
+
             locatorsDisappear();
             mGPSLocatorHelper.mMagnifier.appear();
-            onFocused(locator, indexOfFocus);
+
         }
 
         void locatorsDisappear() {
+            onLocatorDisappear(mFocusLocator, mIndexOfFocusLocator, true);
+
             int index = 0;
             for (Locator locator : mGPSLocatorHelper.mLocators) {
                 if (locator != mFocusLocator) {
-                    onLocatorDisappear(locator, index);
+                    onLocatorDisappear(locator, index, false);
                 }
                 index++;
             }
-            onAllLocatorsDisappeared();
+            onPostLocatorsDisappear();
         }
 
-
-        protected void onLocatorDisappear(Locator locator, int position) {
+        /**
+         * You can override this method to handle disappearing actions such as animations for each locator.
+         *
+         * @param locator  locator on disappearing
+         * @param position position of the locator
+         * @param isFocus  true if the locator is focus locator
+         */
+        protected void onLocatorDisappear(Locator locator, int position, boolean isFocus) {
             locator.hide();
         }
 
-        protected void onAllLocatorsDisappeared() {
-
-        }
-
-        protected void onFocused(Locator focusLocator, int indexOfFocus) {
-
+        /**
+         * Overriding this method is a good chance to intervene the end of processing queue of
+         * {@link #onLocatorDisappear(Locator, int, boolean)}.
+         * <p/>
+         * One use case is that you have bound animations for each locator, and you want those animations to be
+         * started at the same time. Just put animations into {@link android.animation.AnimatorSet} and start the
+         * AnimatorSet here.
+         */
+        protected void onPostLocatorsDisappear() {
         }
 
         void clearFocus() {
-            mFocusLocator.show();
             mGPSLocatorHelper.mMagnifier.disappear();
             locatorsAppear();
-            onFocusCleared(mFocusLocator, mIndexOfFocusLocator);
+
         }
 
         void locatorsAppear() {
+            onLocatorAppear(mFocusLocator, mIndexOfFocusLocator, true);
+
             int index = 0;
             for (Locator locator : mGPSLocatorHelper.mLocators) {
                 if (locator != mFocusLocator) {
-                    onLocatorAppear(locator, index);
+                    onLocatorAppear(locator, index, false);
                 }
                 index++;
             }
-            onAllLocatorsAppeared();
+            onPostLocatorsAppear();
         }
 
-        protected void onLocatorAppear(Locator locator, int position) {
+        /**
+         * You can override this method to handle appearing actions such as animations for each locator.
+         *
+         * @param locator  locator on appearing
+         * @param position position of the locator
+         * @param isFocus  true if the locator is focus locator
+         */
+        protected void onLocatorAppear(Locator locator, int position, boolean isFocus) {
             locator.show();
         }
 
-        protected void onAllLocatorsAppeared() {
-
-        }
-
-        protected void onFocusCleared(Locator oldFocusLocator, int oldIndexOfFocus) {
-
+        /**
+         * Overriding this method is a good chance to intervene the end of processing queue of
+         * {@link #onLocatorAppear(Locator, int, boolean)}
+         * <p/>
+         * One use case is that you have bound animations for each locator, and you want those animations to be
+         * started at the same time. Just put animations into {@link android.animation.AnimatorSet} and start the
+         * AnimatorSet here.
+         */
+        protected void onPostLocatorsAppear() {
         }
 
 
@@ -266,8 +338,9 @@ public class GPSLocatorHelper {
             if (pivot == null) return;
             float offsetX = -pivot[0];
             float offsetY = -pivot[1];
-            mFocusLocator.contentView.setX(rawX + offsetX);
-            mFocusLocator.contentView.setY(rawY + offsetY);
+            mFocusLocator.setX(rawX + offsetX);
+            mFocusLocator.setY(rawY + offsetY);
+
         }
 
         void moveMagnifier(float rawX, float rawY, float centX, float centY) {
@@ -310,7 +383,7 @@ public class GPSLocatorHelper {
          * [0, 1] --- pivot is inside the contentView <br>
          * (1, infinite+) --- pivot is outside the contentView <br>
          * (-infinite, 0) --- invalid value
-         * <p>
+         * <p/>
          * <b>A pivot is a reference point that represents the gravity center of this locator, in most case, this is
          * also the point that indicates the real location where this locator is.</b>
          */
@@ -397,7 +470,7 @@ public class GPSLocatorHelper {
             GPSLocatorHelper.removeParent(contentView);
         }
 
-        public void addAnimation(Animator animator) {
+        public void bindAnimation(Animator animator) {
             animator.setTarget(contentView);
         }
 
@@ -454,9 +527,11 @@ public class GPSLocatorHelper {
             ViewGroup.LayoutParams lp = locator.contentView.getLayoutParams();
             if (lp == null) return null;
 
-            int width = lp.width;
-            int height = lp.height;
+//            int width = lp.width;
+//            int height = lp.height;
 
+            int width = locator.contentView.getWidth();
+            int height = locator.contentView.getHeight();
             float[] pivot = new float[2];
             switch (locator.mPivotGravity) {
                 case GRAVITY_LEFT_TOP:

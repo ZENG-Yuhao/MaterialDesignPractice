@@ -8,13 +8,13 @@
     <TextView
         android:layout_marginTop="250dp"
         android:id="@+id/txt_page_name"
-        android:mPivotGravity="center"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/hello_blank_fragment"/>
     <TextView
         android:id="@+id/txt_page_number"
-        android:mPivotGravity="center"
+        android:gravity="center"
         android:layout_below="@id/txt_page_name"
         android:text="Page number:"
         android:layout_width="match_parent"

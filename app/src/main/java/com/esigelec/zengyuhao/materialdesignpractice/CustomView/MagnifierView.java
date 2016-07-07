@@ -230,15 +230,15 @@ public class MagnifierView extends View {
     }
 
 
-    public void updateCenterByRelativeVals(double relatCentX, double centY) {
-        //if (relatCentX < 0 || relatCentX > 1 || centY < 0 || centY > 1) return false;
+    public void updateCenterByRelativeVals(double relatCentX, double relatCentY) {
+        //if (relatCentX < 0 || relatCentX > 1 || relatCentY < 0 || relatCentY > 1) return false;
         if (relatCentX < 0) relatCentX = 0;
         else if (relatCentX > 1) relatCentX = 1;
 
-        if (centY < 0) centY = 0;
-        else if (centY > 1) centY = 1;
+        if (relatCentY < 0) relatCentY = 0;
+        else if (relatCentY > 1) relatCentY = 1;
         float absX = (float) (mBitmap.getWidth() * relatCentX);
-        float absY = (float) (mBitmap.getHeight() * centY);
+        float absY = (float) (mBitmap.getHeight() * relatCentY);
         updateCenterByAbsoluteVals(absX, absY);
     }
 

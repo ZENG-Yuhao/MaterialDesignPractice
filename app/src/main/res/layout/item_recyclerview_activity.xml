@@ -17,6 +17,6 @@
         android:textSize="20sp"
         android:textColor="@android:color/black"
         android:text="NULL"
-        android:mPivotGravity="center"
+        android:layout_gravity="center"
         android:layout_height="match_parent"/>
 </LinearLayout>
