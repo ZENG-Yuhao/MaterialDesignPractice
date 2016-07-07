@@ -10,7 +10,10 @@ import com.esigelec.zengyuhao.materialdesignpractice.Core.Helper.GPSLocatorHelpe
  */
 public class TempClass extends GPSLocatorHelper.ActionsCoordinator {
 
+
     public TempClass(GPSLocatorHelper helper) {
         super(helper);
     }
+
+
 }

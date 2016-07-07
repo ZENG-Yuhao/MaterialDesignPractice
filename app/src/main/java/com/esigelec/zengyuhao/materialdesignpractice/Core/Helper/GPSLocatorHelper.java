@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Size;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -205,7 +206,7 @@ public class GPSLocatorHelper {
         mActionsCoordinator.moveMagnifier(rawX, rawY, centX, centY);
     }
 
-    private static void attach(ViewGroup parent, ArrayList<Locator> locators) {
+    public static void attach(ViewGroup parent, ArrayList<Locator> locators) {
         for (Locator locator : locators) {
             locator.attachTo(parent);
         }
@@ -249,7 +250,6 @@ public class GPSLocatorHelper {
 
             locatorsDisappear();
             mGPSLocatorHelper.mMagnifier.appear();
-
         }
 
         void locatorsDisappear() {
@@ -351,35 +351,50 @@ public class GPSLocatorHelper {
             if (pivot == null) return;
             float offsetX = -pivot[0];
             float offsetY = -pivot[1];
-            // calculate x, y of locator according to pivot's final position
-            float x = rawX + offsetX;
-            float y = rawY + offsetY;
+//            // calculate x, y of locator according to pivot's final position
+//            float x = rawX + offsetX;
+//            float y = rawY + offsetY;
 
-            View view = mGPSLocatorHelper.mAttachedView;
-            int[] location = new int[2];
-            view.getLocationOnScreen(location);
+//            View view = mGPSLocatorHelper.mAttachedView;
+//            int[] viewLocation = new int[2];
+//            view.getLocationOnScreen(viewLocation);
+//
+//            int leftBorder = viewLocation[0];
+//            int topBorder = viewLocation[1];
+//            int rightBorder = leftBorder + view.getWidth();
+//            int bottomBorder = topBorder + view.getHeight();
+//
+//            if (x < leftBorder) x = leftBorder;
+//            else if (x > rightBorder) x = rightBorder;
+//
+//            if (y < topBorder) y = topBorder;
+//            else if (y > bottomBorder) y = bottomBorder;
+//
+//            locator.setX(x);
+//            locator.setY(y);
 
-            int leftBound = location[0];
-            int topBound = location[1];
-            int rightBound = leftBound + view.getWidth();
-            int bottomBound = topBound + view.getHeight();
-
-            if (x < leftBound) x = leftBound;
-            else if (x > rightBound) x = rightBound;
-
-            if (y < topBound) y = topBound;
-            else if (y > bottomBound) y = bottomBound;
-
-            locator.setX(x);
-            locator.setY(y);
+            float[] location = new float[2];
+            location[0] = rawX + offsetX;
+            location[1] = rawY + offsetY;
+            correctLocation(mGPSLocatorHelper.mAttachedView, location);
+            locator.setX(location[0]);
+            locator.setY(location[1]);
         }
 
         void moveMagnifier(float rawX, float rawY, float centX, float centY) {
             MagnifierView magnifier = mGPSLocatorHelper.mMagnifier;
             float offsetX = -magnifier.getWidth() / 2;
             float offsetY = -magnifier.getHeight();
-            magnifier.setX(rawX + offsetX);
-            magnifier.setY(rawY + offsetY);
+//            magnifier.setX(rawX + offsetX);
+//            magnifier.setY(rawY + offsetY);
+//            magnifier.updateCenterByRelativeVals(centX, centY);
+
+            float[] location = new float[2];
+            location[0] = rawX + offsetX;
+            location[1] = rawY + offsetY;
+            correctLocation(mGPSLocatorHelper.mAttachedView, location);
+            magnifier.setX(location[0]);
+            magnifier.setY(location[1]);
             magnifier.updateCenterByRelativeVals(centX, centY);
         }
 
@@ -391,6 +406,32 @@ public class GPSLocatorHelper {
             return (locator == mFocusLocator);
         }
 
+        /**
+         * @param view     reference view
+         * @param location location to be checked, [0]-rawX [1]-rawY
+         * @return true if location exceeds borders of the view and the location has been corrected.
+         */
+        public static boolean correctLocation(View view, @Size(2) float[] location) {
+            boolean isExceededX = false;
+            boolean isExceededY = false;
+            int[] viewLocation = new int[2];
+            view.getLocationOnScreen(viewLocation);
+
+            int leftBorder = viewLocation[0];
+            int topBorder = viewLocation[1];
+            int rightBorder = leftBorder + view.getWidth();
+            int bottomBorder = topBorder + view.getHeight();
+
+            if (location[0] < leftBorder) location[0] = leftBorder;
+            else if (location[0] > rightBorder) location[0] = rightBorder;
+            else isExceededX = true;
+
+            if (location[1] < topBorder) location[1] = topBorder;
+            else if (location[1] > bottomBorder) location[1] = bottomBorder;
+            else isExceededY = true;
+
+            return (isExceededX || isExceededY);
+        }
     }
 
 
@@ -421,7 +462,7 @@ public class GPSLocatorHelper {
          * (-infinite, 0) --- invalid value
          * <p/>
          * <b>A pivot is a reference point that represents the gravity center of this locator, in most case, this is
-         * also the point that indicates the real location where this locator is.</b>
+         * also the point that indicates the real location where this locator points to.</b>
          */
         protected float pivotX = -1, pivotY = -1;
 
@@ -573,15 +614,6 @@ public class GPSLocatorHelper {
             return contentView.getY();
         }
 
-        public static void removeParent(View view) {
-            if (view != null) {
-                ViewParent parent = view.getParent();
-                if (parent != null) {
-                    ((ViewGroup) parent).removeView(view);
-                }
-            }
-        }
-
         public static float[] calculatePivot(Locator locator) {
             if (locator == null || locator.contentView == null) return null;
             ViewGroup.LayoutParams lp = locator.contentView.getLayoutParams();
@@ -644,7 +676,20 @@ public class GPSLocatorHelper {
                 default:
                     pivot = null;
             }
+            if (pivot != null) {
+                locator.pxPivotX = pivot[0];
+                locator.pxPivotY = pivot[1];
+            }
             return pivot;
+        }
+
+        public static void removeParent(View view) {
+            if (view != null) {
+                ViewParent parent = view.getParent();
+                if (parent != null) {
+                    ((ViewGroup) parent).removeView(view);
+                }
+            }
         }
     }
 }
