@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.esigelec.zengyuhao.materialdesignpractice.CustomView.MagnifierView;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
  * <p>
@@ -198,6 +199,7 @@ public class GPSLocatorHelper {
         mActionsCoordinator.positionLocator(rawX, rawY);
     }
 
+
     public void moveMagnifier(float rawX, float rawY, float centX, float centY) {
         if (mActionsCoordinator == null) return;
         mActionsCoordinator.moveMagnifier(rawX, rawY, centX, centY);
@@ -209,14 +211,6 @@ public class GPSLocatorHelper {
         }
     }
 
-    public static void removeParent(View view) {
-        if (view != null) {
-            ViewParent parent = view.getParent();
-            if (parent != null) {
-                ((ViewGroup) parent).removeView(view);
-            }
-        }
-    }
 
     /**
      * Class that handles and coordinates actions for each locator and also for the magnifier.
@@ -238,15 +232,17 @@ public class GPSLocatorHelper {
         }
 
         void focusOn(int index) {
+            if (hasFocus()) return;
             focusOn(mGPSLocatorHelper.mLocators.get(index), index);
 
         }
 
         void focusOn(Locator locator) {
+            if (hasFocus()) return;
             focusOn(locator, mGPSLocatorHelper.mLocators.indexOf(locator));
         }
 
-        void focusOn(Locator locator, int index) {
+        private void focusOn(Locator locator, int index) {
             // update focus
             mIndexOfFocusLocator = index;
             mFocusLocator = locator;
@@ -277,7 +273,8 @@ public class GPSLocatorHelper {
          * @param isFocus  true if the locator is focus locator
          */
         protected void onLocatorDisappear(Locator locator, int position, boolean isFocus) {
-            locator.hide();
+            if (isFocus)
+                locator.hide();
         }
 
         /**
@@ -294,7 +291,7 @@ public class GPSLocatorHelper {
         void clearFocus() {
             mGPSLocatorHelper.mMagnifier.disappear();
             locatorsAppear();
-
+            mFocusLocator = null;
         }
 
         void locatorsAppear() {
@@ -318,7 +315,8 @@ public class GPSLocatorHelper {
          * @param isFocus  true if the locator is focus locator
          */
         protected void onLocatorAppear(Locator locator, int position, boolean isFocus) {
-            locator.show();
+            if (isFocus)
+                locator.show();
         }
 
         /**
@@ -332,15 +330,48 @@ public class GPSLocatorHelper {
         protected void onPostLocatorsAppear() {
         }
 
-
+        /**
+         * Move current focus locator.
+         */
         void positionLocator(float rawX, float rawY) {
-            float[] pivot = Locator.calculatePivot(mFocusLocator);
+            positionLocator(mFocusLocator, rawX, rawY);
+        }
+
+        /**
+         * Move locator so that locator's pivot coincide with the position indicated by rawX and rawY.
+         * this method who controls locator's position to ensure that locator's pivot does not exceed bounds of
+         * {@link GPSLocatorHelper#mAttachedView}.
+         *
+         * @param locator locator to be positioned
+         * @param rawX    raw data of x-coordinate that locator's pivot should be moved to.
+         * @param rawY    raw data of y-coordinate that locator's pivot should be moved to.
+         */
+        void positionLocator(Locator locator, float rawX, float rawY) {
+            float[] pivot = Locator.calculatePivot(locator);
             if (pivot == null) return;
             float offsetX = -pivot[0];
             float offsetY = -pivot[1];
-            mFocusLocator.setX(rawX + offsetX);
-            mFocusLocator.setY(rawY + offsetY);
+            // calculate x, y of locator according to pivot's final position
+            float x = rawX + offsetX;
+            float y = rawY + offsetY;
 
+            View view = mGPSLocatorHelper.mAttachedView;
+            int[] location = new int[2];
+            view.getLocationOnScreen(location);
+
+            int leftBound = location[0];
+            int topBound = location[1];
+            int rightBound = leftBound + view.getWidth();
+            int bottomBound = topBound + view.getHeight();
+
+            if (x < leftBound) x = leftBound;
+            else if (x > rightBound) x = rightBound;
+
+            if (y < topBound) y = topBound;
+            else if (y > bottomBound) y = bottomBound;
+
+            locator.setX(x);
+            locator.setY(y);
         }
 
         void moveMagnifier(float rawX, float rawY, float centX, float centY) {
@@ -352,14 +383,19 @@ public class GPSLocatorHelper {
             magnifier.updateCenterByRelativeVals(centX, centY);
         }
 
+        public boolean hasFocus() {
+            return (mFocusLocator != null);
+        }
+
+        public boolean isFoucus(Locator locator) {
+            return (locator == mFocusLocator);
+        }
 
     }
 
 
     public static class Locator {
-        /**
-         * pivot position mPivotGravity
-         */
+        /* pivot position mPivotGravity */
         public static final int GRAVITY_LEFT_TOP = 0;
         public static final int GRAVITY_LEFT_CENTER = 1;
         public static final int GRAVITY_LEFT_BOTTOM = 2;
@@ -467,7 +503,22 @@ public class GPSLocatorHelper {
         }
 
         public void removeParent() {
-            GPSLocatorHelper.removeParent(contentView);
+            removeParent(contentView);
+        }
+
+        /**
+         * Move locator so that locator's pivot coincide with the position indicated by rawX and rawY.
+         *
+         * @param rawX raw data of x-coordinate that locator's pivot should be moved to.
+         * @param rawY raw data of y-coordinate that locator's pivot should be moved to.
+         */
+        public void positionTo(float rawX, float rawY) {
+            float[] pivot = Locator.calculatePivot(this);
+            if (pivot == null) return;
+            float offsetX = -pivot[0];
+            float offsetY = -pivot[1];
+            setX(rawX + offsetX);
+            setY(rawY + offsetY);
         }
 
         public void bindAnimation(Animator animator) {
@@ -520,6 +571,15 @@ public class GPSLocatorHelper {
 
         public float getY() {
             return contentView.getY();
+        }
+
+        public static void removeParent(View view) {
+            if (view != null) {
+                ViewParent parent = view.getParent();
+                if (parent != null) {
+                    ((ViewGroup) parent).removeView(view);
+                }
+            }
         }
 
         public static float[] calculatePivot(Locator locator) {

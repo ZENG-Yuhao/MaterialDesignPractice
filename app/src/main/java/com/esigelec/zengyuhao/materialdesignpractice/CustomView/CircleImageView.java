@@ -21,7 +21,7 @@ import android.widget.ImageView;
 /**
  * An custom ImageView that draws drawables/bitmaps in circle. Unlike most of custom views of this kind, this view
  * modifies onDraw() according to original implementation of ImageView to draw circle rather than overriding it
- * completely, thus, almost all features of ImageView are kept.
+ * completely, thus, <b><u>almost all features of ImageView are kept</u></b>.
  * <p>
  * Created by ZENG Yuhao on 01/07/16. <br>
  * Contact: enzo.zyh@gmail.com
