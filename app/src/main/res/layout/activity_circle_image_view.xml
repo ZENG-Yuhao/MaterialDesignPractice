@@ -19,8 +19,8 @@
         android:textSize="20sp"/>
 
     <ImageView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="48dp"
         android:background="@drawable/shape_circle"
@@ -37,8 +37,8 @@
 
     <com.esigelec.zengyuhao.materialdesignpractice.CustomView.CircleImageView
         android:id="@+id/circle_image_view"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:elevation="8dp"
         android:padding="16dp"

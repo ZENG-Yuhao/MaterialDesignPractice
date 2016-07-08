@@ -99,8 +99,12 @@ public class GPSLocatorActivity extends Activity {
             float y = event.getY() - map.getTop();
             float rawX = event.getRawX();
             float rawY = event.getRawY();
-            float relativeX = x / map.getWidth();
-            float relativeY = y / map.getHeight();
+//            float relativeX = x / map.getWidth();
+//            float relativeY = y / map.getHeight();
+
+            float[] position = GPSLocatorHelper.getRelativeLocationInView(map, rawX, rawY, true);
+            float relativeX = position[2];
+            float relativeY = position[3];
             //Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " map.getX()" + map.getX() + " map.getY()
             // " + map.getY());
 //            if (relativeX < 0) rawX = 0;
@@ -115,9 +119,9 @@ public class GPSLocatorActivity extends Activity {
 //                    Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " relativeX" + relativeX + "
 // relativeY" + relativeY);
                     helper.moveMagnifier(rawX, rawY, relativeX, relativeY);
+                    helper.positionLocator(rawX, rawY);
                     return true;
                 case MotionEvent.ACTION_UP:
-                    helper.positionLocator(rawX, rawY);
                     helper.clearFocus();
                     return true;
             }
