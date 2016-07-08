@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{
             "WaveScanner UI",
             "MagnifierImageView",
+            "New GPSLocator",
             "GPSLocator",
             "CircleImageView",
             "ViewGroupOverlay",
@@ -51,6 +52,7 @@ public class MainActivity extends Activity {
     final private static Class[] xActivityClasses = new Class[]{
             NavigationEXEMActivity.class,
             MagnifierImageViewActivity.class,
+            NewGPSLocatorActivity.class,
             GPSLocatorActivity.class,
             CircleImageViewActivity.class,
             ViewGroupOverlayActivity.class,

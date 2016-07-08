@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Size;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -160,7 +159,7 @@ public class GPSLocatorHelper implements Observer {
 
     /**
      * Initialization of locators.
-     * <p/>
+     * <p>
      * <b>IMPORTANT:</b>
      * <br>
      * All locators will be attached to the root view of the window where the attachedView is, in order to have
@@ -261,7 +260,7 @@ public class GPSLocatorHelper implements Observer {
         if (mOnLocatorPositionListener == null) return;
         if (observable instanceof Locator) {
             float[] rawXY = (float[]) data;
-            float[] location = getRelativeLocationInView(mAttachedView, rawXY[0], rawXY[1], true);
+            float[] location = getLocationRelatedTo(mAttachedView, rawXY[0], rawXY[1], true);
             Locator locator = (Locator) observable;
             int index = mLocators.indexOf(locator);
             mOnLocatorPositionListener.onPositionChanged(locator, index, location[0], location[1], location[2],
@@ -283,6 +282,8 @@ public class GPSLocatorHelper implements Observer {
     }
 
     /**
+     * Get location that relates to the specified view.
+     *
      * @param view         reference view
      * @param rawX         x-coordinate on screen
      * @param rawY         y-coordinate on screen
@@ -290,7 +291,7 @@ public class GPSLocatorHelper implements Observer {
      * @return array of 4 elements that follow the order: relativeX, relativeY, relativeX in fraction, relativeY in
      * fraction
      */
-    public static float[] getRelativeLocationInView(View view, float rawX, float rawY, boolean withPaddings) {
+    public static float[] getLocationRelatedTo(View view, float rawX, float rawY, boolean withPaddings) {
         float[] location = new float[4];
 
         int[] viewLocation = new int[2];
@@ -321,7 +322,7 @@ public class GPSLocatorHelper implements Observer {
 
     /**
      * Class that handles and coordinates actions for each locator and also for the magnifier.
-     * <p/>
+     * <p>
      * This class has just finished minimum necessary implementation. Create class that extends
      * {@link ActionCoordinator} and override these methods below to define more powerful actions in your way:
      * <li>1. {@link ActionCoordinator#onLocatorDisappear(Locator, int, boolean)}</li>
@@ -386,7 +387,7 @@ public class GPSLocatorHelper implements Observer {
         /**
          * Overriding this method is a good chance to intervene the end of processing queue of
          * {@link #onLocatorDisappear(Locator, int, boolean)}.
-         * <p/>
+         * <p>
          * One use case is that you have bound animations for each locator, and you want those animations to be
          * started at the same time. Just put animations into {@link android.animation.AnimatorSet} and start the
          * AnimatorSet here.
@@ -428,7 +429,7 @@ public class GPSLocatorHelper implements Observer {
         /**
          * Overriding this method is a good chance to intervene the end of processing queue of
          * {@link #onLocatorAppear(Locator, int, boolean)}
-         * <p/>
+         * <p>
          * One use case is that you have bound animations for each locator, and you want those animations to be
          * started at the same time. Just put animations into {@link android.animation.AnimatorSet} and start the
          * AnimatorSet here.
@@ -564,16 +565,16 @@ public class GPSLocatorHelper implements Observer {
 
         /**
          * Fraction values of pivot(X,Y).
-         * <p/>
+         * <p>
          * <b>
          * A pivot is a reference point that represents the gravity center of this locator, in most case, this is
          * also the point that indicates the real location where this locator points to.
          * </b>
-         * <p/>
+         * <p>
          * [0, 1] --- pivot is inside the contentView <br>
          * (1, infinite+) --- pivot is outside the contentView <br>
          * (-infinite, 0) --- invalid value
-         * <p/>
+         * <p>
          */
         protected float pivotX = -1, pivotY = -1;
 
@@ -851,7 +852,7 @@ public class GPSLocatorHelper implements Observer {
          * @param posX    fraction value of screen's x-coordinate of pivot (not the same with pivotX).
          * @param posY    fraction value of screen's y-coordinate of pivot (not the same with pivotX).
          */
-        void onPositionChanged(Locator locator, int index, float pxPosX, float
-                pxPosY, float posX, float posY);
+        void onPositionChanged(Locator locator, int index, float pxPosX, float pxPosY, float posX, float posY);
+
     }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,36 +25,9 @@ public class GPSLocatorActivity extends Activity {
 
         layout = (RelativeLayout) findViewById(R.id.root_layout);
         map = (ImageView) findViewById(R.id.map);
-        map.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.map);
-                bitmap = Bitmap.createScaledBitmap(bitmap, map.getWidth() - map.getPaddingLeft() - map
-                        .getPaddingRight(), map.getHeight() - map.getPaddingTop() - map.getPaddingBottom(), false);
-                map.setImageBitmap(bitmap);
-                helper = new GPSLocatorHelper(GPSLocatorActivity.this, map, bitmap, locator_blue, locator_red,
-                        locator_green);
-                helper.getLocatorAt(0).positionTo(map.getX() + 300, map.getY() + 300);
-                helper.getLocatorAt(1).positionTo(map.getX() + 600, map.getY() + 600);
-                helper.getLocatorAt(2).positionTo(map.getX() + 900, map.getY() + 900);
-                helper.setOnLocatorPositionListener(new GPSLocatorHelper.OnLocatorPositionListener() {
-                    @Override
-                    public void onPositionChanged(GPSLocatorHelper.Locator locator, int index, float pxPosX, float
-                            pxPosY,
-                                                  float posX, float posY) {
-                        Log.i("GPS", "index:" + index + " pxPosX:" + pxPosX + " pxPosY:" + pxPosY + " posX:" + posX +
-                                " " +
-                                "posY:" + posY);
-                    }
-                });
-                map.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
-
         locator_blue = (ImageView) findViewById(R.id.locator_blue);
         locator_red = (ImageView) findViewById(R.id.locator_red);
         locator_green = (ImageView) findViewById(R.id.locator_green);
-
 
         locator_blue.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -66,6 +38,7 @@ public class GPSLocatorActivity extends Activity {
                 return false;
             }
         });
+
         locator_red.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -86,9 +59,33 @@ public class GPSLocatorActivity extends Activity {
             }
         });
 
-
         layout.setOnTouchListener(new TouchListener());
 
+        map.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.map);
+                bitmap = Bitmap.createScaledBitmap(bitmap, map.getWidth() - map.getPaddingLeft() - map
+                        .getPaddingRight(), map.getHeight() - map.getPaddingTop() - map.getPaddingBottom(), false);
+                map.setImageBitmap(bitmap);
+                helper = new GPSLocatorHelper(GPSLocatorActivity.this, map, bitmap, locator_blue, locator_red,
+                        locator_green);
+                helper.getLocatorAt(0).positionTo(map.getX() + 300, map.getY() + 300);
+                helper.getLocatorAt(1).positionTo(map.getX() + 400, map.getY() + 400);
+                helper.getLocatorAt(2).positionTo(map.getX() + 500, map.getY() + 500);
+                helper.setOnLocatorPositionListener(new GPSLocatorHelper.OnLocatorPositionListener() {
+                    @Override
+                    public void onPositionChanged(GPSLocatorHelper.Locator locator, int index, float pxPosX, float
+                            pxPosY,
+                                                  float posX, float posY) {
+                        Log.i("GPS", "index:" + index + " pxPosX:" + pxPosX + " pxPosY:" + pxPosY + " posX:" + posX +
+                                " " +
+                                "posY:" + posY);
+                    }
+                });
+                map.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
     }
 
@@ -102,7 +99,7 @@ public class GPSLocatorActivity extends Activity {
 //            float relativeX = x / map.getWidth();
 //            float relativeY = y / map.getHeight();
 
-            float[] position = GPSLocatorHelper.getRelativeLocationInView(map, rawX, rawY, true);
+            float[] position = GPSLocatorHelper.getLocationRelatedTo(map, rawX, rawY, true);
             float relativeX = position[2];
             float relativeY = position[3];
             //Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " map.getX()" + map.getX() + " map.getY()
