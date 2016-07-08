@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomView.MagnifierView;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomView.GPSLocator.MagnifierView;
 
 public class MagnifierImageViewActivity extends Activity {
     private static final String TAG = "MagnifierImageView";

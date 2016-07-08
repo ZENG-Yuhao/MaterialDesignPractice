@@ -1,6 +1,6 @@
 package com.esigelec.zengyuhao.materialdesignpractice.Core;
 
-import com.esigelec.zengyuhao.materialdesignpractice.Core.Helper.GPSLocatorHelper;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomView.GPSLocator.GPSLocatorHelper;
 
 /**
  * <p>

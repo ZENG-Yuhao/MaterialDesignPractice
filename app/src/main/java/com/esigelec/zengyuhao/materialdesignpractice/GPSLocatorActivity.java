@@ -3,18 +3,14 @@ package com.esigelec.zengyuhao.materialdesignpractice;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.esigelec.zengyuhao.materialdesignpractice.Core.Helper.GPSLocatorHelper;
-import com.esigelec.zengyuhao.materialdesignpractice.Core.Image.EfficientBitmap;
+import com.esigelec.zengyuhao.materialdesignpractice.CustomView.GPSLocator.GPSLocatorHelper;
 
 public class GPSLocatorActivity extends Activity {
     private GPSLocatorHelper helper;
@@ -94,11 +90,11 @@ public class GPSLocatorActivity extends Activity {
             float relativeX = x / map.getWidth();
             float relativeY = y / map.getHeight();
             //Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " map.getX()" + map.getX() + " map.getY()" + map.getY());
-            if (relativeX < 0) rawX = 0;
-            else if (relativeX >= 1) rawX = map.getWidth();
-
-            if (relativeY < 0) rawY = 0;
-            else if (relativeY > 1) rawY = map.getHeight();
+//            if (relativeX < 0) rawX = 0;
+//            else if (relativeX >= 1) rawX = map.getWidth();
+//
+//            if (relativeY < 0) rawY = 0;
+//            else if (relativeY > 1) rawY = map.getHeight();
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -107,8 +103,8 @@ public class GPSLocatorActivity extends Activity {
                     helper.moveMagnifier(rawX, rawY, relativeX, relativeY);
                     return true;
                 case MotionEvent.ACTION_UP:
-                    helper.clearFocus();
                     helper.positionLocator(rawX, rawY);
+                    helper.clearFocus();
                     return true;
             }
             return false;
