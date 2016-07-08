@@ -258,7 +258,6 @@ public class GPSLocatorHelper implements Observer {
      */
     @Override
     public void update(Observable observable, Object data) {
-        Log.i("GPS", "update");
         if (mOnLocatorPositionListener == null) return;
         if (observable instanceof Locator) {
             float[] rawXY = (float[]) data;
