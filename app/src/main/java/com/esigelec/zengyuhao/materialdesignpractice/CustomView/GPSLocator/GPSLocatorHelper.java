@@ -6,12 +6,15 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Size;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * <p>
@@ -19,7 +22,7 @@ import java.util.ArrayList;
  * Contact: enzo.zyh@gmail.com
  * </p>
  */
-public class GPSLocatorHelper {
+public class GPSLocatorHelper implements Observer {
     private static final String TAG = "GPSLocatorHelper";
 
     private View mAttachedView;
@@ -36,8 +39,8 @@ public class GPSLocatorHelper {
     private MagnifierView mMagnifier;
     private int mMagnifierWidth = 700, mMagnifierHeight = 700;
 
-    private ActionsCoordinator mActionsCoordinator;
-
+    private ActionCoordinator mActionCoordinator;
+    private OnLocatorPositionListener mOnLocatorPositionListener;
 
     public GPSLocatorHelper(Context context, View attachedView, View... locatorViews) {
         useCustomBitmap = false;
@@ -191,18 +194,18 @@ public class GPSLocatorHelper {
     }
 
     private void initCoordinator() {
-        mActionsCoordinator = new ActionsCoordinator(this);
+        mActionCoordinator = new ActionCoordinator(this);
     }
 
     /**
-     * Get locator at specified position.
+     * Get locator at specified index.
      *
-     * @param position position in the ArrayList of locators
-     * @return locator found if position does not out of index, otherwise return null
+     * @param index index in the ArrayList of locators
+     * @return locator found if index does not out of index, otherwise return null
      */
-    public Locator getLocatorAt(int position) {
-        if (mLocators != null && position >= 0 && position < mLocators.size())
-            return mLocators.get(position);
+    public Locator getLocatorAt(int index) {
+        if (mLocators != null && index >= 0 && index < mLocators.size())
+            return mLocators.get(index);
         else
             return null;
     }
@@ -211,36 +214,109 @@ public class GPSLocatorHelper {
 
     }
 
+    public void setActionsCoordinator(ActionCoordinator coordinator) {
+        mActionCoordinator = coordinator;
+    }
+
+    public void setOnLocatorPositionListener(OnLocatorPositionListener listener) {
+        mOnLocatorPositionListener = listener;
+    }
+
     public void setFocusLocator(Locator locator) {
-        if (mActionsCoordinator == null) return;
-        mActionsCoordinator.focusOn(locator);
+        if (mActionCoordinator == null) return;
+        mActionCoordinator.focusOn(locator);
     }
 
     public void setFocusLocator(int index) {
-        if (mActionsCoordinator == null) return;
-        mActionsCoordinator.focusOn(index);
+        if (mActionCoordinator == null) return;
+        mActionCoordinator.focusOn(index);
     }
 
     public void clearFocus() {
-        if (mActionsCoordinator == null || !mActionsCoordinator.hasFocus()) return;
-        mActionsCoordinator.clearFocus();
+        if (mActionCoordinator == null || !mActionCoordinator.hasFocus()) return;
+        mActionCoordinator.clearFocus();
     }
 
     public void positionLocator(float rawX, float rawY) {
-        if (mActionsCoordinator == null || !mActionsCoordinator.hasFocus()) return;
-        mActionsCoordinator.positionLocator(rawX, rawY);
+        if (mActionCoordinator == null || !mActionCoordinator.hasFocus()) return;
+        mActionCoordinator.positionLocator(rawX, rawY);
     }
 
 
     public void moveMagnifier(float rawX, float rawY, float centX, float centY) {
-        if (mActionsCoordinator == null || !mActionsCoordinator.hasFocus()) return;
-        mActionsCoordinator.moveMagnifier(rawX, rawY, centX, centY);
+        if (mActionCoordinator == null || !mActionCoordinator.hasFocus()) return;
+        mActionCoordinator.moveMagnifier(rawX, rawY, centX, centY);
     }
 
-    public static void attach(ViewGroup parent, ArrayList<Locator> locators) {
+    /**
+     * This method is called when registered locator's location has changed.
+     *
+     * @param observable Locator whose location has changed.
+     * @param data       array of 4 elements that follow the order: relativeX, relativeY, relativeX in fraction,
+     *                   relativeY in
+     *                   fraction
+     */
+    @Override
+    public void update(Observable observable, Object data) {
+        Log.i("GPS", "update");
+        if (mOnLocatorPositionListener == null) return;
+        if (observable instanceof Locator) {
+            float[] rawXY = (float[]) data;
+            float[] location = getRelativeLocationInView(mAttachedView, rawXY[0], rawXY[1], true);
+            Locator locator = (Locator) observable;
+            int index = mLocators.indexOf(locator);
+            mOnLocatorPositionListener.onPositionChanged(locator, index, location[0], location[1], location[2],
+                    location[3]);
+        }
+    }
+
+    /**
+     * Attach a group of locators to a specified ViewGroup parent.
+     *
+     * @param parent   parent view
+     * @param locators array of locators
+     */
+    private void attach(ViewGroup parent, ArrayList<Locator> locators) {
         for (Locator locator : locators) {
             locator.attachTo(parent);
+            locator.addObserver(this);
         }
+    }
+
+    /**
+     * @param view         reference view
+     * @param rawX         x-coordinate on screen
+     * @param rawY         y-coordinate on screen
+     * @param withPaddings true if reference view's paddings should be taken into account.
+     * @return array of 4 elements that follow the order: relativeX, relativeY, relativeX in fraction, relativeY in
+     * fraction
+     */
+    public static float[] getRelativeLocationInView(View view, float rawX, float rawY, boolean withPaddings) {
+        float[] location = new float[4];
+
+        int[] viewLocation = new int[2];
+        view.getLocationOnScreen(viewLocation);
+
+        int paddingLeft = 0, paddingTop = 0, paddingRight = 0, paddingBottom = 0;
+        if (withPaddings) {
+            paddingLeft = view.getPaddingLeft();
+            paddingTop = view.getPaddingTop();
+            paddingRight = view.getPaddingRight();
+            paddingBottom = view.getPaddingBottom();
+        }
+
+        // relative X in pixel
+        location[0] = rawX - (viewLocation[0] + paddingLeft);
+        // relative Y in pixel
+        location[1] = rawY - (viewLocation[1] + paddingTop);
+
+        int actualWidth = view.getWidth() - paddingLeft - paddingRight;
+        int actualHeight = view.getHeight() - paddingTop - paddingBottom;
+        // relative X in fraction
+        location[2] = location[0] / actualWidth;
+        // relative Y in fraction
+        location[3] = location[1] / actualHeight;
+        return location;
     }
 
 
@@ -248,18 +324,18 @@ public class GPSLocatorHelper {
      * Class that handles and coordinates actions for each locator and also for the magnifier.
      * <p/>
      * This class has just finished minimum necessary implementation. Create class that extends
-     * {@link ActionsCoordinator} and override these methods below to define more powerful actions in your way:
-     * <li>1. {@link ActionsCoordinator#onLocatorDisappear(Locator, int, boolean)}</li>
-     * <li>2. {@link ActionsCoordinator#onPostLocatorsDisappear()}</li>
-     * <li>3. {@link ActionsCoordinator#onLocatorAppear(Locator, int, boolean)}</li>
-     * <li>4. {@link ActionsCoordinator#onPostLocatorsAppear()}</li>
+     * {@link ActionCoordinator} and override these methods below to define more powerful actions in your way:
+     * <li>1. {@link ActionCoordinator#onLocatorDisappear(Locator, int, boolean)}</li>
+     * <li>2. {@link ActionCoordinator#onPostLocatorsDisappear()}</li>
+     * <li>3. {@link ActionCoordinator#onLocatorAppear(Locator, int, boolean)}</li>
+     * <li>4. {@link ActionCoordinator#onPostLocatorsAppear()}</li>
      */
-    public static class ActionsCoordinator {
+    public static class ActionCoordinator {
         private GPSLocatorHelper mGPSLocatorHelper;
         private Locator mFocusLocator;
         private int mIndexOfFocusLocator;
 
-        public ActionsCoordinator(GPSLocatorHelper helper) {
+        public ActionCoordinator(GPSLocatorHelper helper) {
             mGPSLocatorHelper = helper;
         }
 
@@ -299,11 +375,11 @@ public class GPSLocatorHelper {
         /**
          * You can override this method to handle disappearing actions such as animations for each locator.
          *
-         * @param locator  locator on disappearing
-         * @param position position of the locator
-         * @param isFocus  true if the locator is focus locator
+         * @param locator locator on disappearing
+         * @param index   index of the locator in the list of locators
+         * @param isFocus true if the locator is focus locator
          */
-        protected void onLocatorDisappear(Locator locator, int position, boolean isFocus) {
+        protected void onLocatorDisappear(Locator locator, int index, boolean isFocus) {
             if (isFocus)
                 locator.hide();
         }
@@ -341,11 +417,11 @@ public class GPSLocatorHelper {
         /**
          * You can override this method to handle appearing actions such as animations for each locator.
          *
-         * @param locator  locator on appearing
-         * @param position position of the locator
-         * @param isFocus  true if the locator is focus locator
+         * @param locator locator on appearing
+         * @param index   index of the locator in the list of locators
+         * @param isFocus true if the locator is focus locator
          */
-        protected void onLocatorAppear(Locator locator, int position, boolean isFocus) {
+        protected void onLocatorAppear(Locator locator, int index, boolean isFocus) {
             if (isFocus)
                 locator.show();
         }
@@ -378,15 +454,16 @@ public class GPSLocatorHelper {
          * @param rawY    raw data of y-coordinate that locator's pivot should be moved to.
          */
         void positionLocator(Locator locator, float rawX, float rawY) {
-            float[] pivot = Locator.calculatePivot(locator);
-            if (pivot == null) return;
-            float offsetX = -pivot[0];
-            float offsetY = -pivot[1];
+            Locator.calculatePivot(locator);
+            float offsetX = -locator.getPxPivotX();
+            float offsetY = -locator.getPxPivotY();
 
             float[] location = {rawX, rawY};
             correctLocation(mGPSLocatorHelper.mAttachedView, location);
-            locator.setX(location[0] + offsetX);
-            locator.setY(location[1] + offsetY);
+//            locator.setX(location[0] + offsetX);
+//            locator.setY(location[1] + offsetY);
+
+            locator.setXY(location[0] + offsetX, location[1] + offsetY);
         }
 
         void moveMagnifier(float rawX, float rawY, float centX, float centY) {
@@ -395,13 +472,13 @@ public class GPSLocatorHelper {
             float offsetY = -magnifier.getHeight();
 //            magnifier.setX(rawX + offsetX);
 //            magnifier.setY(rawY + offsetY);
-//            magnifier.updateCenterByRelativeVals(centX, centY);
+//            magnifier.updateCenterByFractionVals(centX, centY);
 
             float[] location = {rawX, rawY};
             correctLocation(mGPSLocatorHelper.mAttachedView, location);
             magnifier.setX(location[0] + offsetX);
             magnifier.setY(location[1] + offsetY);
-            magnifier.updateCenterByRelativeVals(centX, centY);
+            magnifier.updateCenterByFractionVals(centX, centY);
         }
 
         public boolean hasFocus() {
@@ -414,22 +491,45 @@ public class GPSLocatorHelper {
 
         /**
          * Check whether the specified location is out of borders of the specified view, if yes, correct the location
-         * to ensure that it locates in the view.
+         * to ensure that it locates in the view. Paddings are taken into account by default.
          *
          * @param view     reference view
          * @param location location to be checked, an array of two integers in which to hold the coordinates, rawX, rawY
          * @return true if location exceeds borders of the view and the location has been corrected.
          */
         public static boolean correctLocation(View view, @Size(2) float[] location) {
+            return correctLocation(view, location, true);
+        }
+
+        /**
+         * Check whether the specified location is out of borders of the specified view, if yes, correct the location
+         * to ensure that it locates in the view. You can decided whether paddings are taken into account.
+         *
+         * @param view         reference view
+         * @param location     location to be checked, an array of two integers in which to hold the coordinates,
+         *                     rawX, rawY
+         * @param withPaddings set this argument to true if you want paddings are taken into account when doing the
+         *                     correction.
+         * @return true if location exceeds borders of the view and the location has been corrected.
+         */
+        public static boolean correctLocation(View view, @Size(2) float[] location, boolean withPaddings) {
             boolean isExceededX = false;
             boolean isExceededY = false;
             int[] viewLocation = new int[2];
             view.getLocationOnScreen(viewLocation);
 
-            int leftBorder = viewLocation[0];
-            int topBorder = viewLocation[1];
-            int rightBorder = leftBorder + view.getWidth();
-            int bottomBorder = topBorder + view.getHeight();
+            int offsetLeft = 0, offsetTop = 0, offsetRight = 0, offsetBottom = 0;
+            if (withPaddings) {
+                offsetLeft = view.getPaddingLeft();
+                offsetTop = view.getPaddingTop();
+                offsetRight = -view.getPaddingRight();
+                offsetBottom = -view.getPaddingBottom();
+            }
+
+            int leftBorder = viewLocation[0] + offsetLeft;
+            int topBorder = viewLocation[1] + offsetTop;
+            int rightBorder = viewLocation[0] + view.getWidth() + offsetRight;
+            int bottomBorder = viewLocation[1] + view.getHeight() + offsetBottom;
 
             if (location[0] < leftBorder) location[0] = leftBorder;
             else if (location[0] > rightBorder) location[0] = rightBorder;
@@ -441,10 +541,10 @@ public class GPSLocatorHelper {
 
             return (isExceededX || isExceededY);
         }
-    }
+    } // END OF: ActionCoordinator
 
 
-    public static class Locator {
+    public static class Locator extends Observable {
         /* pivot position mPivotGravity */
         public static final int GRAVITY_LEFT_TOP = 0;
         public static final int GRAVITY_LEFT_CENTER = 1;
@@ -464,7 +564,7 @@ public class GPSLocatorHelper {
         protected int mPivotGravity;
 
         /**
-         * Relative values of pivot(X,Y).
+         * Fraction values of pivot(X,Y).
          * <p/>
          * <b>
          * A pivot is a reference point that represents the gravity center of this locator, in most case, this is
@@ -516,11 +616,11 @@ public class GPSLocatorHelper {
          * @param contentView            view attached to this locator, this view will show a location marker
          * @param pivotX                 pivotX
          * @param pivotY                 pivotY
-         * @param attachToRelativeValues whether the specified pivot should be attached as relative values
+         * @param attachToFractionValues whether the specified pivot should be attached as fraction values
          */
-        public Locator(View contentView, float pivotX, float pivotY, boolean attachToRelativeValues) {
+        public Locator(View contentView, float pivotX, float pivotY, boolean attachToFractionValues) {
             this.contentView = contentView;
-            setPivotGravity(GRAVITY_USER_CUSTOM, pivotX, pivotY, attachToRelativeValues);
+            setPivotGravity(GRAVITY_USER_CUSTOM, pivotX, pivotY, attachToFractionValues);
         }
 
         /**
@@ -541,15 +641,15 @@ public class GPSLocatorHelper {
          * @param gravity                gravity of pivot
          * @param pivX                   x-coordinate of pivot
          * @param pivY                   y-coordinate of pivot
-         * @param attachToRelativeValues true if arguments pivX and pivY represent relative values
+         * @param attachToFractionValues true if arguments pivX and pivY represent fraction values
          */
-        public void setPivotGravity(int gravity, float pivX, float pivY, boolean attachToRelativeValues) {
+        public void setPivotGravity(int gravity, float pivX, float pivY, boolean attachToFractionValues) {
             mPivotGravity = gravity;
 
             // pivX, pivY are valid only when gravity is set to GRAVITY_USER_CUSTOM
             if (gravity != GRAVITY_USER_CUSTOM) return;
 
-            if (attachToRelativeValues) {
+            if (attachToFractionValues) {
                 this.pivotX = pivX;
                 this.pivotY = pivY;
 
@@ -585,10 +685,12 @@ public class GPSLocatorHelper {
         public void positionTo(float rawX, float rawY) {
             float[] pivot = Locator.calculatePivot(this);
             if (pivot == null) return;
+
             float offsetX = -pivot[0];
             float offsetY = -pivot[1];
-            setX(rawX + offsetX);
-            setY(rawY + offsetY);
+//            setX(rawX + offsetX);
+//            setY(rawY + offsetY);
+            setXY(rawX + offsetX, rawY + offsetY);
         }
 
         public void bindAnimation(Animator animator) {
@@ -627,7 +729,14 @@ public class GPSLocatorHelper {
             return pxPivotY;
         }
 
-        public void setX(float x) {
+        public void setXY(float x, float y) {
+            contentView.setX(x);
+            contentView.setY(y);
+            setChanged();
+            notifyObservers(new float[]{x + pxPivotX, y + pxPivotY});
+        }
+
+        private void setX(float x) {
             contentView.setX(x);
         }
 
@@ -635,7 +744,7 @@ public class GPSLocatorHelper {
             return contentView.getX();
         }
 
-        public void setY(float y) {
+        private void setY(float y) {
             contentView.setY(y);
         }
 
@@ -731,5 +840,19 @@ public class GPSLocatorHelper {
                 }
             }
         }
+    } // END OF: Locator
+
+    public interface OnLocatorPositionListener {
+
+        /**
+         * @param locator the locator whose position has been changed.
+         * @param index   index of the locator in {@link #mLocators}
+         * @param pxPosX  screen's x-coordinate of pivot in pixels (not the same with pivotX).
+         * @param pxPosY  screen's y-coordinate of pivot in pixels (not the same with pivotX).
+         * @param posX    fraction value of screen's x-coordinate of pivot (not the same with pivotX).
+         * @param posY    fraction value of screen's y-coordinate of pivot (not the same with pivotX).
+         */
+        void onPositionChanged(Locator locator, int index, float pxPosX, float
+                pxPosY, float posX, float posY);
     }
 }

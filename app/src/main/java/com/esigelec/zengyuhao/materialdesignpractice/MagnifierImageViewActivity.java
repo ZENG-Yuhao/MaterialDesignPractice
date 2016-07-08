@@ -47,7 +47,7 @@ public class MagnifierImageViewActivity extends Activity {
         }
 
         magnifier.bindBitmap(((BitmapDrawable) img.getDrawable()).getBitmap());
-        magnifier.updateCenterByRelativeVals(0.5, 0.5);
+        magnifier.updateCenterByFractionVals(0.5, 0.5);
         magnifier.disappearFast();
 
         magnifier.setOnAppearDisappearListener(new MagnifierView.OnAppearDisappearListener() {
@@ -99,7 +99,7 @@ public class MagnifierImageViewActivity extends Activity {
                     float relativeX = x / img.getWidth();
                     float relativeY = y / img.getHeight();
                     Log.i(TAG, "onTouch---->:" + relativeX + " ## " + relativeY);
-                    magnifier.updateCenterByRelativeVals(relativeX, relativeY);
+                    magnifier.updateCenterByFractionVals(relativeX, relativeY);
                     if (relativeX >= 0 && relativeX <= 1)
                         magnifier.setX(rawX - magnifier.getWidth() / 2);
                     if (relativeY >= 0 && relativeY <= 1)

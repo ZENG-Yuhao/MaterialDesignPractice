@@ -8,7 +8,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.CustomView.GPSLocator.GPSLo
  * Contact: enzo.zyh@gmail.com
  * </p>
  */
-public class TempClass extends GPSLocatorHelper.ActionsCoordinator {
+public class TempClass extends GPSLocatorHelper.ActionCoordinator {
 
 
     public TempClass(GPSLocatorHelper helper) {

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -28,16 +30,24 @@ public class GPSLocatorActivity extends Activity {
             @Override
             public void onGlobalLayout() {
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.map);
-                bitmap = Bitmap.createScaledBitmap(bitmap, map.getWidth(), map.getHeight(), false);
+                bitmap = Bitmap.createScaledBitmap(bitmap, map.getWidth() - map.getPaddingLeft() - map
+                        .getPaddingRight(), map.getHeight() - map.getPaddingTop() - map.getPaddingBottom(), false);
                 map.setImageBitmap(bitmap);
-                helper = new GPSLocatorHelper(GPSLocatorActivity.this, map, bitmap, locator_blue, locator_red, locator_green);
-                helper.getLocatorAt(0).setX(map.getX() + 100);
-                helper.getLocatorAt(0).setY(map.getY() + 100);
-                helper.getLocatorAt(1).setX(map.getX() + 300);
-                helper.getLocatorAt(1).setY(map.getY() + 300);
-                helper.getLocatorAt(2).setX(map.getX() + 600);
-                helper.getLocatorAt(2).setY(map.getY() + 600);
-
+                helper = new GPSLocatorHelper(GPSLocatorActivity.this, map, bitmap, locator_blue, locator_red,
+                        locator_green);
+                helper.getLocatorAt(0).positionTo(map.getX() + 300, map.getY() + 300);
+                helper.getLocatorAt(1).positionTo(map.getX() + 600, map.getY() + 600);
+                helper.getLocatorAt(2).positionTo(map.getX() + 900, map.getY() + 900);
+                helper.setOnLocatorPositionListener(new GPSLocatorHelper.OnLocatorPositionListener() {
+                    @Override
+                    public void onPositionChanged(GPSLocatorHelper.Locator locator, int index, float pxPosX, float
+                            pxPosY,
+                                                  float posX, float posY) {
+                        Log.i("GPS", "index:" + index + " pxPosX:" + pxPosX + " pxPosY:" + pxPosY + " posX:" + posX +
+                                " " +
+                                "posY:" + posY);
+                    }
+                });
                 map.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
@@ -77,19 +87,22 @@ public class GPSLocatorActivity extends Activity {
         });
 
 
-        map.setOnTouchListener(new TouchListener());
+        layout.setOnTouchListener(new TouchListener());
+
+
     }
 
     public class TouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            float x = event.getX();
-            float y = event.getY();
+            float x = event.getX() - map.getLeft();
+            float y = event.getY() - map.getTop();
             float rawX = event.getRawX();
             float rawY = event.getRawY();
             float relativeX = x / map.getWidth();
             float relativeY = y / map.getHeight();
-            //Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " map.getX()" + map.getX() + " map.getY()" + map.getY());
+            //Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " map.getX()" + map.getX() + " map.getY()
+            // " + map.getY());
 //            if (relativeX < 0) rawX = 0;
 //            else if (relativeX >= 1) rawX = map.getWidth();
 //
@@ -99,7 +112,8 @@ public class GPSLocatorActivity extends Activity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_MOVE:
-//                    Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " relativeX" + relativeX + " relativeY" + relativeY);
+//                    Log.i("hah", "onTouch--->" + "rawX" + rawX + " rawY" + rawY + " relativeX" + relativeX + "
+// relativeY" + relativeY);
                     helper.moveMagnifier(rawX, rawY, relativeX, relativeY);
                     return true;
                 case MotionEvent.ACTION_UP:

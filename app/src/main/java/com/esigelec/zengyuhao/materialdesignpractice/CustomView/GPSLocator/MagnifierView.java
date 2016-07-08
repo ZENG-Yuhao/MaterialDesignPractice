@@ -46,12 +46,12 @@ public class MagnifierView extends View {
     private int mSidelineWidth = 3;
 
     /**
-     * absolute values of center(X,Y)
+     * absolute values of center(X,Y) in pixels
      */
     private float absCenterX, absCenterY;
 
     /**
-     * absolute value of radius
+     * absolute value of radius in pixels
      */
     private float absRadius;
 
@@ -230,15 +230,15 @@ public class MagnifierView extends View {
     }
 
 
-    public void updateCenterByRelativeVals(double relatCentX, double relatCentY) {
-        //if (relatCentX < 0 || relatCentX > 1 || relatCentY < 0 || relatCentY > 1) return false;
-        if (relatCentX < 0) relatCentX = 0;
-        else if (relatCentX > 1) relatCentX = 1;
+    public void updateCenterByFractionVals(double fractCentX, double fractCentY) {
+        //if (fractCentX < 0 || fractCentX > 1 || fractCentY < 0 || fractCentY > 1) return false;
+        if (fractCentX < 0) fractCentX = 0;
+        else if (fractCentX > 1) fractCentX = 1;
 
-        if (relatCentY < 0) relatCentY = 0;
-        else if (relatCentY > 1) relatCentY = 1;
-        float absX = (float) (mBitmap.getWidth() * relatCentX);
-        float absY = (float) (mBitmap.getHeight() * relatCentY);
+        if (fractCentY < 0) fractCentY = 0;
+        else if (fractCentY > 1) fractCentY = 1;
+        float absX = (float) (mBitmap.getWidth() * fractCentX);
+        float absY = (float) (mBitmap.getHeight() * fractCentY);
         updateCenterByAbsoluteVals(absX, absY);
     }
 
