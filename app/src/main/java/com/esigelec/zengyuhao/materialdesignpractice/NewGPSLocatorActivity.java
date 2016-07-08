@@ -2,6 +2,7 @@ package com.esigelec.zengyuhao.materialdesignpractice;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -23,7 +24,27 @@ public class NewGPSLocatorActivity extends Activity {
         locator_red = (ImageView) findViewById(R.id.locator_red);
         locator_green = (ImageView) findViewById(R.id.locator_green);
 
-        helper = new SimpleGPSLocatorInitializer(this, map, locator_blue, locator_red, locator_green).init();
+        SimpleGPSLocatorInitializer initializer = new SimpleGPSLocatorInitializer(this, map, locator_blue,
+                locator_red, locator_green);
+        helper = initializer.init();
+        initializer.setOnHelperObtainedListener(new SimpleGPSLocatorInitializer.OnHelperObtainedListener() {
+            @Override
+            public void onHelperObtained(GPSLocatorHelper helper) {
+                helper.getLocatorAt(0).positionTo(map.getX() + 300, map.getY() + 300);
+                helper.getLocatorAt(1).positionTo(map.getX() + 400, map.getY() + 300);
+                helper.getLocatorAt(2).positionTo(map.getX() + 500, map.getY() + 300);
 
+                helper.setOnLocatorPositionListener(new GPSLocatorHelper.OnLocatorPositionListener() {
+                    @Override
+                    public void onPositionChanged(GPSLocatorHelper.Locator locator, int index, float pxPosX, float
+                            pxPosY,
+                                                  float posX, float posY) {
+                        Log.i("GPS", "index:" + index + " pxPosX:" + pxPosX + " pxPosY:" + pxPosY + " posX:" + posX +
+                                " " +
+                                "posY:" + posY);
+                    }
+                });
+            }
+        });
     }
 }

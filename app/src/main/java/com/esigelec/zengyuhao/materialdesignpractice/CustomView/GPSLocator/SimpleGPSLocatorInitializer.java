@@ -3,7 +3,6 @@ package com.esigelec.zengyuhao.materialdesignpractice.CustomView.GPSLocator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -22,6 +21,7 @@ public class SimpleGPSLocatorInitializer {
     private ImageView map;
     private View[] locatorViews;
     private GPSLocatorHelper helper;
+    private OnHelperObtainedListener mListener;
 
     public SimpleGPSLocatorInitializer(Context context, ImageView map, View... locatorViews) {
         this.context = context;
@@ -33,6 +33,12 @@ public class SimpleGPSLocatorInitializer {
         View rootView = map.getRootView();
         rootView.setOnTouchListener(new ScreenTouchListener());
 
+        int index = 0;
+        for (View view : locatorViews) {
+            view.setOnTouchListener(new LocatorViewTouchListener(index));
+            index++;
+        }
+
         map.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -41,31 +47,16 @@ public class SimpleGPSLocatorInitializer {
                         .getPaddingRight(), map.getHeight() - map.getPaddingTop() - map.getPaddingBottom(), false);
                 map.setImageBitmap(bitmap);
                 helper = new GPSLocatorHelper(context, map, bitmap, locatorViews);
-                helper.setOnLocatorPositionListener(new GPSLocatorHelper.OnLocatorPositionListener() {
-                    @Override
-                    public void onPositionChanged(GPSLocatorHelper.Locator locator, int index, float pxPosX, float
-                            pxPosY,
-                                                  float posX, float posY) {
-                        Log.i("GPS", "index:" + index + " pxPosX:" + pxPosX + " pxPosY:" + pxPosY + " posX:" + posX +
-                                " " +
-                                "posY:" + posY);
-                    }
-                });
-                helper.getLocatorAt(0).positionTo(map.getX() + 300, map.getY() + 300);
-                helper.getLocatorAt(1).positionTo(map.getX() + 400, map.getY() + 300);
-                helper.getLocatorAt(2).positionTo(map.getX() + 500, map.getY() + 300);
-
                 map.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (mListener != null) mListener.onHelperObtained(helper);
             }
         });
 
-        int index = 0;
-        for (View view : locatorViews) {
-            view.setOnTouchListener(new LocatorViewTouchListener(index));
-            index++;
-        }
-
         return helper;
+    }
+
+    public void setOnHelperObtainedListener(OnHelperObtainedListener listener) {
+        mListener = listener;
     }
 
     private class LocatorViewTouchListener implements View.OnTouchListener {
@@ -109,6 +100,10 @@ public class SimpleGPSLocatorInitializer {
             }
             return false;
         }
+    }
+
+    public interface OnHelperObtainedListener {
+        void onHelperObtained(GPSLocatorHelper helper);
     }
 
 }
