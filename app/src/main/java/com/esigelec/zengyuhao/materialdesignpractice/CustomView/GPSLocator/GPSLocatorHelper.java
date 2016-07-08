@@ -155,6 +155,17 @@ public class GPSLocatorHelper {
     }
 
 
+    /**
+     * Initialization of locators.
+     * <p/>
+     * <b>IMPORTANT:</b>
+     * <br>
+     * All locators will be attached to the root view of the window where the attachedView is, in order to have
+     * global coordinates (rawX, rawY) and to prevent being shaded from other views.
+     *
+     * @param attachedView view attached in which all locators should locate
+     * @param locators     ArrayList of locators
+     */
     private void initLocators(View attachedView, ArrayList<Locator> locators) {
         mAttachedView = attachedView;
         mRootView = attachedView.getRootView();
