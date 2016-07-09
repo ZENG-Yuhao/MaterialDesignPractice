@@ -3,6 +3,8 @@ package com.esigelec.zengyuhao.materialdesignpractice;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -39,11 +41,23 @@ public class NewGPSLocatorActivity extends Activity {
                     public void onPositionChanged(GPSLocatorHelper.Locator locator, int index, float pxPosX, float
                             pxPosY,
                                                   float posX, float posY) {
-                        Log.i("GPS", "index:" + index + " pxPosX:" + pxPosX + " pxPosY:" + pxPosY + " posX:" + posX +
-                                " " +
-                                "posY:" + posY);
+//                        Log.i("GPS", "index:" + index + " pxPosX:" + pxPosX + " pxPosY:" + pxPosY + " posX:" + posX +
+//                                " " +
+//                                "posY:" + posY);
+
                     }
                 });
+            }
+        });
+
+        Button btn = (Button) findViewById(R.id.btn_request_layout);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locator_blue.requestLayout();
+                locator_red.requestLayout();
+                locator_green.requestLayout();
+                map.requestLayout();
             }
         });
     }

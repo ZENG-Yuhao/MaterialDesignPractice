@@ -34,4 +34,10 @@
         android:layout_height="56dp"
         android:src="@drawable/location_pin_green" />
 
+    <Button
+        android:id="@+id/btn_request_layout"
+        android:layout_alignParentBottom="true"
+        android:text="RequestLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

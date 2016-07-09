@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Size;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -734,6 +735,9 @@ public class GPSLocatorHelper implements Observer {
             contentView.setY(y);
             setChanged();
             notifyObservers(new float[]{x + pxPivotX, y + pxPivotY});
+//            Log.i("positionTo", "--->left:" + contentView.getLeft() + " top:" + contentView.getTop() + " right:" +
+//                    contentView.getRight() + " bottom:" + contentView.getBottom() + " width:" + contentView.getWidth
+//                    () + " " + "height:" + contentView.getHeight());
         }
 
         private void setX(float x) {
