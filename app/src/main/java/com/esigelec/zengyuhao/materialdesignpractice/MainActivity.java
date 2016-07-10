@@ -46,7 +46,8 @@ public class MainActivity extends Activity {
             "PagerTabStrip",
             "ActionBar",
             "Shadow and Clipping",
-            "CardView"
+            "CardView",
+            "Test Only"
     };
 
     final private static Class[] xActivityClasses = new Class[]{
@@ -77,7 +78,8 @@ public class MainActivity extends Activity {
             PaperTabStripActivity.class,
             ActionBarActivity.class,
             ShadowAndClippingActivity.class,
-            CardViewActivity.class
+            CardViewActivity.class,
+            TestOnlyActivity.class
     };
 
     @Override

@@ -96,8 +96,6 @@ public class MagnifierView extends View {
         mBackgroundDrawable = new ShapeDrawable();
         mBackgroundDrawable.setShape(new OvalShape());
         setDefaultBackgroundColor(mBackgroundColor);
-
-
     }
 
     public void setDefaultBackgroundColor(@ColorInt int color) {
@@ -122,7 +120,6 @@ public class MagnifierView extends View {
     public void setAbsRadius(float R) {
         absRadius = R;
         postInvalidateOnAnimation();
-
     }
 
     public float getAbsRadius() {
@@ -213,6 +210,12 @@ public class MagnifierView extends View {
     public void removeOnAppearDisappearListener() {
         mOnAppearDisappearListener = null;
     }
+
+//    @Override
+//    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+//        super.onLayout(changed, left, top, right, bottom);
+//        Log.i("MAGNIFIER ONLAYOUT", "....");
+//    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
