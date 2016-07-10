@@ -63,6 +63,8 @@
         <activity android:name=".Activity.NewGPSLocatorActivity"/>
         <activity android:name=".Activity.TestOnlyActivity">
         </activity>
+        <activity android:name=".Activity.ShapeTestActivity">
+        </activity>
     </application>
 
 </manifest>

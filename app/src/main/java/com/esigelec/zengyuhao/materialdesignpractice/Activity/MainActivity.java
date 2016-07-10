@@ -48,7 +48,8 @@ public class MainActivity extends Activity {
             "ActionBar",
             "Shadow and Clipping",
             "CardView",
-            "Test Only"
+            "Test Only",
+            "ShapeTest"
     };
 
     final private static Class[] xActivityClasses = new Class[]{
@@ -80,7 +81,8 @@ public class MainActivity extends Activity {
             ActionBarActivity.class,
             ShadowAndClippingActivity.class,
             CardViewActivity.class,
-            TestOnlyActivity.class
+            TestOnlyActivity.class,
+            ShapeTestActivity.class
     };
 
     @Override

@@ -33,10 +33,6 @@ public class NewGPSLocatorActivity extends Activity {
         initializer.setOnHelperObtainedListener(new SimpleGPSLocatorInitializer.OnHelperObtainedListener() {
             @Override
             public void onHelperObtained(GPSLocatorHelper helper) {
-                locator_blue.setLeft(100);
-                locator_blue.setRight(100);
-                locator_blue.setTop(100);
-                locator_blue.setBottom(100);
                 helper.getLocatorAt(0).positionTo(map.getX() + 300, map.getY() + 300);
                 helper.getLocatorAt(1).positionTo(map.getX() + 400, map.getY() + 300);
                 helper.getLocatorAt(2).positionTo(map.getX() + 500, map.getY() + 300);
