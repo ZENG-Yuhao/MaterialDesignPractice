@@ -160,7 +160,7 @@ public class GPSLocatorHelper implements Observer {
 
     /**
      * Initialization of locators.
-     * <p/>
+     * <p>
      * <b>IMPORTANT:</b>
      * <br>
      * All locators will be attached to the root view of the window where the attachedView is, in order to have
@@ -323,7 +323,7 @@ public class GPSLocatorHelper implements Observer {
 
     /**
      * Class that handles and coordinates actions for each locator and also for the magnifier.
-     * <p/>
+     * <p>
      * This class has just finished minimum necessary implementation. Create class that extends
      * {@link ActionCoordinator} and override these methods below to define more powerful actions in your way:
      * <li>1. {@link ActionCoordinator#onLocatorDisappear(Locator, int, boolean)}</li>
@@ -355,6 +355,7 @@ public class GPSLocatorHelper implements Observer {
             // update focus
             mIndexOfFocusLocator = index;
             mFocusLocator = locator;
+            mFocusLocator.contentView.bringToFront();
 
             locatorsDisappear();
             mGPSLocatorHelper.mMagnifier.appear();
@@ -388,7 +389,7 @@ public class GPSLocatorHelper implements Observer {
         /**
          * Overriding this method is a good chance to intervene the end of processing queue of
          * {@link #onLocatorDisappear(Locator, int, boolean)}.
-         * <p/>
+         * <p>
          * One use case is that you have bound animations for each locator, and you want those animations to be
          * started at the same time. Just put animations into {@link android.animation.AnimatorSet} and start the
          * AnimatorSet here.
@@ -430,7 +431,7 @@ public class GPSLocatorHelper implements Observer {
         /**
          * Overriding this method is a good chance to intervene the end of processing queue of
          * {@link #onLocatorAppear(Locator, int, boolean)}
-         * <p/>
+         * <p>
          * One use case is that you have bound animations for each locator, and you want those animations to be
          * started at the same time. Just put animations into {@link android.animation.AnimatorSet} and start the
          * AnimatorSet here.
@@ -561,16 +562,16 @@ public class GPSLocatorHelper implements Observer {
 
         /**
          * Fraction values of pivot(X,Y).
-         * <p/>
+         * <p>
          * <b>
          * A pivot is a reference point that represents the gravity center of this locator, in most case, this is
          * also the point that indicates the real location where this locator points to.
          * </b>
-         * <p/>
+         * <p>
          * [0, 1] --- pivot is inside the contentView <br>
          * (1, infinite+) --- pivot is outside the contentView <br>
          * (-infinite, 0) --- invalid value
-         * <p/>
+         * <p>
          */
         protected float pivotX = -1, pivotY = -1;
 
