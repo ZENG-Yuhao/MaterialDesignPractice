@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class SnackerBarActivity extends Activity {
 

@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.media.Image;
@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 import org.w3c.dom.Text;
 

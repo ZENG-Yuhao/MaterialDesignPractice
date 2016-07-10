@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.esigelec.zengyuhao.materialdesignpractice.CustomView.GPSLocator.MagnifierView;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MagnifierImageViewActivity extends Activity {
     private static final String TAG = "MagnifierImageView";

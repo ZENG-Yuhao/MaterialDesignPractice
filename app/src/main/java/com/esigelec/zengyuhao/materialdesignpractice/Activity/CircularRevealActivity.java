@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.animation.Animator;
 import android.app.Activity;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class CircularRevealActivity extends Activity {
     private TextView txt1, txt2, txt3, txt4;

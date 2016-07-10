@@ -1,7 +1,9 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class AlterDialogActivity extends Activity {
 

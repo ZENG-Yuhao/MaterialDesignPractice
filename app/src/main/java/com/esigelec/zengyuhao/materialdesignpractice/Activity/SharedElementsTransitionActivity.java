@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 /**
  * Setting exit transition (xml)

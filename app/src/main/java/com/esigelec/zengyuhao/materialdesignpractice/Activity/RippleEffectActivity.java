@@ -1,8 +1,10 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 /**
  * 1.Create a ripple in drawable @see ./res/drawable/ripple_rect.xmlt.xml which can give a shape to calculate the

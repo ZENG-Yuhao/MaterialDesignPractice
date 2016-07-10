@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class DialogActivity extends Activity {
     private Button btn_normal_dialog, btn_custom_view_dialog;

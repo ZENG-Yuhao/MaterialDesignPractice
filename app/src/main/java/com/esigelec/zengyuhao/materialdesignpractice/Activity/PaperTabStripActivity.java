@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.esigelec.zengyuhao.materialdesignpractice.Core.Image.EfficientBitmap;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class PaperTabStripActivity extends Activity {
     private static String[] titles = {"Dice", "Play", "Info", "Android", "Wu", "Earth"};

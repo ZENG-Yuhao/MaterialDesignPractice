@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login2Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.Login3Activity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActivity;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] xActivityNames = new String[]{

@@ -1,10 +1,12 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class ActionBarActivity extends Activity {
 

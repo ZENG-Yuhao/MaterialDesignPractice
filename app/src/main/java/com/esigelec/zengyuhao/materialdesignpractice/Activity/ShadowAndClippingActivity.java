@@ -1,10 +1,12 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class ShadowAndClippingActivity extends Activity {
 

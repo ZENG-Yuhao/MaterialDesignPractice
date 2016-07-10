@@ -3,13 +3,12 @@ package com.esigelec.zengyuhao.materialdesignpractice.EXEM;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.esigelec.zengyuhao.materialdesignpractice.R;
-import com.esigelec.zengyuhao.materialdesignpractice.SwipeLayoutActivity;
+import com.esigelec.zengyuhao.materialdesignpractice.Activity.SwipeLayoutActivity;
 
 
 public class NavigationEXEMActivity extends Activity {

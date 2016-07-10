@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.esigelec.zengyuhao.materialdesignpractice.Core.Image.EfficientBitmap;
 import com.esigelec.zengyuhao.materialdesignpractice.EXEM.BottomToolBarActivity;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 import java.util.Collections;
 import java.util.Random;

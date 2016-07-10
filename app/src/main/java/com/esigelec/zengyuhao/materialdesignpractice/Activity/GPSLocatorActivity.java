@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.esigelec.zengyuhao.materialdesignpractice.CustomView.GPSLocator.GPSLocatorHelper;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class GPSLocatorActivity extends Activity {
     private GPSLocatorHelper helper;

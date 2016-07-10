@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.esigelec.zengyuhao.materialdesignpractice.CustomView.SwipeLayout;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class SwipeLayoutActivity extends Activity {
 

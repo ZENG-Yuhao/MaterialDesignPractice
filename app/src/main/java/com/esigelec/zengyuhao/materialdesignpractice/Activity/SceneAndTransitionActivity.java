@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class SceneAndTransitionActivity extends Activity {
     private Scene scene_a, scene_b;

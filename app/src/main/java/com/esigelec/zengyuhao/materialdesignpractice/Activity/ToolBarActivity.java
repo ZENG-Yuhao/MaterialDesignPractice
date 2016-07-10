@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -8,10 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class ToolBarActivity extends AppCompatActivity {
     private Toolbar myToolbar;

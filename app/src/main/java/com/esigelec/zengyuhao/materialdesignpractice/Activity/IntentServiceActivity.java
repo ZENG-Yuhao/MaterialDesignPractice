@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 import com.esigelec.zengyuhao.materialdesignpractice.Service.MyIntentService;
 
 /**

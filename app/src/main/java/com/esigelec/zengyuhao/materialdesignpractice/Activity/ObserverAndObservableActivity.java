@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.graphics.Paint;
@@ -7,6 +7,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 import java.util.Observable;
 import java.util.Observer;

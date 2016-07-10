@@ -8,60 +8,60 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CardViewActivity"/>
-        <activity android:name=".ShadowAndClippingActivity"/>
+        <activity android:name=".Activity.CardViewActivity"/>
+        <activity android:name=".Activity.ShadowAndClippingActivity"/>
         <activity
-            android:name=".ActionBarActivity"
+            android:name=".Activity.ActionBarActivity"
             android:label="@string/title_activity_action_bar"/>
-        <activity android:name=".PaperTabStripActivity"/>
+        <activity android:name=".Activity.PaperTabStripActivity"/>
         <activity
-            android:name=".NavigationDrawerActivity"
+            android:name=".Activity.NavigationDrawerActivity"
             android:label="DrawerLayout"
             android:logo="@drawable/ic_arrow_back_black_24dp"/>
-        <activity android:name=".NotificationActivity"/>
-        <activity android:name=".SnackerBarActivity"/>
-        <activity android:name=".CustomViewActivity"/>
-        <activity android:name=".IntentServiceActivity"/>
+        <activity android:name=".Activity.NotificationActivity"/>
+        <activity android:name=".Activity.SnackerBarActivity"/>
+        <activity android:name=".Activity.CustomViewActivity"/>
+        <activity android:name=".Activity.IntentServiceActivity"/>
 
         <service
             android:name=".Service.MyIntentService"
             android:exported="false"/>
 
-        <activity android:name=".RippleEffectActivity"/>
-        <activity android:name=".CircularRevealActivity"/>
-        <activity android:name=".SharedElementsTransitionActivity"/>
-        <activity android:name=".SharedElementDetailsActivity"/>
-        <activity android:name=".AlterDialogActivity"/>
-        <activity android:name=".ObserverAndObservableActivity"/>
+        <activity android:name=".Activity.RippleEffectActivity"/>
+        <activity android:name=".Activity.CircularRevealActivity"/>
+        <activity android:name=".Activity.SharedElementsTransitionActivity"/>
+        <activity android:name=".Activity.SharedElementDetailsActivity"/>
+        <activity android:name=".Activity.AlterDialogActivity"/>
+        <activity android:name=".Activity.ObserverAndObservableActivity"/>
         <activity android:name=".MVP.View.LoginActivity"/>
         <activity android:name=".MVP.View.Login2Activity"/>
         <activity android:name=".MVP.View.Login3Activity"/>
-        <activity android:name=".ToolBarActivity"/>
+        <activity android:name=".Activity.ToolBarActivity"/>
         <activity android:name=".MVP.View.LoginExtendedActivity"/>
-        <activity android:name=".HardwareAccelerationActivity"/>
-        <activity android:name=".HardwareAcceleration2Activity"/>
-        <activity android:name=".DialogActivity"/>
+        <activity android:name=".Activity.HardwareAccelerationActivity"/>
+        <activity android:name=".Activity.HardwareAcceleration2Activity"/>
+        <activity android:name=".Activity.DialogActivity"/>
         <activity android:name=".EXEM.BottomToolBarActivity"/>
         <activity android:name=".EXEM.NavigationEXEMActivity"/>
         <activity android:name=".EXEM.ExemWelcomeActivity"/>
-        <activity android:name=".SceneAndTransitionActivity"/>
-        <activity android:name=".SwipeLayoutActivity"/>
-        <activity android:name=".RecyclerViewActivity"/>
+        <activity android:name=".Activity.SceneAndTransitionActivity"/>
+        <activity android:name=".Activity.SwipeLayoutActivity"/>
+        <activity android:name=".Activity.RecyclerViewActivity"/>
         <activity android:name=".EXEM.StickyLabelListViewActivity"/>
         <activity android:name=".EXEM.SiteInfoActivity"/>
-        <activity android:name=".ViewGroupOverlayActivity"/>
-        <activity android:name=".MagnifierImageViewActivity"/>
-        <activity android:name=".CircleImageViewActivity"/>
-        <activity android:name=".GPSLocatorActivity"/>
-        <activity android:name=".NewGPSLocatorActivity"/>
-        <activity android:name=".TestOnlyActivity">
+        <activity android:name=".Activity.ViewGroupOverlayActivity"/>
+        <activity android:name=".Activity.MagnifierImageViewActivity"/>
+        <activity android:name=".Activity.CircleImageViewActivity"/>
+        <activity android:name=".Activity.GPSLocatorActivity"/>
+        <activity android:name=".Activity.NewGPSLocatorActivity"/>
+        <activity android:name=".Activity.TestOnlyActivity">
         </activity>
     </application>
 

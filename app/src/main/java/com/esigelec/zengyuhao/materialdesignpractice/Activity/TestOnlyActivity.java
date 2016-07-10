@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice;
+package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.esigelec.zengyuhao.materialdesignpractice.Core.ViewTest;
+import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class TestOnlyActivity extends Activity {
     private ViewTest view;
