@@ -215,6 +215,7 @@ public class RoundShapeInjector {
                 gradientPressed.setCornerRadius(radius);
 
                 StateListDrawable stateListDrawable = new StateListDrawable();
+                // // TODO: 16/7/11 测试普通ShapeDrawable（不加RoundRectShape)情况下的阴影情况
                 stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, gradientPressed);
                 stateListDrawable.addState(new int[]{}, gradientNormal);
                 view.setBackground(stateListDrawable);
