@@ -3,21 +3,38 @@ package com.esigelec.zengyuhao.materialdesignpractice.Core.Utils;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.PictureDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.graphics.drawable.shapes.Shape;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Size;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.text.AndroidCharacter;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
+
+import com.esigelec.zengyuhao.materialdesignpractice.R;
+
+import java.io.IOException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.spi.SelectorProvider;
+import java.sql.Ref;
+import java.util.Set;
 
 /**
  * <p>
@@ -61,13 +78,154 @@ public class RoundShapeInjector {
         drawable.getPaint().setColor(color);
         //drawable.getPaint().setAntiAlias(true);
         drawable.getPaint().setStyle(Paint.Style.FILL);
-
-        int[][] states = new int[][]{new int[]{android.R.attr.state_activated}, new int[]{-android.R.attr
-                .state_activated}};
-        int[] colors = new int[]{Color.parseColor("#FFFF00"), Color.BLACK};
-        ColorStateList myList = new ColorStateList(states, colors);
-        RippleDrawable rippleDrawable = new RippleDrawable(myList, drawable, null);
-
         return drawable;
     }
+
+    public static void injectRippleEffect(final Context context, final View target) {
+        target.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int width = target.getWidth();
+                int height = target.getHeight();
+                int white_color = context.getResources().getColor(android.R.color.white);
+                int purple_color = context.getResources().getColor(android.R.color.holo_purple);
+                int orange_color = context.getResources().getColor(android.R.color.holo_orange_light);
+                ColorDrawable colorDrawable = new ColorDrawable(purple_color);
+
+                // RoundRectShape
+                float[] outerRadii = new float[8];
+                for (int i = 0; i < 8; i++) outerRadii[i] = Math.min(width, height) / 2;
+                RoundRectShape roundRectShape = new RoundRectShape(outerRadii, null, null);
+
+                // ShapeDrawable
+                ShapeDrawable shapeDrawable = new ShapeDrawable();
+                shapeDrawable.getPaint().setColor(orange_color);
+                shapeDrawable.getPaint().setStyle(Paint.Style.FILL);
+                shapeDrawable.setShape(roundRectShape);
+
+
+                // RippleDrawable
+                ColorStateList colorStateList = new ColorStateList(
+                        new int[][]{
+//                                new int[]{android.R.attr.state_pressed},
+//                                new int[]{android.R.attr.state_activated},
+                                new int[]{}
+                        },
+                        new int[]{
+//                                context.getResources().getColor(android.R.color.holo_orange_dark),
+//                                context.getResources().getColor(android.R.color.holo_purple),
+                                context.getResources().getColor(android.R.color.holo_orange_dark)
+                        });
+                // first setup
+                // shapeDrawable as content, mask layer is null, so the shape of shapeDrawable is used as mask,
+                // ripple effects in the boundary of mask/shapeDrawable.
+                RippleDrawable rippleDrawable = new RippleDrawable(colorStateList, shapeDrawable, null);
+
+                // second setup
+                // shapeDrawable as content, colorDrawable as mask, ripple effects in the boundary of
+                // mask/colorDrawable, but color of colorDrawable will not be draw on screen.
+                RippleDrawable rippleDrawable2 = new RippleDrawable(colorStateList, shapeDrawable, colorDrawable);
+
+
+                // third setup
+                // no content, no mask, ripple effects as far as it can in his parent view.
+                RippleDrawable rippleDrawable3 = new RippleDrawable(colorStateList, null, null);
+
+
+                target.setClickable(true);
+                target.setBackground(rippleDrawable);
+
+                target.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+    }
+
+    public static RippleDrawable getRippleDrawable(Context context) {
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_pressed},
+                        new int[]{android.R.attr.state_activated, android.R.attr.state_enabled, android.R.attr
+                                .state_focused},
+                        new int[]{}
+                },
+                new int[]{
+                        android.R.color.holo_orange_dark,
+                        android.R.color.holo_orange_light,
+                        android.R.color.darker_gray
+                });
+        int color = context.getResources().getColor(android.R.color.holo_purple);
+        ColorDrawable colorDrawable = new ColorDrawable(color);
+        ShapeDrawable shapeDrawable = getDefaultShapeDrawable(context, color);
+        RippleDrawable rippleDrawable = new RippleDrawable(colorStateList, shapeDrawable,
+                shapeDrawable);
+
+
+        return rippleDrawable;
+    }
+
+
+    public static RippleDrawable getRippleDrawableFromXml(Context context) {
+        return null;
+    }
+
+    public static void injectStateListDrawable(final Context context, final View view) {
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int white_color = context.getResources().getColor(android.R.color.white);
+                int purple_color = context.getResources().getColor(android.R.color.holo_purple);
+                int orange_color = context.getResources().getColor(android.R.color.holo_orange_light);
+                int radius = Math.min(view.getWidth(), view.getHeight()) / 2;
+                RoundShapeDrawable pressedDrawable = new RoundShapeDrawable(radius);
+                pressedDrawable.getPaint().setStyle(Paint.Style.FILL);
+                pressedDrawable.getPaint().setColor(orange_color);
+
+                RoundShapeDrawable normalDrawable = new RoundShapeDrawable(radius);
+                normalDrawable.getPaint().setStyle(Paint.Style.FILL);
+                normalDrawable.getPaint().setColor(purple_color);
+
+                // stroke width
+                int strW = 8;
+                ShapeDrawable shapeDrawable = new ShapeDrawable();
+//                RectF inset = new RectF(view.getLeft() + strW, view.getTop() + strW, view.getRight() - strW, view
+//                        .getBottom() - strW);
+                RectF inset = new RectF(strW, strW, strW, strW);
+                float[] outerRadii = new float[8];
+                float[] innerRadii = new float[8];
+                for (int i = 0; i < 8; i++) {
+                    outerRadii[i] = radius;
+                    innerRadii[i] = radius - strW;
+                }
+                RoundRectShape shape = new RoundRectShape(outerRadii, inset, innerRadii);
+                shapeDrawable.setShape(shape);
+                shapeDrawable.getPaint().setStyle(Paint.Style.FILL);
+                shapeDrawable.getPaint().setAntiAlias(true);
+                shapeDrawable.getPaint().setColor(orange_color);
+
+                StateListDrawable stateListDrawable = new StateListDrawable();
+                stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, pressedDrawable);
+                stateListDrawable.addState(new int[]{}, shapeDrawable);
+                view.setBackground(stateListDrawable);
+                //view.setBackground(pressedDrawable);
+                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+    }
+
+    public static class RoundGradientDrawable extends GradientDrawable {
+
+    }
+
+
+    public static class RoundShapeDrawable extends ShapeDrawable {
+        public RoundShapeDrawable(float radius) {
+            float[] outerRadii = new float[8];
+            for (int i = 0; i < 8; i++) outerRadii[i] = radius;
+            RoundRectShape shape = new RoundRectShape(outerRadii, null, null);
+            setShape(shape);
+        }
+    }
+
+
 }
