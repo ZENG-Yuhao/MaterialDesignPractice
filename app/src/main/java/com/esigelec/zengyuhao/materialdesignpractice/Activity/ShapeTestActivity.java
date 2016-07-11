@@ -2,6 +2,7 @@ package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.graphics.Paint;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -20,12 +21,16 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 public class ShapeTestActivity extends Activity {
     private Shape mShape;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shape_test);
         ImageView imageView = (ImageView) findViewById(R.id.image_view);
 
+        int white_color = getResources().getColor(android.R.color.white);
+        final int purple_color = getResources().getColor(android.R.color.holo_purple);
+        final int orange_color = getResources().getColor(android.R.color.holo_orange_light);
         Log.i("ShapeTestActivity", "-->" + imageView.getPaddingTop() + " " + imageView.getPaddingRight());
 
         float[] outerRadii = {20, 40, 40, 40, 60, 60, 100, 100};
@@ -73,9 +78,24 @@ public class ShapeTestActivity extends Activity {
         });
 
 
-        TextView button2 = (TextView) findViewById(R.id.text2);
-        button2.setClickable(true);
+        Button button2 = (Button) findViewById(R.id.text2);
+        //button2.setClickable(true);
         RoundShapeInjector.injectStateListDrawable(this, button2);
         button2.setElevation(16);
+
+        final TextView gradient = (TextView) findViewById(R.id.text3);
+        gradient.setClickable(true);
+        gradient.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                GradientDrawable gradientDrawable = new GradientDrawable();
+                gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+                gradientDrawable.setStroke(10, purple_color);
+                gradientDrawable.setColor(orange_color);
+                gradientDrawable.setCornerRadius(Math.min(gradient.getWidth(), gradient.getHeight()) / 2);
+                gradient.setBackground(gradientDrawable);
+            }
+        });
+        gradient.setElevation(16);
     }
 }

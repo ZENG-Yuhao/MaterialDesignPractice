@@ -202,9 +202,21 @@ public class RoundShapeInjector {
                 shapeDrawable.getPaint().setAntiAlias(true);
                 shapeDrawable.getPaint().setColor(orange_color);
 
+                // GradientDrawable
+                GradientDrawable gradientNormal = new GradientDrawable();
+                gradientNormal.setShape(GradientDrawable.RECTANGLE);
+                gradientNormal.setStroke(10, orange_color);
+                gradientNormal.setColor(white_color);
+                gradientNormal.setCornerRadius(radius);
+
+                GradientDrawable gradientPressed = new GradientDrawable();
+                gradientPressed.setShape(GradientDrawable.RECTANGLE);
+                gradientPressed.setColor(orange_color);
+                gradientPressed.setCornerRadius(radius);
+
                 StateListDrawable stateListDrawable = new StateListDrawable();
-                stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, pressedDrawable);
-                stateListDrawable.addState(new int[]{}, shapeDrawable);
+                stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, gradientPressed);
+                stateListDrawable.addState(new int[]{}, gradientNormal);
                 view.setBackground(stateListDrawable);
                 //view.setBackground(pressedDrawable);
                 view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
