@@ -61,7 +61,7 @@ public class SideToolbar extends FrameLayout {
     private boolean isItemLayoutChanged = true;
 
     /* item on focus & lost focus */
-    private int mWeightFocus = 21000;
+    private int mWeightFocus = 16180;
     private int mWeightNoFocus = 10000;
     private int widthNoFocus;
     private int heightNoFocus;
