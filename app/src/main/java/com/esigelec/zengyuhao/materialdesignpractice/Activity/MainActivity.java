@@ -19,11 +19,12 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActiv
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
-    final private static String[] xActivityNames = new String[]{
+    final private static String[] mActivityNames = new String[]{
             "WaveScanner UI",
             "MagnifierImageView",
             "New GPSLocator",
             "GPSLocator",
+            "Wifi Connection",
             "CircleImageView",
             "ViewGroupOverlay",
             "RecyclerView",
@@ -52,11 +53,12 @@ public class MainActivity extends Activity {
             "ShapeTest"
     };
 
-    final private static Class[] xActivityClasses = new Class[]{
+    final private static Class[] mActivityClasses = new Class[]{
             NavigationEXEMActivity.class,
             MagnifierImageViewActivity.class,
             NewGPSLocatorActivity.class,
             GPSLocatorActivity.class,
+            WifiConnectionActivity.class,
             CircleImageViewActivity.class,
             ViewGroupOverlayActivity.class,
             RecyclerViewActivity.class,
@@ -100,32 +102,32 @@ public class MainActivity extends Activity {
 
     }
 
-    private RecyclerView xRecyclerView;
-    private RecyclerView.Adapter xAdapter;
-    private RecyclerView.LayoutManager xLayoutManager;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        xRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         // use this announce to improve performance if the layout size of RecyclerView will not be changed.
-        xRecyclerView.setHasFixedSize(true);
-        xRecyclerView.setClickable(true);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setClickable(true);
 
-        xLayoutManager = new LinearLayoutManager(this);
-        xRecyclerView.setLayoutManager(xLayoutManager);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        xAdapter = new MyAdapter(xActivityNames);
-        xRecyclerView.setAdapter(xAdapter);
+        mAdapter = new MyAdapter(mActivityNames);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private String[] xDataSet;
+        private String[] dataSet;
 
         public MyAdapter(String[] dataSet) {
-            xDataSet = dataSet;
+            this.dataSet = dataSet;
         }
 
         @Override
@@ -137,12 +139,12 @@ public class MainActivity extends Activity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.button.setText(xDataSet[position]);
+            holder.button.setText(dataSet[position]);
         }
 
         @Override
         public int getItemCount() {
-            return xDataSet.length;
+            return dataSet.length;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -158,7 +160,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.i("Clicked", "---> Clicked: " + getAdapterPosition());
-                Intent intent = new Intent(MainActivity.this, xActivityClasses[getAdapterPosition()]);
+                Intent intent = new Intent(MainActivity.this, mActivityClasses[getAdapterPosition()]);
                 startActivity(intent);
             }
         }
