@@ -280,7 +280,7 @@ public class MagnifierView extends View {
     /**
      * appear without animations
      */
-    public void appearFast() {
+    public void appearImmediately() {
         setAlpha(1);
         setAbsRadius(pxRadiusBackup);
         bringToFront();
@@ -289,7 +289,7 @@ public class MagnifierView extends View {
     /**
      * disappear without animations
      */
-    public void disappearFast() {
+    public void disappearImmediately() {
         setAlpha(0);
         setAbsRadius(0);
     }

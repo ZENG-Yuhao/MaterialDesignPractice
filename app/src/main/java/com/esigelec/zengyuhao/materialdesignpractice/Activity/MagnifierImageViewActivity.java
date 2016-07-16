@@ -49,7 +49,7 @@ public class MagnifierImageViewActivity extends Activity {
 
         magnifier.bindBitmap(((BitmapDrawable) img.getDrawable()).getBitmap());
         magnifier.updateCenterByFractionVals(0.5, 0.5);
-        magnifier.disappearFast();
+        magnifier.disappearImmediately();
 
         magnifier.setOnAppearDisappearListener(new MagnifierView.OnAppearDisappearListener() {
             @Override

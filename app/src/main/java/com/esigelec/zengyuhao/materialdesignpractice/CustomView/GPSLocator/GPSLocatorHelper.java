@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Size;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -140,11 +139,11 @@ public class GPSLocatorHelper implements Observer {
 //            throw new RuntimeException("The attachedView should be attached to window");
 
         if (useCustomBitmap && mBitmap == null)
-            throw new RuntimeException("Attached bitmap cannot be null");
+            throw new RuntimeException("If you want use another bitmap rather than the one in ImageView, then  " +
+                    "the attached bitmap cannot be null.");
 
         if (!useCustomBitmap && !(attachedView instanceof ImageView))
-            throw new RuntimeException("If attachedView is" +
-                    " not an ImageView, you should bind a Bitmap in " +
+            throw new RuntimeException("If attachedView is not an ImageView, then you should bind a Bitmap in " +
                     "constructor arguments.");
 
         // view and locators
@@ -185,10 +184,10 @@ public class GPSLocatorHelper implements Observer {
 
         mMagnifier = new MagnifierView(context);
         mMagnifier.setSize(mMagnifierWidth, mMagnifierHeight);
-        mMagnifier.setElevation(32);
+        //mMagnifier.setElevation(32);
         mMagnifier.setScaleRate(2f);
         mMagnifier.bindBitmap(mBitmap);
-        mMagnifier.disappearFast();
+        mMagnifier.disappearImmediately();
         ((ViewGroup) mRootView).addView(mMagnifier);
 
     }
@@ -214,10 +213,18 @@ public class GPSLocatorHelper implements Observer {
 
     }
 
+    /**
+     * Set your custom coordinator.
+     * @param coordinator ActionCoordinator that extends {@link ActionCoordinator}
+     */
     public void setActionsCoordinator(ActionCoordinator coordinator) {
         mActionCoordinator = coordinator;
     }
 
+    /**
+     * Add listener that receive callbacks and information when any locator has changed its position.
+     * @param listener {@link OnLocatorPositionListener}
+     */
     public void setOnLocatorPositionListener(OnLocatorPositionListener listener) {
         mOnLocatorPositionListener = listener;
     }
@@ -494,7 +501,7 @@ public class GPSLocatorHelper implements Observer {
          * @param location location to be checked, an array of two integers in which to hold the coordinates, rawX, rawY
          * @return true if location exceeds borders of the view and the location has been corrected.
          */
-        public static boolean correctLocation(View view, @Size(2) float[] location) {
+        static boolean correctLocation(View view, @Size(2) float[] location) {
             return correctLocation(view, location, true);
         }
 
@@ -509,7 +516,7 @@ public class GPSLocatorHelper implements Observer {
          *                     correction.
          * @return true if location exceeds borders of the view and the location has been corrected.
          */
-        public static boolean correctLocation(View view, @Size(2) float[] location, boolean withPaddings) {
+        static boolean correctLocation(View view, @Size(2) float[] location, boolean withPaddings) {
             boolean isExceededX = false;
             boolean isExceededY = false;
             int[] viewLocation = new int[2];
@@ -832,7 +839,7 @@ public class GPSLocatorHelper implements Observer {
          *
          * @param view operation view
          */
-        public static void removeParent(View view) {
+        static void removeParent(View view) {
             if (view != null) {
                 ViewParent parent = view.getParent();
                 if (parent != null) {
