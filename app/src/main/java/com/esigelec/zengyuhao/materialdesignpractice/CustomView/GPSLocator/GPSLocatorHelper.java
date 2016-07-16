@@ -473,6 +473,7 @@ public class GPSLocatorHelper implements Observer {
             locator.setXY(location[0] + offsetX, location[1] + offsetY);
         }
 
+        // // TODO: 16/7/17 make offsetX, offsetY configurable.
         void moveMagnifier(float rawX, float rawY, float centX, float centY) {
             MagnifierView magnifier = mGPSLocatorHelper.mMagnifier;
             float offsetX = -magnifier.getWidth() / 2;
