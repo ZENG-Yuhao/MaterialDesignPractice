@@ -570,16 +570,15 @@ public class GPSLocatorHelper implements Observer {
 
         /**
          * Fraction values of pivot(X,Y).
-         * <p>
+         * <p/>
          * <b>
          * A pivot is a reference point that represents the gravity center of this locator, in most case, this is
          * also the point that indicates the real location where this locator points to.
          * </b>
-         * <p>
+         * <p/>
          * [0, 1] --- pivot is inside the contentView <br>
          * (1, infinite+) --- pivot is outside the contentView <br>
          * (-infinite, 0) --- invalid value
-         * <p>
          */
         protected float pivotX = -1, pivotY = -1;
 
@@ -693,8 +692,6 @@ public class GPSLocatorHelper implements Observer {
 
             float offsetX = -pivot[0];
             float offsetY = -pivot[1];
-//            setX(rawX + offsetX);
-//            setY(rawY + offsetY);
             setXY(rawX + offsetX, rawY + offsetY);
         }
 
