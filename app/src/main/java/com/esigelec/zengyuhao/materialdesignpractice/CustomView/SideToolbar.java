@@ -188,11 +188,13 @@ public class SideToolbar extends FrameLayout {
     }
 
     protected void initShadowSize() {
-        Log.i("SideToolbar", "------>initShadowSize" + getMeasuredWidth() + " " + getMeasuredHeight() + " " + getWidth() + " " +
+        Log.i("SideToolbar", "------>initShadowSize" + getMeasuredWidth() + " " + getMeasuredHeight() + " " +
+                getWidth() + " " +
                 "" + getHeight());
 
         int width, height;
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mHolderList[mCurrentPosition].itemView.getLayoutParams();
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mHolderList[mCurrentPosition].itemView
+                .getLayoutParams();
         if (mOrientation == HORIZONTAL) {
             width = lp.width;
             height = integerize(0.05 * lp.height);
@@ -206,7 +208,8 @@ public class SideToolbar extends FrameLayout {
             mShadowOffsetTop = mCurrentPosition * integerize((double) mHeight * mWeightNoFocus /
                     mWeightCount);
         }
-        Log.i("SideToolbar", "------>initShadowSize shadow" + mShadowView.getWidth() + " " + mShadowView.getHeight() + " " +
+        Log.i("SideToolbar", "------>initShadowSize shadow" + mShadowView.getWidth() + " " + mShadowView.getHeight()
+                + " " +
                 "" + mShadowView.getMeasuredWidth() + " " + mShadowView.getMeasuredHeight());
         mShadowWidth = width;
         mShadowHeight = height;
@@ -372,7 +375,8 @@ public class SideToolbar extends FrameLayout {
 
     protected void onShadowLayout() {
         Log.i("SideToolbar", "------>onShadowLayout");
-        mShadowView.layout(mShadowOffsetLeft, mShadowOffsetTop, mShadowOffsetLeft + mShadowWidth, mShadowOffsetTop + mShadowHeight);
+        mShadowView.layout(mShadowOffsetLeft, mShadowOffsetTop, mShadowOffsetLeft + mShadowWidth, mShadowOffsetTop +
+                mShadowHeight);
     }
 
     /**
@@ -596,6 +600,11 @@ public class SideToolbar extends FrameLayout {
             }
         }
 
+        /**
+         * Shadow's movement is separated into 2 parts, one is following user's scrolling gesture (being defined
+         * here), the other is moving to target position when user released scrolling gesture, which is defined at
+         * {@link FocusChangedAnimator#onShadowAnimation(float)}
+         */
         public void moveShadow(int position, float positionOffset) {
             if (mOrientation == HORIZONTAL) {
                 mShadowOffsetLeft = mHolderList[position].itemView.getLeft() + integerize(widthNoFocus *
