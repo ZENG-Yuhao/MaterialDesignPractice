@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.esigelec.zengyuhao.materialdesignpractice">
+
     <!--
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -8,6 +9,9 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     -->
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
@@ -76,7 +80,8 @@
         </activity>
         <activity android:name=".Activity.WifiConnectionActivity">
         </activity>
-        <!-- 注册广播方法中的一种，另一种在程序中定义。这种方法注册的广播在应用结束之后，依然会接收信息，程度中定义的则不会。
+        <!--
+             注册广播方法中的一种，另一种在程序中定义。这种方法注册的广播在应用结束之后，依然会接收信息，程度中定义的则不会。
                 <receiver android:name=".Receiver.NetworkChangedReceiver">
                     <intent-filter>
                         <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -84,7 +89,9 @@
                         <action android:name="android.net.wifi.STATE_CHANGE" />
                     </intent-filter>
                 </receiver>
-                -->
+        -->
+        <activity android:name=".Activity.CameraActivity">
+        </activity>
     </application>
 
 </manifest>

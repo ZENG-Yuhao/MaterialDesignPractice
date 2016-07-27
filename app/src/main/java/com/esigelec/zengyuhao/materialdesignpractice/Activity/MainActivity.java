@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "Camera & Photo",
             "WaveScanner UI",
             "MagnifierImageView",
             "New GPSLocator",
@@ -54,6 +55,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            CameraActivity.class,
             NavigationEXEMActivity.class,
             MagnifierImageViewActivity.class,
             NewGPSLocatorActivity.class,
