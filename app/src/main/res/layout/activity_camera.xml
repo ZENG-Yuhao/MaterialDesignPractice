@@ -19,6 +19,9 @@
         android:textAllCaps="false"/>
 
     <ImageView
+        android:layout_below="@id/btn_take_photo"
+        android:background="@drawable/shape_rect_border"
+        android:elevation="4dp"
         android:id="@+id/img_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
