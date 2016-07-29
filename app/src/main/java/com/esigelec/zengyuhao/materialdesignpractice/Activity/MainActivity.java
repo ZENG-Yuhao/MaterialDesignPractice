@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "Soft Keyboard",
             "Camera & Photo",
             "WaveScanner UI",
             "MagnifierImageView",
@@ -55,6 +56,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            SoftKeyboardHeightActivity.class,
             CameraActivity.class,
             NavigationEXEMActivity.class,
             MagnifierImageViewActivity.class,
