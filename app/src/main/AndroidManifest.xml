@@ -94,6 +94,8 @@
         </activity>
         <activity android:name=".Activity.SoftKeyboardHeightActivity">
         </activity>
+        <activity android:name=".Activity.AutoCompleteTextActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "AutoCompleteTextView",
             "Soft Keyboard",
             "Camera & Photo",
             "WaveScanner UI",
@@ -56,6 +57,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            AutoCompleteTextActivity.class,
             SoftKeyboardHeightActivity.class,
             CameraActivity.class,
             NavigationEXEMActivity.class,
