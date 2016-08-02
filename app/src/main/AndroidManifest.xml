@@ -96,6 +96,8 @@
         </activity>
         <activity android:name=".Activity.AutoCompleteTextActivity">
         </activity>
+        <activity android:name=".Activity.AutoHideViewActivity">
+        </activity>
     </application>
 
 </manifest>

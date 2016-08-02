@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Spinner;
 
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
@@ -18,6 +19,9 @@ public class AutoCompleteTextActivity extends Activity {
             "mince", "paté", "salami", "sausages", "pork", "turkey", "veal", "butter", "cream",
             "cheese", "blue cheese", "goats cheese", "margarine", "milk", "yoghurt", "apple", "apricot", "blackberry"
     };
+
+
+    private Spinner mSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,5 +50,8 @@ public class AutoCompleteTextActivity extends Activity {
                 Log.d("AutoCompleteTextView", "--->onNothingSelected");
             }
         });
+        // Spinner
+        mSpinner = (Spinner) findViewById(R.id.spinner1);
+        mSpinner.setAdapter(arrayAdapter);
     }
 }
