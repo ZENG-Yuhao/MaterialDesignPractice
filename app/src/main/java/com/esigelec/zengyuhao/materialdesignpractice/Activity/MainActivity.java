@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "MPAndroidChart",
             "AutoCompleteTextView",
             "Soft Keyboard",
             "Camera & Photo",
@@ -57,6 +58,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            MPAndroidChartActivity.class,
             AutoCompleteTextActivity.class,
             SoftKeyboardHeightActivity.class,
             CameraActivity.class,
