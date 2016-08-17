@@ -52,6 +52,7 @@ public class MPAndroidChartActivity extends Activity {
          "1t". */
         mLineChart.getXAxis().setValueFormatter(new LargeValueFormatter());
         mLineChart.getXAxis().setTextColor(Color.WHITE);
+        //mLineChart.getXAxis().setLabelCount(4);
 
         mLineChart.getAxisLeft().setAxisMaxValue(200000);
         mLineChart.getAxisLeft().setAxisMinValue(-200000);
@@ -102,7 +103,6 @@ public class MPAndroidChartActivity extends Activity {
                     btn_switch.setText("ZOOM SCROLL");
                     mLineChart.setDragEnabled(true);
                     mLineChart.setScaleXEnabled(true);
-
                 }
             }
         });

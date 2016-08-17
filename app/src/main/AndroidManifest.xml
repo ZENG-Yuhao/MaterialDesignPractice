@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.esigelec.zengyuhao.materialdesignpractice">
+          package="com.esigelec.zengyuhao.materialdesignpractice">
 
     <!--
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -9,11 +9,11 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     -->
 
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -23,60 +23,60 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.CardViewActivity" />
-        <activity android:name=".Activity.ShadowAndClippingActivity" />
+        <activity android:name=".Activity.CardViewActivity"/>
+        <activity android:name=".Activity.ShadowAndClippingActivity"/>
         <activity
             android:name=".Activity.ActionBarActivity"
-            android:label="@string/title_activity_action_bar" />
-        <activity android:name=".Activity.PaperTabStripActivity" />
+            android:label="@string/title_activity_action_bar"/>
+        <activity android:name=".Activity.PaperTabStripActivity"/>
         <activity
             android:name=".Activity.NavigationDrawerActivity"
             android:label="DrawerLayout"
-            android:logo="@drawable/ic_arrow_back_black_24dp" />
-        <activity android:name=".Activity.NotificationActivity" />
-        <activity android:name=".Activity.SnackerBarActivity" />
-        <activity android:name=".Activity.CustomViewActivity" />
-        <activity android:name=".Activity.IntentServiceActivity" />
+            android:logo="@drawable/ic_arrow_back_black_24dp"/>
+        <activity android:name=".Activity.NotificationActivity"/>
+        <activity android:name=".Activity.SnackerBarActivity"/>
+        <activity android:name=".Activity.CustomViewActivity"/>
+        <activity android:name=".Activity.IntentServiceActivity"/>
 
         <service
             android:name=".Service.MyIntentService"
-            android:exported="false" />
+            android:exported="false"/>
 
-        <activity android:name=".Activity.RippleEffectActivity" />
-        <activity android:name=".Activity.CircularRevealActivity" />
-        <activity android:name=".Activity.SharedElementsTransitionActivity" />
-        <activity android:name=".Activity.SharedElementDetailsActivity" />
-        <activity android:name=".Activity.AlterDialogActivity" />
-        <activity android:name=".Activity.ObserverAndObservableActivity" />
-        <activity android:name=".MVP.View.LoginActivity" />
-        <activity android:name=".MVP.View.Login2Activity" />
-        <activity android:name=".MVP.View.Login3Activity" />
-        <activity android:name=".Activity.ToolBarActivity" />
-        <activity android:name=".MVP.View.LoginExtendedActivity" />
-        <activity android:name=".Activity.HardwareAccelerationActivity" />
-        <activity android:name=".Activity.HardwareAcceleration2Activity" />
-        <activity android:name=".Activity.DialogActivity" />
-        <activity android:name=".EXEM.BottomToolBarActivity" />
-        <activity android:name=".EXEM.NavigationEXEMActivity" />
-        <activity android:name=".EXEM.ExemWelcomeActivity" />
-        <activity android:name=".Activity.SceneAndTransitionActivity" />
-        <activity android:name=".Activity.SwipeLayoutActivity" />
-        <activity android:name=".Activity.RecyclerViewActivity" />
-        <activity android:name=".EXEM.StickyLabelListViewActivity" />
-        <activity android:name=".EXEM.SiteInfoActivity" />
-        <activity android:name=".Activity.ViewGroupOverlayActivity" />
-        <activity android:name=".Activity.MagnifierImageViewActivity" />
-        <activity android:name=".Activity.CircleImageViewActivity" />
-        <activity android:name=".Activity.GPSLocatorActivity" />
-        <activity android:name=".Activity.NewGPSLocatorActivity" />
-        <activity android:name=".Activity.TestOnlyActivity"></activity>
-        <activity android:name=".Activity.ShapeTestActivity"></activity>
-        <activity android:name=".Activity.WifiConnectionActivity"></activity>
+        <activity android:name=".Activity.RippleEffectActivity"/>
+        <activity android:name=".Activity.CircularRevealActivity"/>
+        <activity android:name=".Activity.SharedElementsTransitionActivity"/>
+        <activity android:name=".Activity.SharedElementDetailsActivity"/>
+        <activity android:name=".Activity.AlterDialogActivity"/>
+        <activity android:name=".Activity.ObserverAndObservableActivity"/>
+        <activity android:name=".MVP.View.LoginActivity"/>
+        <activity android:name=".MVP.View.Login2Activity"/>
+        <activity android:name=".MVP.View.Login3Activity"/>
+        <activity android:name=".Activity.ToolBarActivity"/>
+        <activity android:name=".MVP.View.LoginExtendedActivity"/>
+        <activity android:name=".Activity.HardwareAccelerationActivity"/>
+        <activity android:name=".Activity.HardwareAcceleration2Activity"/>
+        <activity android:name=".Activity.DialogActivity"/>
+        <activity android:name=".EXEM.BottomToolBarActivity"/>
+        <activity android:name=".EXEM.NavigationEXEMActivity"/>
+        <activity android:name=".EXEM.ExemWelcomeActivity"/>
+        <activity android:name=".Activity.SceneAndTransitionActivity"/>
+        <activity android:name=".Activity.SwipeLayoutActivity"/>
+        <activity android:name=".Activity.RecyclerViewActivity"/>
+        <activity android:name=".EXEM.StickyLabelListViewActivity"/>
+        <activity android:name=".EXEM.SiteInfoActivity"/>
+        <activity android:name=".Activity.ViewGroupOverlayActivity"/>
+        <activity android:name=".Activity.MagnifierImageViewActivity"/>
+        <activity android:name=".Activity.CircleImageViewActivity"/>
+        <activity android:name=".Activity.GPSLocatorActivity"/>
+        <activity android:name=".Activity.NewGPSLocatorActivity"/>
+        <activity android:name=".Activity.TestOnlyActivity"/>
+        <activity android:name=".Activity.ShapeTestActivity"/>
+        <activity android:name=".Activity.WifiConnectionActivity"/>
         <!--
              注册广播方法中的一种，另一种在程序中定义。这种方法注册的广播在应用结束之后，依然会接收信息，程度中定义的则不会。
                 <receiver android:name=".Receiver.NetworkChangedReceiver">
@@ -87,11 +87,13 @@
                     </intent-filter>
                 </receiver>
         -->
-        <activity android:name=".Activity.CameraActivity"></activity>
-        <activity android:name=".Activity.SoftKeyboardHeightActivity"></activity>
-        <activity android:name=".Activity.AutoCompleteTextActivity"></activity>
-        <activity android:name=".Activity.AutoHideViewActivity"></activity>
-        <activity android:name=".Activity.MPAndroidChartActivity"></activity>
+        <activity android:name=".Activity.CameraActivity"/>
+        <activity android:name=".Activity.SoftKeyboardHeightActivity"/>
+        <activity android:name=".Activity.AutoCompleteTextActivity"/>
+        <activity android:name=".Activity.AutoHideViewActivity"/>
+        <activity android:name=".Activity.MPAndroidChartActivity"/>
+        <activity android:name=".Activity.PickerDialogActivity">
+        </activity>
     </application>
 
 </manifest>

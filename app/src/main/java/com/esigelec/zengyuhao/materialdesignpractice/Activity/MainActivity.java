@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "Picker Dialog",
             "MPAndroidChart",
             "AutoCompleteTextView",
             "Soft Keyboard",
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            PickerDialogActivity.class,
             MPAndroidChartActivity.class,
             AutoCompleteTextActivity.class,
             SoftKeyboardHeightActivity.class,
