@@ -64,8 +64,6 @@ public class MPAndroidChartActivity extends Activity {
         mLineChart.setDoubleTapToZoomEnabled(false);
         mLineChart.setDragDecelerationEnabled(false);
 
-        mLineChart.setOnChartGestureListener(new ChartGestureListener());
-
         limitNF = 140000f;
         limitD = -100000f;
         limitLineNF = new LimitLine(limitNF, "Noise Floor");
@@ -203,68 +201,6 @@ public class MPAndroidChartActivity extends Activity {
                     break;
             }
             return false;
-        }
-    }
-
-    private class ChartGestureListener implements OnChartGestureListener {
-
-        @Override
-        public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-        }
-
-        @Override
-        public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-        }
-
-        @Override
-        public void onChartLongPressed(MotionEvent me) {
-
-        }
-
-        @Override
-        public void onChartDoubleTapped(MotionEvent me) {
-
-        }
-
-        @Override
-        public void onChartSingleTapped(MotionEvent me) {
-
-        }
-
-        @Override
-        public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-        }
-
-        @Override
-        public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-        }
-
-        @Override
-        public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-//            float chartWidth = mLineChart.getWidth();
-//            float pressedPosX = me.getX();
-//            if (pressedPosX > chartWidth / 2) {
-//                limitNF += dY * 100;
-//                mLineChart.getAxisLeft().removeLimitLine(limitLineNF);
-//                limitLineNF = new LimitLine(limitNF, "Noise Floor");
-//                limitLineNF.setLineColor(Color.GREEN);
-//                limitLineNF.setTextSize(12f);
-//                limitLineNF.setTextColor(Color.WHITE);
-//                mLineChart.getAxisLeft().addLimitLine(limitLineNF);
-//            } else {
-//                limitD += dY * 100;
-//                mLineChart.getAxisLeft().removeLimitLine(limitLineD);
-//                limitLineD = new LimitLine(limitD, "Delta");
-//                limitLineD.setLineColor(Color.YELLOW);
-//                limitLineD.setTextSize(12f);
-//                limitLineD.setTextColor(Color.WHITE);
-//                mLineChart.getAxisLeft().addLimitLine(limitLineD);
-//            }
         }
     }
 
