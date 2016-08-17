@@ -20,10 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.esigelec.zengyuhao.materialdesignpractice.Core.Image.EfficientBitmap;
-import com.esigelec.zengyuhao.materialdesignpractice.EXEM.BottomToolBarActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
-import java.util.Collections;
 import java.util.Random;
 
 
