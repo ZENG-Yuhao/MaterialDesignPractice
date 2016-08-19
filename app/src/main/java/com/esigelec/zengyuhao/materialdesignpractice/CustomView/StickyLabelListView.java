@@ -125,8 +125,14 @@ public class StickyLabelListView extends FrameLayout {
     }
 
     /* first completely visible item */
+
     /**
-     * there may be a possibility that Completely Visible Item does not exist (when item height > screen height)
+     * Main utility of this method is to calculate top margin of {@link ShadowLayout}, according to the item next to
+     * the first visible item's position.
+     * But there may be a possibility that Completely Visible Item does not exist (when item height > screen height)
+     * when {@link LinearLayoutManager#findFirstCompletelyVisibleItemPosition()} return -1, that means this situation
+     * happens, at this moment, there is no completely visible item on screen (there are only two half visible items)
+     * , so we take the last visible item's position instead.
      */
     private int getFirstCompletelyVisibleItemPosition() {
         int position = mLayoutManager.findFirstCompletelyVisibleItemPosition();
