@@ -125,8 +125,15 @@ public class StickyLabelListView extends FrameLayout {
     }
 
     /* first completely visible item */
+    /**
+     * there may be a possibility that Completely Visible Item does not exist (when item height > screen height)
+     */
     private int getFirstCompletelyVisibleItemPosition() {
-        return mLayoutManager.findFirstCompletelyVisibleItemPosition();
+        int position = mLayoutManager.findFirstCompletelyVisibleItemPosition();
+        if (position == -1) {
+            position = mLayoutManager.findLastVisibleItemPosition();
+        }
+        return position;
     }
 
     private View getFirstCompletelyVisibleItem() {
