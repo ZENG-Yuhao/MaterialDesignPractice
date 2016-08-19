@@ -2,6 +2,7 @@ package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.NumberPicker;
 
 import com.esigelec.zengyuhao.materialdesignpractice.R;
@@ -29,10 +30,20 @@ public class PickerDialogActivity extends Activity {
         picker_height.setDisplayedValues(HEIGHT_NAMES);
         picker_height.setWrapSelectorWheel(true);
 
+        String[] setupNames = new String[SETUP_NAMES.length];
+        int i = 0;
+        for (String str : SETUP_NAMES) {
+            if (i < 10)
+                setupNames[i] = str + "   (" + (i + 1) + ") ";
+            else
+                setupNames[i] = str + "   (" + (i + 1) + ") ";
+            i++;
+        }
         picker_setup = (NumberPicker) findViewById(R.id.picker_setup);
+        picker_setup.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         picker_setup.setMinValue(0);
         picker_setup.setMaxValue(SETUP_NAMES.length - 1);
-        picker_setup.setDisplayedValues(SETUP_NAMES);
+        picker_setup.setDisplayedValues(setupNames);
         picker_setup.setWrapSelectorWheel(true);
     }
 
