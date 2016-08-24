@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "LazyFragmentActivity",
             "Picker Dialog",
             "MPAndroidChart",
             "AutoCompleteTextView",
@@ -59,6 +60,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            LazyFragmentActivity.class,
             PickerDialogActivity.class,
             MPAndroidChartActivity.class,
             AutoCompleteTextActivity.class,
@@ -96,6 +98,9 @@ public class MainActivity extends Activity {
             TestOnlyActivity.class,
             ShapeTestActivity.class
     };
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onResume() {
@@ -112,10 +117,6 @@ public class MainActivity extends Activity {
 
     }
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +132,14 @@ public class MainActivity extends Activity {
 
         mAdapter = new MyAdapter(mActivityNames);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private String[] dataGenerator(int n) {
+        String[] data = new String[n];
+        for (int i = 0; i < n; i++) {
+            data[i] = "RecyclerView ListItem " + i;
+        }
+        return data;
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -174,13 +183,5 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         }
-    }
-
-    private String[] dataGenerator(int n) {
-        String[] data = new String[n];
-        for (int i = 0; i < n; i++) {
-            data[i] = "RecyclerView ListItem " + i;
-        }
-        return data;
     }
 }
