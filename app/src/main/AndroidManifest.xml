@@ -94,6 +94,8 @@
         <activity android:name=".Activity.MPAndroidChartActivity"/>
         <activity android:name=".Activity.PickerDialogActivity">
         </activity>
+        <activity android:name=".Activity.LazyFragmentActivity">
+        </activity>
     </application>
 
 </manifest>
