@@ -1,7 +1,10 @@
 package com.esigelec.zengyuhao.materialdesignpractice.Fragment;
 
 
-import android.animation.LayoutTransition;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,15 +18,18 @@ import android.widget.FrameLayout;
 public abstract class BaseLazyFragment extends Fragment {
     public static final String ARG_MODE = "startup.mode";
     public static final int MODE_NORMAL = 0;
-    public static final int MODE_LAZY = 1;
+    public static final int MODE_LAZY = 2;
 
     protected int mode = MODE_NORMAL;
-    protected boolean isVisible = false;
+    protected boolean isVisibleToUser = false;
     protected boolean isLoaded = false;
     protected FrameLayout mContainerLayout;
     private View mLazyView;
-    private View mCurrView;
+    private View mLoadingView;
     private int position;
+
+    private Animator mLazyViewAppearAnim, mLoadingViewDisappearAnim;
+    private AnimatorSet animSet;
 
     public BaseLazyFragment() {
         // Required empty public constructor
@@ -49,25 +55,37 @@ public abstract class BaseLazyFragment extends Fragment {
         mContainerLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
                 .LayoutParams
                 .MATCH_PARENT));
-        LayoutTransition transition = new LayoutTransition();
-        transition.setDuration(150);
-        mContainerLayout.setLayoutTransition(transition);
+
+        // init animators
+        mLazyViewAppearAnim = ObjectAnimator.ofFloat(null, "alpha", 0f, 1f);
+        mLoadingViewDisappearAnim = ObjectAnimator.ofFloat(null, "alpha", 1f, 0f);
+        animSet = new AnimatorSet();
+        animSet.playTogether(mLazyViewAppearAnim, mLoadingViewDisappearAnim);
+        animSet.setDuration(100);
     }
 
+    /**
+     * if we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly loading,
+     * this method will be called after {@link #setUserVisibleHint(boolean)}, contrary, when pager is scrolling,
+     * because of preload mechanism of ViewPager, this method will be called before {@link #setUserVisibleHint(boolean)}
+     */
     @Override
     public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
         Log.d("TAG", "-->onCreateView() " + position);
         if (isLoaded) return mContainerLayout;
 
-        if (mode == MODE_LAZY)
-            mCurrView = onCreateLoadingView(mContainerLayout);
-        else
-            mCurrView = onCreateLazyView(mContainerLayout);
-        mContainerLayout.addView(mCurrView);
+        if (mode == MODE_LAZY) {
+            mLoadingView = onCreateLoadingView(mContainerLayout);
+
+            mLazyView = onCreateLazyView(mContainerLayout);
+            mLazyView.setAlpha(0f);
+            mContainerLayout.addView(mLazyView);
+        } else
+            mLoadingView = onCreateLazyView(mContainerLayout);
+        mContainerLayout.addView(mLoadingView);
         return mContainerLayout;
     }
-
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -76,18 +94,18 @@ public abstract class BaseLazyFragment extends Fragment {
         Log.d("TAG", "-->setUserVisibleHint() " + isVisibleToUser + " pos:" + position);
         //Log.i("BaseLazyFragment", "-->setUserVisibleHint : " + System.currentTimeMillis());
         if (getUserVisibleHint()) {
-            isVisible = true;
+            this.isVisibleToUser = true;
             onUserVisible();
 
         } else {
-            isVisible = false;
+            this.isVisibleToUser = false;
             onUserInvisible();
         }
     }
 
     protected void onUserVisible() {
         if (mode == MODE_NORMAL) return;
-        if (isVisible && !isLoaded)
+        if (isVisibleToUser && !isLoaded)
             lazyLoad();
     }
 
@@ -97,7 +115,7 @@ public abstract class BaseLazyFragment extends Fragment {
 
     protected void lazyLoad() {
         Log.d("TAG", "-->lazyLoad() " + position);
-        mLazyView = onCreateLazyView(mContainerLayout);
+        //mLazyView = onCreateLazyView(mContainerLayout);
         onLoadData();
     }
 
@@ -120,18 +138,43 @@ public abstract class BaseLazyFragment extends Fragment {
      */
     protected void notifyDataLoaded() {
         Log.d("TAG", "-->notifyDataLoaded() " + position);
-        if (mLazyView != null) {
-            onBindData(mLazyView);
-            replaceContentView(mLazyView);
-            isLoaded = true;
+
+        // if this fragment is not in a ViewPager, normally, this method will be called before onCreateView().
+        // At this moment, all views are null, so we call onCreateView() manually for having views inflated and
+        // prepared. Once this method is called, isLoaded = true, thus if onCreateView() is called later, it will do
+        // nothing but return a container layout.
+        if (mLazyView == null) {
+            onCreateView(null, null, null);
         }
+        onBindData(mLazyView);
+        replaceContentView(mLazyView);
+        isLoaded = true;
+
     }
 
     protected void replaceContentView(View view) {
         Log.d("TAG", "-->replaceContentView() " + position);
-        //mContainerLayout.removeAllViews();
-        mContainerLayout.addView(view);
-        //Log.i("BaseLazyFragment", "--> replaceContentView : " + System.currentTimeMillis());
+        if (mLazyViewAppearAnim.isRunning())
+            mLazyViewAppearAnim.cancel();
+
+        if (mLoadingViewDisappearAnim.isRunning())
+            mLoadingViewDisappearAnim.cancel();
+
+        if (animSet.isRunning())
+            animSet.cancel();
+
+        mLazyViewAppearAnim.setTarget(view);
+        mLoadingViewDisappearAnim.setTarget(mLoadingView);
+
+        //view.setVisibility(View.VISIBLE);
+        animSet.start();
+        animSet.removeAllListeners();
+        animSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoadingView.setVisibility(View.GONE);
+            }
+        });
     }
 
 
