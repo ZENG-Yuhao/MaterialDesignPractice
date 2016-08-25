@@ -39,20 +39,21 @@ public class LazyLoadTestFragment extends BaseLazyFragment {
         }
     }
 
+
     @Override
-    View onCreateLoadingView(@Nullable ViewGroup parent) {
+    public View onCreateLoadingView(@Nullable ViewGroup parent) {
         Log.d("TAG", "-->onCreateLoadingView() " + position);
         return LayoutInflater.from(getActivity()).inflate(R.layout.layout_lazy_fragment_loading_view, parent, false);
     }
 
     @Override
-    View onCreateLazyView(@Nullable ViewGroup parent) {
+    public View onCreateLazyView(@Nullable ViewGroup parent) {
         Log.d("TAG", "-->onCreateLazyView() " + position);
         return LayoutInflater.from(getActivity()).inflate(R.layout.fragment_lazy_load_test, parent, false);
     }
 
     @Override
-    void onLoadData() {
+    public void onLoadData() {
         notifyDataLoaded();
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
@@ -63,7 +64,7 @@ public class LazyLoadTestFragment extends BaseLazyFragment {
     }
 
     @Override
-    void onBindData(View view) {
+    public void onBindData(View view) {
         TextView txtvw = (TextView) view.findViewById(R.id.txtvw);
         txtvw.setText("Hello World");
     }

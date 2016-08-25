@@ -12,13 +12,12 @@ import android.util.TypedValue;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
-import com.esigelec.zengyuhao.materialdesignpractice.Fragment.BaseLazyFragment;
-import com.esigelec.zengyuhao.materialdesignpractice.Fragment.LazyLoadTestFragment;
+import com.esigelec.zengyuhao.materialdesignpractice.Fragment.temp.TempGraphFragment;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class LazyFragmentActivity extends AppCompatActivity {
 
-    private static String[] titles = {"Dice", "Play", "Info", "Android", "Wu", "Earth"};
+    private static String[] titles = {"Dice", "Play", "Info", "Android", "Wu", "Earth", "Mouse", "Monitor", "K"};
     private static int[] imageResId = {R.drawable.img0, R.drawable.img1, R.drawable.img2, R.drawable.img3, R.drawable
             .img4, R.drawable.img5};
 
@@ -79,7 +78,13 @@ public class LazyFragmentActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return LazyLoadTestFragment.newInstance(BaseLazyFragment.MODE_LAZY, position);
+            //return LazyLoadTestFragment.newInstance(BaseLazyFragment.MODE_LAZY, position);
+            TempGraphFragment fragment = new TempGraphFragment();
+            Bundle args = new Bundle();
+            args.putInt(TempGraphFragment.ARG_MODE, TempGraphFragment.MODE_LAZY);
+            args.putInt("position", position);
+            fragment.setArguments(args);
+            return fragment;
         }
 
         @Override
