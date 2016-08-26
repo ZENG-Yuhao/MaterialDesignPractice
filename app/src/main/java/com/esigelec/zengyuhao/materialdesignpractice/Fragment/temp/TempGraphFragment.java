@@ -48,7 +48,7 @@ public class TempGraphFragment extends BaseLazyFragment {
     }
 
     @Override
-    public void onLoadData() {
+    public void onLazyLoad() {
         notifyDataLoaded();
     }
 

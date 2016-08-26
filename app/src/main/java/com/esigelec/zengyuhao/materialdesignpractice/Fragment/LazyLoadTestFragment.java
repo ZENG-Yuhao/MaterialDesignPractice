@@ -53,7 +53,7 @@ public class LazyLoadTestFragment extends BaseLazyFragment {
     }
 
     @Override
-    public void onLoadData() {
+    public void onLazyLoad() {
         notifyDataLoaded();
 //        new Handler().postDelayed(new Runnable() {
 //            @Override

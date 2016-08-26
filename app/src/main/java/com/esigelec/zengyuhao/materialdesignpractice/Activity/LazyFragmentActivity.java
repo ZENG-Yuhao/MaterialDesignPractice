@@ -81,7 +81,7 @@ public class LazyFragmentActivity extends AppCompatActivity {
             //return LazyLoadTestFragment.newInstance(BaseLazyFragment.MODE_LAZY, position);
             TempGraphFragment fragment = new TempGraphFragment();
             Bundle args = new Bundle();
-            args.putInt(TempGraphFragment.ARG_MODE, TempGraphFragment.MODE_LAZY);
+            args.putInt(TempGraphFragment.ARG_MODE, TempGraphFragment.MODE_DEEP_LAZY);
             args.putInt("position", position);
             fragment.setArguments(args);
             return fragment;

@@ -2,8 +2,6 @@ package com.esigelec.zengyuhao.materialdesignpractice.Fragment;
 
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -24,16 +22,15 @@ public abstract class BaseLazyFragment extends Fragment {
     protected int mode = MODE_NORMAL;
     protected boolean isVisibleToUser = false;
     protected boolean isLoaded = false;
-    protected boolean isCanceling = false;
     protected boolean isOnCreateViewCalled = false;
+    protected boolean isOnUserVisibleCalled = false;
 
     protected FrameLayout mContainerLayout;
     protected View mLazyView;
     protected View mLoadingView;
     protected int position = 0;
 
-    protected Animator mLazyViewAppearAnim, mLoadingViewDisappearAnim;
-    protected AnimatorSet animSet;
+    protected Animator mLoadingViewDisappearAnim;
 
     public BaseLazyFragment() {
         // Required empty public constructor
@@ -60,36 +57,8 @@ public abstract class BaseLazyFragment extends Fragment {
                 .LayoutParams.MATCH_PARENT));
 
         // init animators
-        mLazyViewAppearAnim = ObjectAnimator.ofFloat(null, "alpha", 0f, 1f);
-        mLazyViewAppearAnim.setDuration(0);
         mLoadingViewDisappearAnim = ObjectAnimator.ofFloat(null, "alpha", 1f, 0f);
         mLoadingViewDisappearAnim.setDuration(100);
-        animSet = new AnimatorSet();
-        animSet.playTogether(mLoadingViewDisappearAnim);
-    }
-
-    /**
-     * if we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly loading,
-     * this method will be called after {@link #setUserVisibleHint(boolean)}, contrary, when pager is scrolling,
-     * because of preload mechanism of ViewPager, this method will be called before {@link #setUserVisibleHint(boolean)}
-     */
-    @Override
-    public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
-            savedInstanceState) {
-        Log.d("TAG", "-->onCreateView() " + position);
-//        if (isLoaded) return mContainerLayout;
-//
-//        if (mode == MODE_LAZY) {
-//            mLoadingView = onCreateLoadingView(mContainerLayout);
-//
-//            mLazyView = onCreateLazyView(mContainerLayout);
-//            //mLazyView.setAlpha(0f);
-//            mContainerLayout.addView(mLazyView);
-//        } else
-//            mLoadingView = onCreateLazyView(mContainerLayout);
-//        mContainerLayout.addView(mLoadingView);
-        isOnCreateViewCalled = true;
-        return mContainerLayout;
     }
 
 
@@ -109,54 +78,91 @@ public abstract class BaseLazyFragment extends Fragment {
         }
     }
 
-    protected void onUserVisible() {
+
+    /**
+     * if we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly loading,
+     * this method will be called after {@link #setUserVisibleHint(boolean)}, contrary, when pager is scrolling,
+     * because of preload mechanism of ViewPager, this method will be called before {@link #setUserVisibleHint(boolean)}
+     */
+    @Override
+    public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
+            savedInstanceState) {
+        Log.d("TAG", "-->onCreateView() " + position);
+
         if (mode == MODE_NORMAL) {
             mLazyView = onCreateLazyView(mContainerLayout);
             mContainerLayout.addView(mLazyView);
+        } else {
+            isOnCreateViewCalled = true;
+            onPrepareView();
+            onRequestViewShowing();
         }
-//
-//        isCanceling = false;
-//        if (isVisibleToUser && !isLoaded) {
-//            lazyLoad();
-//        }
-        if (mode == MODE_LAZY || mode == MODE_DEEP_LAZY) {
-            if (!isLoaded) {
-                mLazyView = onCreateLazyView(mContainerLayout);
-                mLoadingView = onCreateLoadingView(mContainerLayout);
-                mContainerLayout.addView(mLazyView);
-                mContainerLayout.addView(mLoadingView);
-                lazyLoad();
-            } else {
-                if (mode == MODE_DEEP_LAZY) {
+        return mContainerLayout;
+    }
 
-                }
+
+    protected void onUserVisible() {
+        if (mode == MODE_NORMAL) return;
+        Log.d("TAG", "-->onUserVisible() " + position);
+
+        isOnUserVisibleCalled = true;
+
+        if (mode == MODE_LAZY && !isLoaded) {
+            onPrepareView();
+            onLazyLoad();
+        }
+
+        if (mode == MODE_DEEP_LAZY) {
+            if (!isLoaded) {
+                onPrepareView();
+                onLazyLoad();
+            } else {
+                onRequestViewShowing();
             }
         }
     }
 
     protected void onUserInvisible() {
-//        if (mode == MODE_LAZY && !isLoaded) {
-//            isCanceling = true;
-//            cancelAllAnimations();
-//        }
-        isOnCreateViewCalled = false;
+        if (mode == MODE_NORMAL) return;
+        Log.d("TAG", "-->onUserInvisible() " + position);
+
+//        isOnCreateViewCalled = false;
+//        isOnUserVisibleCalled = false;
+        cancelAllAnimations();
+
+        // if it's MODE_DEEP_LAZY means that when scrolling back to previous page, there will be also a loading effect
+        // so we have to initiate these views.
+        if (mode == MODE_DEEP_LAZY) {
+            mLazyView.setVisibility(View.INVISIBLE);
+            mLoadingView.setAlpha(1);
+        }
+    }
+
+    protected void onPrepareView() {
+        if (mLazyView != null && mLoadingView != null) return;
+        Log.d("TAG", "-->onPrepareView() " + position);
+
+        mLazyView = onCreateLazyView(mContainerLayout);
+        mContainerLayout.addView(mLazyView);
+
+        mLoadingView = onCreateLoadingView(mContainerLayout);
+        mContainerLayout.addView(mLoadingView);
+    }
+
+    protected void onRequestViewShowing() {
+        if (isOnUserVisibleCalled && isOnCreateViewCalled) {
+            Log.d("TAG", "-->onRequestViewShowing() " + position);
+            mLoadingView.bringToFront();
+            mLazyView.setVisibility(View.VISIBLE);
+            mLoadingViewDisappearAnim.setTarget(mLoadingView);
+            mLoadingViewDisappearAnim.start();
+        }
     }
 
     protected void cancelAllAnimations() {
-        if (mLazyViewAppearAnim.isRunning())
-            mLazyViewAppearAnim.cancel();
-
+        Log.d("TAG", "-->cancelAllAnimations() " + position);
         if (mLoadingViewDisappearAnim.isRunning())
             mLoadingViewDisappearAnim.cancel();
-
-        if (animSet.isRunning())
-            animSet.cancel();
-    }
-
-    protected void lazyLoad() {
-        Log.d("TAG", "-->lazyLoad() " + position);
-        //mLazyView = onCreateLazyView(mContainerLayout);
-        onLoadData();
     }
 
     public abstract View onCreateLoadingView(@Nullable ViewGroup parent);
@@ -171,58 +177,27 @@ public abstract class BaseLazyFragment extends Fragment {
      * <b>IMPORTANT: </b>you must call
      * {@link #notifyDataLoaded()} when your data is ready, and then {@link #onBindData(View)} will be called.
      */
-    public abstract void onLoadData();
+    public abstract void onLazyLoad();
+
 
     /**
      * Notify that your data is ready to be bound to the view.
      */
     protected void notifyDataLoaded() {
-        if (isCanceling) return;
-
         Log.d("TAG", "-->notifyDataLoaded() " + position);
-
-        // if this fragment is not in a ViewPager, normally, this method will be called before onCreateView().
-        // At this moment, all views are null, so we call onCreateView() manually for having views inflated and
-        // prepared. Once this method is called, isLoaded = true, thus if onCreateView() is called later, it will do
-        // nothing but return a container layout.
-//        if (mLazyView == null) {
-//            onCreateView(null, null, null);
-//        }
-
-
         onBindData(mLazyView);
-        replaceContentView(mLazyView);
+        onRequestViewShowing();
         isLoaded = true;
-
-    }
-
-    protected void replaceContentView(View view) {
-        if (isCanceling) return;
-
-        Log.d("TAG", "-->replaceContentView() " + position);
-        cancelAllAnimations();
-
-        //mLazyViewAppearAnim.setTarget(view);
-        mLoadingViewDisappearAnim.setTarget(mLoadingView);
-
-        //view.setVisibility(View.VISIBLE);
-        animSet.start();
-        animSet.removeAllListeners();
-        animSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLoadingView.setVisibility(View.GONE);
-            }
-        });
     }
 
 
     /**
-     * Bind data to your lazy loaded view. You must call {@link #notifyDataLoaded()} in {@link #onLoadData()} to
+     * Bind data to your lazy loaded view. You must call {@link #notifyDataLoaded()} in {@link #onLazyLoad()} to
      * make this method to be invoked when your data is loaded.
      *
      * @param view view created by {@link #onCreateLazyView(ViewGroup)}
      */
     public abstract void onBindData(View view);
+
 
 }
