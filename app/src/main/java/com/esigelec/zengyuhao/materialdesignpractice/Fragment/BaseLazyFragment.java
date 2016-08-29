@@ -151,8 +151,8 @@ public abstract class BaseLazyFragment extends Fragment {
 
     protected void onRequestViewShowing() {
         // onUserVisible(),  onCreateView()
-        // since we are not sure which method above will call this method first, we add this condition to make sure
-        // that this method only response to the last one.
+        // since we are not sure which above method will call this method first, we add this condition to make sure
+        // that this method only responses to the last one.
         if (isOnUserVisibleCalled && isOnCreateViewCalled) {
             Log.d("TAG", "-->onRequestViewShowing() " + position);
             mLoadingView.bringToFront();
