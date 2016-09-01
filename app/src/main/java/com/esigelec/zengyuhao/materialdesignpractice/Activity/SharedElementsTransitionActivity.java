@@ -11,8 +11,8 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 /**
  * Setting exit transition (xml)
- * 1.add an explode-transition into resources folder @see ./res/transition/grid_exit.xml
- * 2.declare the explode-transition in AppTheme @see ./res/values/styles.xml
+ * 1.add an explode-transition into resources folder ./res/transition/grid_exit.xml
+ * 2.declare the explode-transition in AppTheme ./res/values/styles.xml
  * 3.create bundle using ActivityOptions.makeSceneTransitionAnimation(context) (different with shared-element transi.)
  * <p/>
  *
@@ -45,7 +45,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
  * if the AppTheme inherits already AppCompat or Material. @see ./res/values/styles.xml
  * <p/>
  * Reference:
- * @sse <a href="https://classroom.udacity.com/courses/ud862/lessons/4969789009/concepts/49083289230923">Udacity</a>
+ * @see <a href="https://classroom.udacity.com/courses/ud862/lessons/4969789009/concepts/49083289230923">Udacity</a>
  * @see <a href="http://developer.android.com/training/material/animations.html">Defining Custom Animations</a>
  */
 public class SharedElementsTransitionActivity extends Activity {
