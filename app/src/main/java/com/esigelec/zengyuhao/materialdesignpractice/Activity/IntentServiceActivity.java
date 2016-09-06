@@ -17,14 +17,16 @@ import com.esigelec.zengyuhao.materialdesignpractice.Service.MyIntentService;
 
 /**
  * Steps:
- *
+ * <p>
  * 1.Create IntentService and implement onHandleIntent() method.
  * 2.Define actions and status (like those in Constants class)
  * 3.Instantiate new intent with the action defined and put the status difined as an extras.
  * 4.Call LocalBroadcastManager.getInstance(context).sendBroadcast(intent) in onHandleIntent() when task is done.
  * 5.Create Receiver Class which extends BroadcastReceiver and implement onReceive() method to handle incoming data
- *   and manipulate UI in Activity/Fragment.
+ * and manipulate UI in Activity/Fragment.
  * 6.In Activity/Fragment, create IntentFilter and register it in LocalBroadcastManager.
+ * <p>
+ * <a href="https://developer.android.com/training/run-background-service/create-service.html">Tutorial Reference</a>
  */
 public class IntentServiceActivity extends Activity {
 

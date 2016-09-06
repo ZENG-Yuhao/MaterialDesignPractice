@@ -48,10 +48,7 @@
        />
 
     <Button
-        android:id="@+id/btn_test"
-        android:layout_gravity="center"
-        android:text="This is a test button"
-        android:textAllCaps="false"
+        android:id="@+id/btn_complex_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>

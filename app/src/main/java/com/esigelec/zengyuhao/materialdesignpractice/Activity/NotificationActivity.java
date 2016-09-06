@@ -1,10 +1,12 @@
 package com.esigelec.zengyuhao.materialdesignpractice.Activity;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.RenderScript;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
@@ -77,6 +79,38 @@ public class NotificationActivity extends Activity {
                 builder_auto.setNumber(++number);
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 manager.notify(NOTIFICATION_ID + 1, builder_auto.build());
+            }
+        });
+
+
+        final NotificationCompat.Builder builderComplex = new NotificationCompat.Builder(this);
+        builderComplex.setSmallIcon(R.drawable.ic_devices_black_48dp);
+        builderComplex.setContentTitle("AutoCancel Notification");
+        builderComplex.setContentText("Hello World.");
+        builderComplex.setDefaults(Notification.DEFAULT_ALL);
+        builderComplex.setPriority(Notification.PRIORITY_MAX);
+        builderComplex.setProgress(100, 30, false);
+
+        NotificationCompat.InboxStyle inboxStyle =
+                new NotificationCompat.InboxStyle();
+
+        String[] events = new String[]{
+                "ENZO", "IKEDA", "ZENG", "YUHAO"
+        };
+        // Sets a title for the Inbox in expanded layout
+        inboxStyle.setBigContentTitle("Event tracker details:");
+        // Moves events into the expanded layout
+        for (int i = 0; i < events.length; i++) {
+
+            inboxStyle.addLine(events[i]);
+        }
+        //builderComplex.setStyle(inboxStyle);
+        Button btn_complex_notification = (Button) findViewById(R.id.btn_complex_notification);
+        btn_complex_notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.notify(NOTIFICATION_ID + 2, builderComplex.build());
             }
         });
     }
