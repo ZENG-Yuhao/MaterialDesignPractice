@@ -80,7 +80,7 @@ public abstract class BaseLazyFragment extends Fragment {
 
 
     /**
-     * if we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly
+     * If we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly
      * being loaded, this method will be called after {@link #setUserVisibleHint(boolean)}, contrary, when pager is
      * scrolling, because of preload mechanism of ViewPager, this method will be called before
      * {@link #setUserVisibleHint(boolean)}
@@ -139,6 +139,11 @@ public abstract class BaseLazyFragment extends Fragment {
         }
     }
 
+    /**
+     * Will be called in {@link #onUserVisible()} and {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, this
+     * method works at 1st time that it was called. This mechanism make sure that no matter what kind of loading the
+     * fragment is (normal loading or pre-loading by ViewPager), there are always loading-view and lazy-view prepared.
+     */
     protected void onPrepareView() {
         // nothing to be prepared
         if (mLazyView != null && mLoadingView != null) return;
@@ -151,6 +156,10 @@ public abstract class BaseLazyFragment extends Fragment {
         mContainerLayout.addView(mLoadingView);
     }
 
+    /**
+     * Will be called in {@link #onUserVisible()} and {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, this
+     * method will actually work at 2nd time that it was called.
+     */
     protected void onRequestViewShowing() {
         // onUserVisible(),  onCreateView()
         // since we are not sure which above method will call this method first, we add this condition to make sure
