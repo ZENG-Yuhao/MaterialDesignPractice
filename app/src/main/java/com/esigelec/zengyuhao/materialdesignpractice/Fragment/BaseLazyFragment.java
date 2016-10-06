@@ -140,6 +140,7 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     protected void onPrepareView() {
+        // nothing to be prepared
         if (mLazyView != null && mLoadingView != null) return;
         Log.d("TAG", "-->onPrepareView() " + position);
 
