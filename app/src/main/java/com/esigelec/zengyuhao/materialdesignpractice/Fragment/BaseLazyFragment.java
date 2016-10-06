@@ -95,8 +95,8 @@ public abstract class BaseLazyFragment extends Fragment {
             mContainerLayout.addView(mLazyView);
         } else {
             isOnCreateViewCalled = true;
-            onPrepareView();
-            onRequestViewShowing();
+            prepareView();
+            requestViewShowing();
         }
         return mContainerLayout;
     }
@@ -109,16 +109,16 @@ public abstract class BaseLazyFragment extends Fragment {
         isOnUserVisibleCalled = true;
 
         if (mode == MODE_LAZY && !isLoaded) {
-            onPrepareView();
+            prepareView();
             onLazyLoad();
         }
 
         if (mode == MODE_DEEP_LAZY) {
             if (!isLoaded) {
-                onPrepareView();
+                prepareView();
                 onLazyLoad();
             } else {
-                onRequestViewShowing();
+                requestViewShowing();
             }
         }
     }
@@ -144,7 +144,7 @@ public abstract class BaseLazyFragment extends Fragment {
      * method works at 1st time that it was called. This mechanism make sure that no matter what kind of loading the
      * fragment is (normal loading or pre-loading by ViewPager), there are always loading-view and lazy-view prepared.
      */
-    protected void onPrepareView() {
+    protected void prepareView() {
         // nothing to be prepared
         if (mLazyView != null && mLoadingView != null) return;
         Log.d("TAG", "-->onPrepareView() " + position);
@@ -160,7 +160,7 @@ public abstract class BaseLazyFragment extends Fragment {
      * Will be called in {@link #onUserVisible()} and {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, this
      * method will actually work at 2nd time that it was called.
      */
-    protected void onRequestViewShowing() {
+    protected void requestViewShowing() {
         // onUserVisible(),  onCreateView()
         // since we are not sure which above method will call this method first, we add this condition to make sure
         // that this method only responses to the last one.
@@ -200,7 +200,7 @@ public abstract class BaseLazyFragment extends Fragment {
     protected void notifyDataLoaded() {
         Log.d("TAG", "-->notifyDataLoaded() " + position);
         onBindData(mLazyView);
-        onRequestViewShowing();
+        requestViewShowing();
         isLoaded = true;
     }
 
