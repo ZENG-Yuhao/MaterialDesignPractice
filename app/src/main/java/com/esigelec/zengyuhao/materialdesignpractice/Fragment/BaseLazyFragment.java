@@ -80,9 +80,10 @@ public abstract class BaseLazyFragment extends Fragment {
 
 
     /**
-     * if we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly loading,
-     * this method will be called after {@link #setUserVisibleHint(boolean)}, contrary, when pager is scrolling,
-     * because of preload mechanism of ViewPager, this method will be called before {@link #setUserVisibleHint(boolean)}
+     * if we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly
+     * being loaded, this method will be called after {@link #setUserVisibleHint(boolean)}, contrary, when pager is
+     * scrolling, because of preload mechanism of ViewPager, this method will be called before
+     * {@link #setUserVisibleHint(boolean)}
      */
     @Override
     public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle

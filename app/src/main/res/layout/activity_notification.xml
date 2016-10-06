@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:text="Start notification"
         android:textAllCaps="false"
-       />
+        />
 
     <Button
         android:id="@+id/btn_cancel"
@@ -45,10 +45,12 @@
         android:layout_gravity="center"
         android:text="Update Number"
         android:textAllCaps="false"
-       />
+        />
 
     <Button
         android:id="@+id/btn_complex_notification"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="COMPLEX"/>
 </LinearLayout>
