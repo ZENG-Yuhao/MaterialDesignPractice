@@ -182,7 +182,7 @@ public abstract class BaseLazyFragment extends Fragment {
     public abstract View onCreateLoadingView(@Nullable ViewGroup parent);
 
     /**
-     * @return view should be shown to user after lazy load.
+     * @return view should be shown to user after lazy loading.
      */
     public abstract View onCreateLazyView(@Nullable ViewGroup parent);
 
