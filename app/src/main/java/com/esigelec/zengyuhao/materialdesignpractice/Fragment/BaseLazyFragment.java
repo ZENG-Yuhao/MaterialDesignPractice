@@ -36,6 +36,20 @@ public abstract class BaseLazyFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * @return Loading view, make sure you have created view, otherwise you will get null.
+     */
+    public View getLoadingView() {
+        return mLoadingView;
+    }
+
+    /**
+     * @return Lazy view (main view of your fragment), make sure you have created view, otherwise you will get null.
+     */
+    public View getLazyView() {
+        return mLazyView;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         //Log.i("BaseLazyFragment", "-->onCreate : " + System.currentTimeMillis());

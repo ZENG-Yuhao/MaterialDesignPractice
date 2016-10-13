@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +35,7 @@ public class LazyFragmentActivity extends AppCompatActivity {
         viewPager.setAdapter(new MyPagerAdapter(getFragmentManager()));
         viewPager.setCurrentItem(3);
 
-        //viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -71,7 +71,7 @@ public class LazyFragmentActivity extends AppCompatActivity {
 
     }
 
-    private class MyPagerAdapter extends FragmentStatePagerAdapter {
+    private class MyPagerAdapter extends FragmentPagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
