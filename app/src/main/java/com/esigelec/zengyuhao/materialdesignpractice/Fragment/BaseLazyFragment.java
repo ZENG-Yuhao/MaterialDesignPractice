@@ -154,6 +154,15 @@ public abstract class BaseLazyFragment extends Fragment {
 
         mLoadingView = onCreateLoadingView(mContainerLayout);
         mContainerLayout.addView(mLoadingView);
+
+        onViewCreated();
+    }
+
+    /**
+     * This method is called after {@link #onCreateLoadingView(ViewGroup)} and {@link #onCreateLazyView(ViewGroup)}.
+     */
+    protected void onViewCreated() {
+        // implementation optional for child class.
     }
 
     /**

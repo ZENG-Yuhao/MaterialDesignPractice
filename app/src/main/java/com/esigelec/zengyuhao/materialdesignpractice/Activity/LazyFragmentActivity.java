@@ -33,7 +33,7 @@ public class LazyFragmentActivity extends AppCompatActivity {
         pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
 
         viewPager.setAdapter(new MyPagerAdapter(getFragmentManager()));
-        //viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(3);
 
         //viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
