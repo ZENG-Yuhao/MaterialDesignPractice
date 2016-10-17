@@ -173,7 +173,8 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     /**
-     * This method is called after {@link #onCreateLoadingView(ViewGroup)} and {@link #onCreateLazyView(ViewGroup)}.
+     * This method is called immediately after {@link #onCreateLoadingView(ViewGroup)} and
+     * {@link #onCreateLazyView(ViewGroup)}.
      */
     protected void onViewCreated() {
         // implementation optional for child class.
