@@ -20,6 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "CoordinatorLayout",
             "LazyFragmentActivity",
             "Picker Dialog",
             "MPAndroidChart",
@@ -60,6 +61,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            CoordinatorLayoutActivity.class,
             LazyFragmentActivity.class,
             PickerDialogActivity.class,
             MPAndroidChartActivity.class,
