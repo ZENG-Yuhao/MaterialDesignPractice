@@ -25,22 +25,22 @@ public abstract class BaseLazyFragment extends Fragment {
     public static final int MODE_LAZY = 1;
     public static final int MODE_DEEP_LAZY = 2;
 
-    public enum LoadState {
+    private enum LoadState {
         READY, RUNNING, FINISHED
     }
 
-    protected int mode = MODE_LAZY;
-    protected boolean newVisibility = false;
-    protected boolean previousVisibility = false;
-    protected FragmentVisibilityListener mVisibilityListener;
-    protected LoadState mLoadState = LoadState.READY;
+    private int mode = MODE_LAZY;
+    private boolean newVisibility = false;
+    private boolean previousVisibility = false;
+    private FragmentVisibilityListener mVisibilityListener;
+    private LoadState mLoadState = LoadState.READY;
 
-    protected ViewGroup mContainerLayout;
-    protected View mLazyView;
-    protected View mLoadingView;
+    private ViewGroup mContainerLayout;
+    private View mLazyView;
+    private View mLoadingView;
     protected int position = 0;
 
-    protected Animator mViewDisappearAnim, mViewAppearAnim;
+    private Animator mViewDisappearAnim, mViewAppearAnim;
 
     public BaseLazyFragment() {
         // Required empty public constructor
@@ -54,7 +54,7 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     /**
-     * @return Lazy view (main view of your fragment), make sure you have created view, otherwise you will get null.
+     * @return Lazy view (content view of your fragment), make sure you have created view, otherwise you will get null.
      */
     public View getLazyView() {
         return mLazyView;
@@ -66,6 +66,10 @@ public abstract class BaseLazyFragment extends Fragment {
 
     public void setMode(int mode) {
         this.mode = mode;
+    }
+
+    public void setVisibilityChangeListener(FragmentVisibilityListener listener) {
+        mVisibilityListener = listener;
     }
 
     @Override
@@ -125,7 +129,7 @@ public abstract class BaseLazyFragment extends Fragment {
             checkVisibilityChanges();
     }
 
-    protected void checkVisibilityChanges() {
+    private void checkVisibilityChanges() {
         Log.d("TAG", "-->checkVisibilityChanges() " + "recent " + previousVisibility + " current " + newVisibility);
         if (newVisibility != previousVisibility) {
             onVisibilityChanged(newVisibility);
@@ -134,7 +138,7 @@ public abstract class BaseLazyFragment extends Fragment {
         }
     }
 
-    protected void onVisibilityChanged(boolean isVisibleToUser) {
+    private void onVisibilityChanged(boolean isVisibleToUser) {
         Log.d("TAG", "-->onVisibilityChanged() " + isVisibleToUser);
         if (mode == MODE_NORMAL) return;
 
@@ -159,7 +163,7 @@ public abstract class BaseLazyFragment extends Fragment {
         }
     }
 
-    protected void showLazyView() {
+    private void showLazyView() {
         Log.d("TAG", "-->showLazyView() " + position);
 //        mLazyView.bringToFront();
         mViewDisappearAnim.setTarget(mLoadingView);
@@ -170,7 +174,7 @@ public abstract class BaseLazyFragment extends Fragment {
 
     }
 
-    protected void showLoadingView() {
+    private void showLoadingView() {
         Log.d("TAG", "-->showLoadingView() " + position);
 //        mLoadingView.bringToFront();
         mLoadingView.setAlpha(1f);
@@ -186,10 +190,15 @@ public abstract class BaseLazyFragment extends Fragment {
     /**
      * Load data, you can do it in UI-thread or off-UI-thread.<br>
      * <b>IMPORTANT: </b>you must call
-     * {@link #notifyDataLoaded()} when your data is ready, and then {@link #onBindData(View)} will be called.
+     * {@link #notifyDataLoaded()} when your data is ready, and then {@link #onBindData(View)} will be called.  If
+     * you don't have time-consuming task such like Internet data loading, you need simply call
+     * {@link #notifyDataLoaded()} in this method.
      */
     protected abstract void onLazyLoad();
 
+    /**
+     * When fragment is becoming invisible to user, stop your background loading task in this method.
+     */
     protected void onCancelLoading() {
         Log.d("TAG", "-->onCancelLoading() " + position);
     }
@@ -207,7 +216,7 @@ public abstract class BaseLazyFragment extends Fragment {
 
     /**
      * Bind data to your lazy loaded view. You must call {@link #notifyDataLoaded()} in {@link #onLazyLoad()} to
-     * make this method to be invoked when your data is loaded.
+     * make this method being invoked when your data has loaded.
      *
      * @param view view created by {@link #onCreateLazyView(ViewGroup)}
      */
