@@ -204,7 +204,7 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     /**
-     * Notify that your data is ready to be bound to the view.
+     * Notify that your data is ready to be bound to the content view.
      */
     protected void notifyDataLoaded() {
         Log.d("TAG", "-->notifyDataLoaded() " + position);
@@ -216,11 +216,11 @@ public abstract class BaseLazyFragment extends Fragment {
 
     /**
      * Bind data to your lazy loaded view. You must call {@link #notifyDataLoaded()} in {@link #onLazyLoad()} to
-     * make this method being invoked when your data has loaded.
+     * make this method being invoked when your data has been loaded.
      *
-     * @param view view created by {@link #onCreateLazyView(ViewGroup)}
+     * @param lazyView view created by {@link #onCreateLazyView(ViewGroup)}
      */
-    protected abstract void onBindData(View view);
+    protected abstract void onBindData(View lazyView);
 
     public interface FragmentVisibilityListener {
         void onVisibilityChanged(boolean isVisibleToUser);

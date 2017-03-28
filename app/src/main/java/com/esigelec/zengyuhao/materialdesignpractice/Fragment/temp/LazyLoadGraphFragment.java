@@ -2,7 +2,6 @@ package com.esigelec.zengyuhao.materialdesignpractice.Fragment.temp;
 
 
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,13 +24,13 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TempGraphFragment extends BaseLazyFragment {
+public class LazyLoadGraphFragment extends BaseLazyFragment {
     private LineChart mLineChart;
     private LimitLine limitLineNF, limitLineD;
     private float limitNF, limitD, tempNF, tempD;
     private boolean state_btn_switch = false;
 
-    public TempGraphFragment() {
+    public LazyLoadGraphFragment() {
         // Required empty public constructor
     }
 
@@ -42,9 +41,7 @@ public class TempGraphFragment extends BaseLazyFragment {
 
     @Override
     public View onCreateLazyView(@Nullable ViewGroup parent) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_temp_graph, parent, false);
-
-        return view;
+        return LayoutInflater.from(getActivity()).inflate(R.layout.fragment_temp_graph, parent, false);
     }
 
     @Override
@@ -53,8 +50,8 @@ public class TempGraphFragment extends BaseLazyFragment {
     }
 
     @Override
-    public void onBindData(View view) {
-        mLineChart = (LineChart) view.findViewById(R.id.chart);
+    public void onBindData(View lazyView) {
+        mLineChart = (LineChart) lazyView.findViewById(R.id.chart);
         mLineChart.setBackgroundColor(Color.parseColor("#252525"));
         mLineChart.setDrawBorders(false);
         mLineChart.setDrawGridBackground(false);
@@ -87,21 +84,6 @@ public class TempGraphFragment extends BaseLazyFragment {
         mLineChart.setData(lineData);
         //mLineChart.notifyDataSetChanged();
         mLineChart.invalidate();
-    }
-
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_temp_graph, container, false);
-//    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
     }
 
     private LineData generateLineData(float[] rawData) {
