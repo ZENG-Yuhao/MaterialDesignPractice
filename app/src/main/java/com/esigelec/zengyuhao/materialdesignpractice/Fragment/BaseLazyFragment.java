@@ -169,7 +169,7 @@ public abstract class BaseLazyFragment extends Fragment {
         mViewDisappearAnim.setTarget(mLoadingView);
         mViewAppearAnim.setTarget(mLazyView);
         AnimatorSet set = new AnimatorSet();
-        set.setDuration(200).play(mViewDisappearAnim).with(mViewAppearAnim);
+        set.setDuration(100).play(mViewDisappearAnim).with(mViewAppearAnim);
         set.start();
 
     }
