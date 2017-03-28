@@ -8,7 +8,10 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
@@ -35,6 +38,16 @@ public class LazyFragmentActivity extends AppCompatActivity {
         viewPager.setAdapter(new MyPagerAdapter(getFragmentManager()));
         viewPager.setCurrentItem(0);
 
+        viewPager.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int max = titles.length;
+                int min = 0;
+                int rand = (int) (Math.random() * (max - min) + min);
+                viewPager.setCurrentItem(rand);
+            }
+        });
+
         viewPager.setOffscreenPageLimit(1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -50,9 +63,12 @@ public class LazyFragmentActivity extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
 //                Log.i("addOnPageChangeListener", "-->" + state + " : " + System.currentTimeMillis());
-//                if (state == 0) {
-//                    Log.i("addOnPageChangeListener", "--> idle : " + System.currentTimeMillis());
-//                }
+                if (state == 0) {
+                    Log.d("TAG", "      ");
+                    Log.d("TAG", "      ");
+                    Log.d("TAG", "      ");
+                    Log.d("TAG", "      ");
+                }
             }
         });
 
@@ -80,10 +96,11 @@ public class LazyFragmentActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             //return LazyLoadTestFragment.newInstance(OldBaseLazyFragment.MODE_LAZY, position);
             TempGraphFragment fragment = new TempGraphFragment();
-            Bundle args = new Bundle();
-            args.putInt(TempGraphFragment.ARG_MODE, TempGraphFragment.MODE_DEEP_LAZY);
-            args.putInt("position", position);
-            fragment.setArguments(args);
+//            Bundle args = new Bundle();
+//            args.putInt(TempGraphFragment.ARG_MODE, TempGraphFragment.MODE_DEEP_LAZY);
+//            args.putInt("position", position);
+//            fragment.setArguments(args);
+            fragment.setPosition(position);
             return fragment;
         }
 

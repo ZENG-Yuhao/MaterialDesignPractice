@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.esigelec.zengyuhao.materialdesignpractice.Fragment.OldBaseLazyFragment;
+import com.esigelec.zengyuhao.materialdesignpractice.Fragment.BaseLazyFragment;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TempGraphFragment extends OldBaseLazyFragment {
+public class TempGraphFragment extends BaseLazyFragment {
     private LineChart mLineChart;
     private LimitLine limitLineNF, limitLineD;
     private float limitNF, limitD, tempNF, tempD;
@@ -82,7 +82,7 @@ public class TempGraphFragment extends OldBaseLazyFragment {
         mLineChart.getAxisRight().setEnabled(false);
         mLineChart.setDoubleTapToZoomEnabled(false);
         mLineChart.setDragDecelerationEnabled(false);
-        float[] rawData = generateRawData(20000, 0.1f, 100000f);
+        float[] rawData = generateRawData(2000, 0.1f, 100000f);
         LineData lineData = generateLineData(rawData);
         mLineChart.setData(lineData);
         //mLineChart.notifyDataSetChanged();

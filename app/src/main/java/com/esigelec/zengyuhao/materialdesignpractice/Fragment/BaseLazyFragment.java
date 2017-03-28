@@ -1,10 +1,11 @@
 package com.esigelec.zengyuhao.materialdesignpractice.Fragment;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +25,22 @@ public abstract class BaseLazyFragment extends Fragment {
     public static final int MODE_LAZY = 1;
     public static final int MODE_DEEP_LAZY = 2;
 
-    protected int mode = MODE_DEEP_LAZY;
-    protected boolean isVisibleToUser = false;
-    protected boolean isLoaded = false;
-    protected boolean isOnCreateViewCalled = false;
-    protected boolean isOnUserVisibleCalled = false;
+    public enum LoadState {
+        READY, RUNNING, FINISHED
+    }
 
-    protected FrameLayout mContainerLayout;
+    protected int mode = MODE_LAZY;
+    protected boolean newVisibility = false;
+    protected boolean previousVisibility = false;
+    protected FragmentVisibilityListener mVisibilityListener;
+    protected LoadState mLoadState = LoadState.READY;
+
+    protected ViewGroup mContainerLayout;
     protected View mLazyView;
     protected View mLoadingView;
     protected int position = 0;
 
-    protected Animator mLoadingViewDisappearAnim;
+    protected Animator mViewDisappearAnim, mViewAppearAnim;
 
     public BaseLazyFragment() {
         // Required empty public constructor
@@ -55,49 +60,35 @@ public abstract class BaseLazyFragment extends Fragment {
         return mLazyView;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        //Log.i("OldBaseLazyFragment", "-->onCreate : " + System.currentTimeMillis());
-
         super.onCreate(savedInstanceState);
-
+        Log.d("TAG", "-->onCreate() " + position);
         if (mode != MODE_NORMAL && mode != MODE_LAZY && mode != MODE_DEEP_LAZY)
             throw new IllegalArgumentException("Unknown mode : mode must be 0 (NORMAL) or 1 (LAZY) or 2 (DEEP LAZY)");
 
-        if (getArguments() != null) {
-            mode = getArguments().getInt(ARG_MODE);
-            position = getArguments().getInt("position");
-        }
-        Log.d("TAG", "-->onCreate() " + position);
-
-        // init container layout
-        mContainerLayout = new FrameLayout(getActivity());
-        mContainerLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
-                .LayoutParams.MATCH_PARENT));
-
         // init animators
-        mLoadingViewDisappearAnim = ObjectAnimator.ofFloat(null, "alpha", 1f, 0f);
-        mLoadingViewDisappearAnim.setDuration(100);
+        mViewDisappearAnim = ObjectAnimator.ofFloat(null, "alpha", 1f, 0f);
+        mViewAppearAnim = ObjectAnimator.ofFloat(null, "alpha", 0.6f, 1f);
     }
 
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
-        Log.d("TAG", "-->setUserVisibleHint() " + isVisibleToUser + " pos:" + position);
-        Log.d("TAG", "getActivity()!=null " + (getActivity() != null));
-        //Log.i("OldBaseLazyFragment", "-->setUserVisibleHint : " + System.currentTimeMillis());
-        if (getUserVisibleHint()) {
-            this.isVisibleToUser = true;
-            onUserVisible();
-
-        } else {
-            this.isVisibleToUser = false;
-            onUserInvisible();
-        }
+        newVisibility = isVisibleToUser;
+        Log.d("TAG", "-->setUserVisibleHint() " + position);
+        if (isViewPrepared())
+            checkVisibilityChanges();
     }
-
 
     /**
      * If we apply this fragment on a {@link android.support.v4.view.ViewPager} and when ViewPager is firstly
@@ -109,131 +100,110 @@ public abstract class BaseLazyFragment extends Fragment {
     public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
         Log.d("TAG", "-->onCreateView() " + position);
-
-        if (mode == MODE_NORMAL) {
-            mLazyView = onCreateLazyView(mContainerLayout);
-            mContainerLayout.addView(mLazyView);
-        } else {
-            isOnCreateViewCalled = true;
-            prepareView();
-            requestViewShowing();
-        }
+        // init container layout
+        mContainerLayout = new FrameLayout(getActivity());
+        mContainerLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
+                .LayoutParams.MATCH_PARENT));
+        mLoadingView = onCreateLoadingView(mContainerLayout);
+        mLazyView = onCreateLazyView(mContainerLayout);
+        mContainerLayout.addView(mLoadingView);
+        mContainerLayout.addView(mLazyView);
+        mLoadingView.bringToFront();
+        Log.d("TAG", "-->getUserVisibleHint() " + getUserVisibleHint());
         return mContainerLayout;
     }
 
+    protected boolean isViewPrepared() {
+        return (mLoadingView != null && mLazyView != null);
+    }
 
-    protected void onUserVisible() {
-        if (mode == MODE_NORMAL) return;
-        Log.d("TAG", "-->onUserVisible() " + position);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Log.d("TAG", "-->onViewCreated() " + position);
+        super.onViewCreated(view, savedInstanceState);
+        if (isViewPrepared())
+            checkVisibilityChanges();
+    }
 
-        isOnUserVisibleCalled = true;
-
-        if (mode == MODE_LAZY && !isLoaded) {
-            prepareView();
-            onLazyLoad();
+    protected void checkVisibilityChanges() {
+        Log.d("TAG", "-->checkVisibilityChanges() " + "recent " + previousVisibility + " current " + newVisibility);
+        if (newVisibility != previousVisibility) {
+            onVisibilityChanged(newVisibility);
+            if (mVisibilityListener != null) mVisibilityListener.onVisibilityChanged(newVisibility);
+            previousVisibility = newVisibility;
         }
+    }
 
-        if (mode == MODE_DEEP_LAZY) {
-            if (!isLoaded) {
-                prepareView();
+    protected void onVisibilityChanged(boolean isVisibleToUser) {
+        Log.d("TAG", "-->onVisibilityChanged() " + isVisibleToUser);
+        if (mode == MODE_NORMAL) return;
+
+        if (isVisibleToUser) {
+            if (mLoadState == LoadState.READY) {
+                mLoadState = LoadState.RUNNING;
+                Log.d("TAG", "-->onLazyLoad() " + position);
                 onLazyLoad();
-            } else {
-                requestViewShowing();
             }
+
+            if (mLoadState == LoadState.FINISHED && mode == MODE_DEEP_LAZY) {
+                showLazyView();
+            }
+        } else { // isVisibleToUser == false;
+            if (mLoadState == LoadState.RUNNING) {
+                onCancelLoading();
+                mLoadState = LoadState.READY;
+            }
+
+            if (mode == MODE_DEEP_LAZY)
+                showLoadingView();
         }
     }
 
-    protected void onUserInvisible() {
-        if (mode == MODE_NORMAL) return;
-        Log.d("TAG", "-->onUserInvisible() " + position);
+    protected void showLazyView() {
+        Log.d("TAG", "-->showLazyView() " + position);
+//        mLazyView.bringToFront();
+        mViewDisappearAnim.setTarget(mLoadingView);
+        mViewAppearAnim.setTarget(mLazyView);
+        AnimatorSet set = new AnimatorSet();
+        set.setDuration(200).play(mViewDisappearAnim).with(mViewAppearAnim);
+        set.start();
 
-//        isOnCreateViewCalled = false;
-//        isOnUserVisibleCalled = false;
-        cancelAllAnimations();
-
-        // if it's MODE_DEEP_LAZY means that when scrolling back to previous page, there will be also a loading effect
-        // so we have to initiate these views.
-        if (mode == MODE_DEEP_LAZY) {
-            mLazyView.setVisibility(View.INVISIBLE);
-            mLoadingView.setAlpha(1);
-        }
     }
 
+    protected void showLoadingView() {
+        Log.d("TAG", "-->showLoadingView() " + position);
+//        mLoadingView.bringToFront();
+        mLoadingView.setAlpha(1f);
+    }
+
+    protected abstract View onCreateLoadingView(@Nullable ViewGroup parent);
+
     /**
-     * Will be called in {@link #onUserVisible()} and {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, this
-     * method works at 1st time that it was called. This mechanism make sure that no matter what kind of loading the
-     * fragment is (normal loading or pre-loading by ViewPager), there are always loading-view and lazy-view prepared.
+     * @return view should be shown as a content view to user after lazy loading.
      */
-    protected void prepareView() {
-        // nothing to be prepared
-        if (mLazyView != null && mLoadingView != null) return;
-        Log.d("TAG", "-->onPrepareView() " + position);
-
-        mLazyView = onCreateLazyView(mContainerLayout);
-        mContainerLayout.addView(mLazyView);
-
-        mLoadingView = onCreateLoadingView(mContainerLayout);
-        mContainerLayout.addView(mLoadingView);
-
-        onViewCreated();
-    }
+    protected abstract View onCreateLazyView(@Nullable ViewGroup parent);
 
     /**
-     * This method is called immediately after {@link #onCreateLoadingView(ViewGroup)} and
-     * {@link #onCreateLazyView(ViewGroup)}.
-     */
-    protected void onViewCreated() {
-        // implementation optional for child class.
-    }
-
-    /**
-     * Will be called in {@link #onUserVisible()} and {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}, this
-     * method will actually work at 2nd time that it was called.
-     */
-    protected void requestViewShowing() {
-        // onUserVisible(),  onCreateView()
-        // since we are not sure which above method will call this method first, we add this condition to make sure
-        // that this method only responses to the last one.
-        if (isOnUserVisibleCalled && isOnCreateViewCalled) {
-            Log.d("TAG", "-->onRequestViewShowing() " + position);
-            mLoadingView.bringToFront();
-            mLazyView.setVisibility(View.VISIBLE);
-            mLoadingViewDisappearAnim.setTarget(mLoadingView);
-            mLoadingViewDisappearAnim.start();
-        }
-    }
-
-    protected void cancelAllAnimations() {
-        Log.d("TAG", "-->cancelAllAnimations() " + position);
-        if (mLoadingViewDisappearAnim.isRunning())
-            mLoadingViewDisappearAnim.cancel();
-    }
-
-    public abstract View onCreateLoadingView(@Nullable ViewGroup parent);
-
-    /**
-     * @return view should be shown to user after lazy loading.
-     */
-    public abstract View onCreateLazyView(@Nullable ViewGroup parent);
-
-    /**
-     * Load data, you can do it in UI thread or off UI thread.<br>
+     * Load data, you can do it in UI-thread or off-UI-thread.<br>
      * <b>IMPORTANT: </b>you must call
      * {@link #notifyDataLoaded()} when your data is ready, and then {@link #onBindData(View)} will be called.
      */
-    public abstract void onLazyLoad();
+    protected abstract void onLazyLoad();
 
+    protected void onCancelLoading() {
+        Log.d("TAG", "-->onCancelLoading() " + position);
+    }
 
     /**
      * Notify that your data is ready to be bound to the view.
      */
     protected void notifyDataLoaded() {
         Log.d("TAG", "-->notifyDataLoaded() " + position);
+        mLoadState = LoadState.FINISHED;
+        Log.d("TAG", "-->onBindData() " + position);
         onBindData(mLazyView);
-        requestViewShowing();
-        isLoaded = true;
+        showLazyView();
     }
-
 
     /**
      * Bind data to your lazy loaded view. You must call {@link #notifyDataLoaded()} in {@link #onLazyLoad()} to
@@ -241,7 +211,9 @@ public abstract class BaseLazyFragment extends Fragment {
      *
      * @param view view created by {@link #onCreateLazyView(ViewGroup)}
      */
-    public abstract void onBindData(View view);
+    protected abstract void onBindData(View view);
 
-
+    public interface FragmentVisibilityListener {
+        void onVisibilityChanged(boolean isVisibleToUser);
+    }
 }

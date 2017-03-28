@@ -19,7 +19,7 @@ public abstract class OldBaseLazyFragment extends Fragment {
     public static final int MODE_LAZY = 1;
     public static final int MODE_DEEP_LAZY = 2;
 
-    protected int mode = MODE_DEEP_LAZY;
+    protected int mode = MODE_NORMAL;
     protected boolean isVisibleToUser = false;
     protected boolean isLoaded = false;
     protected boolean isOnCreateViewCalled = false;
@@ -50,6 +50,10 @@ public abstract class OldBaseLazyFragment extends Fragment {
         return mLazyView;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         //Log.i("OldBaseLazyFragment", "-->onCreate : " + System.currentTimeMillis());
@@ -58,11 +62,11 @@ public abstract class OldBaseLazyFragment extends Fragment {
 
         if (mode != MODE_NORMAL && mode != MODE_LAZY && mode != MODE_DEEP_LAZY)
             throw new IllegalArgumentException("Unknown mode : mode must be 0 (NORMAL) or 1 (LAZY) or 2 (DEEP LAZY)");
-
-        if (getArguments() != null) {
-            mode = getArguments().getInt(ARG_MODE);
-            position = getArguments().getInt("position");
-        }
+            mode = MODE_DEEP_LAZY;
+//        if (getArguments() != null) {
+//            mode = getArguments().getInt(ARG_MODE);
+//            position = getArguments().getInt("position");
+//        }
         Log.d("TAG", "-->onCreate() " + position);
 
         // init container layout
@@ -82,6 +86,7 @@ public abstract class OldBaseLazyFragment extends Fragment {
 
         Log.d("TAG", "-->setUserVisibleHint() " + isVisibleToUser + " pos:" + position);
         Log.d("TAG", "getActivity()!=null " + (getActivity() != null));
+        Log.d("TAG", "getView()!=null" + (getView() != null));
         //Log.i("OldBaseLazyFragment", "-->setUserVisibleHint : " + System.currentTimeMillis());
         if (getUserVisibleHint()) {
             this.isVisibleToUser = true;
@@ -104,6 +109,7 @@ public abstract class OldBaseLazyFragment extends Fragment {
     public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
         Log.d("TAG", "-->onCreateView() " + position);
+        Log.d("TAG", "-->container : " + container.toString());
 
         if (mode == MODE_NORMAL) {
             mLazyView = onCreateLazyView(mContainerLayout);
