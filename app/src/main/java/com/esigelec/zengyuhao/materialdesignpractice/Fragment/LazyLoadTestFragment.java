@@ -15,7 +15,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LazyLoadTestFragment extends BaseLazyFragment {
+public class LazyLoadTestFragment extends OldBaseLazyFragment {
     private int position;
 
     public LazyLoadTestFragment() {

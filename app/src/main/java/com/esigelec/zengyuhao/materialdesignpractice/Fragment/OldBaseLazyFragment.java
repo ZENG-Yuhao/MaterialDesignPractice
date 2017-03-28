@@ -1,24 +1,19 @@
 package com.esigelec.zengyuhao.materialdesignpractice.Fragment;
 
+
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-/**
- * <p>
- * Created by ZENG Yuhao. <br>
- * Contact: enzo.zyh@gmail.com
- * </p>
- */
 
-public abstract class BaseLazyFragment extends Fragment {
+public abstract class OldBaseLazyFragment extends Fragment {
     public static final String ARG_MODE = "startup.mode";
     public static final int MODE_NORMAL = 0;
     public static final int MODE_LAZY = 1;
@@ -37,7 +32,7 @@ public abstract class BaseLazyFragment extends Fragment {
 
     protected Animator mLoadingViewDisappearAnim;
 
-    public BaseLazyFragment() {
+    public OldBaseLazyFragment() {
         // Required empty public constructor
     }
 

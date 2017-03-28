@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -33,9 +33,9 @@ public class LazyFragmentActivity extends AppCompatActivity {
         pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
 
         viewPager.setAdapter(new MyPagerAdapter(getFragmentManager()));
-        viewPager.setCurrentItem(3);
+        viewPager.setCurrentItem(0);
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -71,14 +71,14 @@ public class LazyFragmentActivity extends AppCompatActivity {
 
     }
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            //return LazyLoadTestFragment.newInstance(BaseLazyFragment.MODE_LAZY, position);
+            //return LazyLoadTestFragment.newInstance(OldBaseLazyFragment.MODE_LAZY, position);
             TempGraphFragment fragment = new TempGraphFragment();
             Bundle args = new Bundle();
             args.putInt(TempGraphFragment.ARG_MODE, TempGraphFragment.MODE_DEEP_LAZY);
