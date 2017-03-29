@@ -65,6 +65,8 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     public void setMode(int mode) {
+        if (mode != MODE_NORMAL && mode != MODE_LAZY && mode != MODE_DEEP_LAZY)
+            throw new IllegalArgumentException("Unknown mode : mode must be 0 (NORMAL) or 1 (LAZY) or 2 (DEEP LAZY)");
         this.mode = mode;
     }
 
@@ -76,9 +78,6 @@ public abstract class BaseLazyFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("TAG", "-->onCreate() " + position);
-        if (mode != MODE_NORMAL && mode != MODE_LAZY && mode != MODE_DEEP_LAZY)
-            throw new IllegalArgumentException("Unknown mode : mode must be 0 (NORMAL) or 1 (LAZY) or 2 (DEEP LAZY)");
-
         // init animators
         mViewDisappearAnim = ObjectAnimator.ofFloat(null, "alpha", 1f, 0f);
         mViewAppearAnim = ObjectAnimator.ofFloat(null, "alpha", 0.6f, 1f);
@@ -200,7 +199,7 @@ public abstract class BaseLazyFragment extends Fragment {
      * When fragment is becoming invisible to user, stop your background loading task in this method.
      */
     protected void onCancelLoading() {
-        Log.d("TAG", "-->onCancelLoading() " + position);
+
     }
 
     /**
@@ -208,10 +207,18 @@ public abstract class BaseLazyFragment extends Fragment {
      */
     protected void notifyDataLoaded() {
         Log.d("TAG", "-->notifyDataLoaded() " + position);
+        if (getActivity() == null)
+            throw new RuntimeException("Activity is null, you have called notifyDataLoaded() in a wrong " +
+                    "place.");
         mLoadState = LoadState.FINISHED;
-        Log.d("TAG", "-->onBindData() " + position);
-        onBindData(mLazyView);
-        showLazyView();
+        // this method may be called in off-ui-thread
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onBindData(mLazyView);
+                showLazyView();
+            }
+        });
     }
 
     /**

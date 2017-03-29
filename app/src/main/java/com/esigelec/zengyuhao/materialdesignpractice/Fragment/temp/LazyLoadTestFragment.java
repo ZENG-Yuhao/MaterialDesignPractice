@@ -1,4 +1,4 @@
-package com.esigelec.zengyuhao.materialdesignpractice.Fragment;
+package com.esigelec.zengyuhao.materialdesignpractice.Fragment.temp;
 
 
 import android.app.Fragment;
@@ -10,13 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.esigelec.zengyuhao.materialdesignpractice.Fragment.BaseLazyFragment;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LazyLoadTestFragment extends OldBaseLazyFragment {
+public class LazyLoadTestFragment extends BaseLazyFragment {
     private int position;
+    private boolean isCanceled = false;
 
     public LazyLoadTestFragment() {
         // Required empty public constructor
@@ -54,13 +56,30 @@ public class LazyLoadTestFragment extends OldBaseLazyFragment {
 
     @Override
     public void onLazyLoad() {
-        notifyDataLoaded();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                notifyDataLoaded();
-//            }
-//        }, 70);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    if (isCanceled) break;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("TAG", "-->onLazyLoad " + i + "s");
+                }
+                notifyDataLoaded();
+                isCanceled = false;
+            }
+        }).start();
+    }
+
+    /**
+     * When fragment is becoming invisible to user, stop your background loading task in this method.
+     */
+    @Override
+    protected void onCancelLoading() {
+        isCanceled = true;
     }
 
     @Override

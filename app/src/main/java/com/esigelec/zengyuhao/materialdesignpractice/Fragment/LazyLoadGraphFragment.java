@@ -1,14 +1,14 @@
-package com.esigelec.zengyuhao.materialdesignpractice.Fragment.temp;
+package com.esigelec.zengyuhao.materialdesignpractice.Fragment;
 
 
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.esigelec.zengyuhao.materialdesignpractice.Fragment.BaseLazyFragment;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -29,6 +29,7 @@ public class LazyLoadGraphFragment extends BaseLazyFragment {
     private LimitLine limitLineNF, limitLineD;
     private float limitNF, limitD, tempNF, tempD;
     private boolean state_btn_switch = false;
+    private boolean isCanceled = false;
 
     public LazyLoadGraphFragment() {
         // Required empty public constructor
@@ -46,11 +47,38 @@ public class LazyLoadGraphFragment extends BaseLazyFragment {
 
     @Override
     public void onLazyLoad() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                isCanceled = false;
+//                for (int i = 0; i < 3; i++) {
+//                    if (isCanceled) return;
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    Log.d("TAG", "-->onLazyLoad " + i + "s");
+//                }
+//                notifyDataLoaded();
+//            }
+//        }).start();
         notifyDataLoaded();
     }
 
+    /**
+     * When fragment is becoming invisible to user, stop your background loading task in this method.
+     */
+    @Override
+    protected void onCancelLoading() {
+        Log.d("TAG", "-->onCancelLoading() " + position);
+        isCanceled = true;
+    }
+
+
     @Override
     public void onBindData(View lazyView) {
+        Log.d("TAG", "-->onBindData() " + position);
         mLineChart = (LineChart) lazyView.findViewById(R.id.chart);
         mLineChart.setBackgroundColor(Color.parseColor("#252525"));
         mLineChart.setDrawBorders(false);
@@ -79,7 +107,7 @@ public class LazyLoadGraphFragment extends BaseLazyFragment {
         mLineChart.getAxisRight().setEnabled(false);
         mLineChart.setDoubleTapToZoomEnabled(false);
         mLineChart.setDragDecelerationEnabled(false);
-        float[] rawData = generateRawData(2000, 0.1f, 100000f);
+        float[] rawData = generateRawData(20000, 0.1f, 100000f);
         LineData lineData = generateLineData(rawData);
         mLineChart.setData(lineData);
         //mLineChart.notifyDataSetChanged();

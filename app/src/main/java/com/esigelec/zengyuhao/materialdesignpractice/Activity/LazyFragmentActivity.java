@@ -15,7 +15,8 @@ import android.view.View.OnClickListener;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
-import com.esigelec.zengyuhao.materialdesignpractice.Fragment.temp.LazyLoadGraphFragment;
+import com.esigelec.zengyuhao.materialdesignpractice.Fragment.BaseLazyFragment;
+import com.esigelec.zengyuhao.materialdesignpractice.Fragment.LazyLoadGraphFragment;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class LazyFragmentActivity extends AppCompatActivity {
@@ -101,6 +102,7 @@ public class LazyFragmentActivity extends AppCompatActivity {
 //            args.putInt("position", position);
 //            fragment.setArguments(args);
             fragment.setPosition(position);
+            fragment.setMode(BaseLazyFragment.MODE_DEEP_LAZY);
             return fragment;
         }
 
