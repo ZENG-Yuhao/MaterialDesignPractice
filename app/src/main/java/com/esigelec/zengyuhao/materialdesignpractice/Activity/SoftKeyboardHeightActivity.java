@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -89,6 +88,8 @@ public class SoftKeyboardHeightActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         layout_main.getViewTreeObserver().removeOnGlobalLayoutListener(mListener);
+//        removeAllKeyboardStateChangedListener();
+//        unregisterKeyboardGlobalLayoutListener();
     }
 
     public static int getStatusBarHeight(Context context) {
@@ -121,4 +122,87 @@ public class SoftKeyboardHeightActivity extends Activity {
         }
         return 0;
     }
+
+//    /* for soft keyboard */
+//    private ArrayList<KeyboardStateChangedListener> mKeyboardStateListeners;
+//    private KeyboardGlobalLayoutListener mKeyboardGlobalLayoutListener;
+//    private boolean mKeyBoardVisibleState = false;
+//    private int mKeyBoardHeight = 0;
+
+//    public void addKeyboardStateChangedListener(KeyboardStateChangedListener listener) {
+//        if (mKeyboardStateListeners == null) {
+//            mKeyboardStateListeners = new ArrayList<>();
+//            mKeyboardStateListeners.add(listener);
+//            registerKeyboardGlobalLayoutListener();
+//        } else
+//            mKeyboardStateListeners.add(listener);
+//    }
+//
+//    public boolean removeKeyboardStateChangedListener(KeyboardStateChangedListener listener) {
+//        boolean isFound = false;
+//        for (KeyboardStateChangedListener elem : mKeyboardStateListeners) {
+//            if (elem == listener) {
+//                mKeyboardStateListeners.remove(listener);
+//                isFound = true;
+//            }
+//        }
+//        return isFound;
+//    }
+//
+//    public void removeAllKeyboardStateChangedListener() {
+//        if (mKeyboardStateListeners == null) return;
+//        for (KeyboardStateChangedListener elem : mKeyboardStateListeners) {
+//            mKeyboardStateListeners.remove(elem);
+//        }
+//    }
+//
+//    private void notifyAllKeyboardStateChangedListeners(boolean isKeyboardVisible, int keyboardHeight) {
+//        if (mKeyboardStateListeners == null) return;
+//        for (KeyboardStateChangedListener elem : mKeyboardStateListeners) {
+//            elem.onKeyboardStateChanged(isKeyboardVisible, keyboardHeight);
+//        }
+//    }
+//
+//    private void registerKeyboardGlobalLayoutListener() {
+//        if (mKeyboardGlobalLayoutListener == null) {
+//            mKeyboardGlobalLayoutListener = new KeyboardGlobalLayoutListener();
+//            getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener
+//                    (mKeyboardGlobalLayoutListener);
+//        }
+//    }
+//
+//    private void unregisterKeyboardGlobalLayoutListener() {
+//        if (mKeyboardGlobalLayoutListener != null)
+//            getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener
+//                    (mKeyboardGlobalLayoutListener);
+//    }
+//
+//    public interface KeyboardStateChangedListener {
+//        void onKeyboardStateChanged(boolean isKeyboardVisible, int keyboardHeight);
+//    }
+//
+//    private class KeyboardGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+//
+//        @Override
+//        public void onGlobalLayout() {
+//            // get visible are of current window
+//            Rect r = new Rect();
+//            getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+//
+//            // get window height
+////            int screenHeight = getWindow().getDecorView().getRootView().getRootView().getHeight();
+//            DisplayMetrics dm = new DisplayMetrics();
+//            getWindowManager().getDefaultDisplay().getMetrics(dm);
+//            int screenHeight = dm.heightPixels;
+//
+//            int heightDifference = screenHeight - (r.bottom - r.top);
+//            boolean isKeyboardVisible = heightDifference > (float) (screenHeight / 5);
+//            Log.i("GLOBAL LAYOUT", "---> screen h:" + screenHeight + "; hDiff:" + heightDifference + "; " +
+//                    isKeyboardVisible);
+//            if (isKeyboardVisible != mKeyBoardVisibleState) {
+//                mKeyBoardVisibleState = isKeyboardVisible;
+//                notifyAllKeyboardStateChangedListeners(isKeyboardVisible, heightDifference);
+//            }
+//        }
+//    }
 }
