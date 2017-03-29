@@ -112,20 +112,13 @@ public abstract class BaseLazyFragment extends Fragment {
         mContainerLayout.addView(mLoadingView);
         mContainerLayout.addView(mLazyView);
         mLoadingView.bringToFront();
-        Log.d("TAG", "-->getUserVisibleHint() " + getUserVisibleHint());
+        if (isViewPrepared())
+            checkVisibilityChanges();
         return mContainerLayout;
     }
 
     protected boolean isViewPrepared() {
         return (mLoadingView != null && mLazyView != null);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Log.d("TAG", "-->onViewCreated() " + position);
-        super.onViewCreated(view, savedInstanceState);
-        if (isViewPrepared())
-            checkVisibilityChanges();
     }
 
     private void checkVisibilityChanges() {
