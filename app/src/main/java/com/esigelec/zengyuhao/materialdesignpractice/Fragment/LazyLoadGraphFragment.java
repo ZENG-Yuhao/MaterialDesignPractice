@@ -2,6 +2,7 @@ package com.esigelec.zengyuhao.materialdesignpractice.Fragment;
 
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class LazyLoadGraphFragment extends BaseLazyFragment {
+    private static final String TAG = "LazyLoadGraphFragment";
     private LineChart mLineChart;
     private LimitLine limitLineNF, limitLineD;
     private float limitNF, limitD, tempNF, tempD;
@@ -33,6 +35,37 @@ public class LazyLoadGraphFragment extends BaseLazyFragment {
 
     public LazyLoadGraphFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "-->onCreate");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
+            savedInstanceState) {
+        Log.d(TAG, "-->onCreateView");
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "-->onViewCreated");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "-->onActivityCreated");
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.d(TAG, "-->onViewStateRestored");
     }
 
     @Override
@@ -47,23 +80,23 @@ public class LazyLoadGraphFragment extends BaseLazyFragment {
 
     @Override
     public void onLazyLoad() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                isCanceled = false;
-//                for (int i = 0; i < 3; i++) {
-//                    if (isCanceled) return;
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    Log.d("TAG", "-->onLazyLoad " + i + "s");
-//                }
-//                notifyDataLoaded();
-//            }
-//        }).start();
-        notifyDataLoaded();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                isCanceled = false;
+                for (int i = 0; i < 3; i++) {
+                    if (isCanceled) return;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("TAG", "-->onLazyLoad " + i + "s");
+                }
+                notifyDataLoaded();
+            }
+        }).start();
+//        notifyDataLoaded();
     }
 
     /**

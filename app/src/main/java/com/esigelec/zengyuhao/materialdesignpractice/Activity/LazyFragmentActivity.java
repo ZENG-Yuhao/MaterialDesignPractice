@@ -20,7 +20,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.Fragment.LazyLoadGraphFragm
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class LazyFragmentActivity extends AppCompatActivity {
-
+    private static final String TAG = "LazyFragmentActivity";
     private static String[] titles = {"Dice", "Play", "Info", "Android", "Wu", "Earth", "Mouse", "Monitor", "K"};
     private static int[] imageResId = {R.drawable.img0, R.drawable.img1, R.drawable.img2, R.drawable.img3, R.drawable
             .img4, R.drawable.img5};
@@ -30,6 +30,7 @@ public class LazyFragmentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "-->onCreate");
         setContentView(R.layout.activity_lazy_fragment);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -86,6 +87,12 @@ public class LazyFragmentActivity extends AppCompatActivity {
 //        } catch (IllegalAccessException e) {
 //        }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "-->onResume");
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {

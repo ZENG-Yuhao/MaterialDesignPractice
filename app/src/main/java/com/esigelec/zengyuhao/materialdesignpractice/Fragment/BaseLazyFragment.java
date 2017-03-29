@@ -13,6 +13,35 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
+ * Fragment applying a lazy-load mechanism (Loading of Internet data and Binding of component-views' data will be done
+ * only when fragment is visible to user).<br>
+ * <p><b>MODE_NORMAL :</b> This mode is only for some special test use-case, a normal {@link Fragment} will be a
+ * better choice.</p>
+ *
+ * <p><b>MODE_LAZY :</b> Those fragment-pages were being initialized/loaded will be kept in memory, and when user scroll
+ * back to previous page, there will <b>NOT</b> be a loading view showing.</p>
+ *
+ * <p><b>MODE_DEEP_LAZY :</b> Those fragment-pages were being initialized/loaded will be kept in memory, but when user
+ * scroll back to previous page, there will <b>STILL</b> be a loading view showing. If you have a fragment view which
+ * does intensive drawing works (such like a graph with massive points). This mode will reduce GPU rendering pressure
+ * when scrolling (because previous page is covered by a simple loading view).</p>
+ *
+ * <p>
+ * <b>Usage :</b><br>
+ * 1) Create your own class extending this class, select correctly fragment mode.<br>
+ *
+ * 2) Create a loading view in {@link #onCreateLoadingView(ViewGroup)} and create a content view in
+ * {@link #onCreateLazyView(ViewGroup)}.<br>
+ *
+ * 3) Load your data in {@link #onLazyLoad()}, you should create you own thread if you want to do it in
+ * off-ui-thread, once your data has been loaded, call {@link #notifyDataLoaded()} (if your data loading does not
+ * take much time, or it can be done immediately from local, you don't have to do anything in this method but just
+ * call {@link #notifyDataLoaded()}).<br>
+ *
+ * 4) Override {@link #onCancelLoading()} and stop your thread in this method, if you load data in off-ui-thread.<br>
+ *
+ * 5) Bind your data to view components (TextView, ListView etc.) in {@link #onBindData(View)}<br>
+ * </p>
  * <p>
  * Created by ZENG Yuhao. <br>
  * Contact: enzo.zyh@gmail.com
@@ -20,6 +49,8 @@ import android.widget.FrameLayout;
  */
 
 public abstract class BaseLazyFragment extends Fragment {
+    private static final String TAG = "BaseLazyFragment";
+
     public static final String ARG_MODE = "startup.mode";
     public static final int MODE_NORMAL = 0;
     public static final int MODE_LAZY = 1;
@@ -77,7 +108,7 @@ public abstract class BaseLazyFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TAG", "-->onCreate() " + position);
+        Log.d(TAG, "-->onCreate() " + position);
         // init animators
         mViewDisappearAnim = ObjectAnimator.ofFloat(null, "alpha", 1f, 0f);
         mViewAppearAnim = ObjectAnimator.ofFloat(null, "alpha", 0.6f, 1f);
@@ -88,7 +119,7 @@ public abstract class BaseLazyFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         newVisibility = isVisibleToUser;
-        Log.d("TAG", "-->setUserVisibleHint() " + position);
+        Log.d(TAG, "-->setUserVisibleHint() " + position);
         if (isViewPrepared())
             checkVisibilityChanges();
     }
@@ -100,29 +131,49 @@ public abstract class BaseLazyFragment extends Fragment {
      * {@link #setUserVisibleHint(boolean)}
      */
     @Override
-    public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
-        Log.d("TAG", "-->onCreateView() " + position);
+        Log.d(TAG, "-->onCreateView() " + position);
+        if (mode == MODE_NORMAL) return onCreateLazyView(container);
         // init container layout
         mContainerLayout = new FrameLayout(getActivity());
         mContainerLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
                 .LayoutParams.MATCH_PARENT));
-        mLoadingView = onCreateLoadingView(mContainerLayout);
+
         mLazyView = onCreateLazyView(mContainerLayout);
-        mContainerLayout.addView(mLoadingView);
         mContainerLayout.addView(mLazyView);
+
+        mLoadingView = onCreateLoadingView(mContainerLayout);
+        mContainerLayout.addView(mLoadingView);
         mLoadingView.bringToFront();
-        if (isViewPrepared())
-            checkVisibilityChanges();
+
         return mContainerLayout;
     }
 
+    /**
+     * Called when all saved state has been restored into the view hierarchy
+     * of the fragment.  This can be used to do initialization based on saved
+     * state that you are letting the view hierarchy track itself, such as
+     * whether check box widgets are currently checked.  This is called
+     * after {@link #onActivityCreated(Bundle)} and before
+     * {@link #onStart()}.
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     *                           a previous saved state, this is the state.
+     */
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (isViewPrepared())
+            checkVisibilityChanges();
+    }
+
     protected boolean isViewPrepared() {
-        return (mLoadingView != null && mLazyView != null);
+        return ((mLoadingView != null || mode == MODE_NORMAL) && mLazyView != null);
     }
 
     private void checkVisibilityChanges() {
-        Log.d("TAG", "-->checkVisibilityChanges() " + "recent " + previousVisibility + " current " + newVisibility);
+        Log.d(TAG, "-->checkVisibilityChanges() " + "recent " + previousVisibility + " current " + newVisibility);
         if (newVisibility != previousVisibility) {
             onVisibilityChanged(newVisibility);
             if (mVisibilityListener != null) mVisibilityListener.onVisibilityChanged(newVisibility);
@@ -131,13 +182,13 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     private void onVisibilityChanged(boolean isVisibleToUser) {
-        Log.d("TAG", "-->onVisibilityChanged() " + isVisibleToUser);
+        Log.d(TAG, "-->onVisibilityChanged() " + isVisibleToUser);
         if (mode == MODE_NORMAL) return;
 
         if (isVisibleToUser) {
             if (mLoadState == LoadState.READY) {
                 mLoadState = LoadState.RUNNING;
-                Log.d("TAG", "-->onLazyLoad() " + position);
+                Log.d(TAG, "-->onLazyLoad() " + position);
                 onLazyLoad();
             }
 
@@ -156,7 +207,7 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     private void showLazyView() {
-        Log.d("TAG", "-->showLazyView() " + position);
+        Log.d(TAG, "-->showLazyView() " + position);
 //        mLazyView.bringToFront();
         mViewDisappearAnim.setTarget(mLoadingView);
         mViewAppearAnim.setTarget(mLazyView);
@@ -167,7 +218,7 @@ public abstract class BaseLazyFragment extends Fragment {
     }
 
     private void showLoadingView() {
-        Log.d("TAG", "-->showLoadingView() " + position);
+        Log.d(TAG, "-->showLoadingView() " + position);
 //        mLoadingView.bringToFront();
         mLoadingView.setAlpha(1f);
     }
@@ -199,7 +250,7 @@ public abstract class BaseLazyFragment extends Fragment {
      * Notify that your data is ready to be bound to the content view.
      */
     protected void notifyDataLoaded() {
-        Log.d("TAG", "-->notifyDataLoaded() " + position);
+        Log.d(TAG, "-->notifyDataLoaded() " + position);
         if (getActivity() == null)
             throw new RuntimeException("Activity is null, you have called notifyDataLoaded() in a wrong " +
                     "place.");
