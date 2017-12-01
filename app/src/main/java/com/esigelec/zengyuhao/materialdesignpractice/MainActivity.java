@@ -39,6 +39,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.RoundShapeInjector.ShapeTes
 import com.esigelec.zengyuhao.materialdesignpractice.SceneAndTransition.SceneAndTransitionActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.SharedElementTransition.SharedElementsTransitionActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.SwipeLayout.SwipeLayoutActivity;
+import com.esigelec.zengyuhao.materialdesignpractice.SwipeRefresh.SwipeRefreshActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.ViewGroupOverlay.ViewGroupOverlayActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.Wifi.WifiConnectionActivity;
 import com.esigelec.zengyuhao.materialdesignpractice.Dialog.DialogActivity;
@@ -51,6 +52,7 @@ import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.LoginExtendedActiv
 
 public class MainActivity extends Activity {
     final private static String[] mActivityNames = new String[]{
+            "SwipeRefreshLayout",
             "CoordinatorLayout",
             "LazyFragmentActivity",
             "Picker Dialog",
@@ -92,6 +94,7 @@ public class MainActivity extends Activity {
     };
 
     final private static Class[] mActivityClasses = new Class[]{
+            SwipeRefreshActivity.class,
             CoordinatorLayoutActivity.class,
             LazyFragmentActivity.class,
             PickerDialogActivity.class,
@@ -130,8 +133,8 @@ public class MainActivity extends Activity {
             CardViewActivity.class,
             ShapeTestActivity.class
     };
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView               mRecyclerView;
+    private RecyclerView.Adapter       mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
