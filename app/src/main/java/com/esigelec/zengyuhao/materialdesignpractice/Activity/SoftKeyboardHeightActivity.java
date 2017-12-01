@@ -39,7 +39,6 @@ public class SoftKeyboardHeightActivity extends Activity {
             public void onGlobalLayout() {
                 Rect rect = new Rect();
                 getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-
                 int screenHeight = layout_main.getRootView().getHeight();
                 int heightDiff = screenHeight - (rect.bottom - rect.top);
                 int statusBarHeight = getStatusBarHeight();
