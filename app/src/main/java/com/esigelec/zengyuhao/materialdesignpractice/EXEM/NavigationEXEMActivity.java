@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.esigelec.zengyuhao.materialdesignpractice.R;
-import com.esigelec.zengyuhao.materialdesignpractice.Activity.SwipeLayoutActivity;
+import com.esigelec.zengyuhao.materialdesignpractice.SwipeLayout.SwipeLayoutActivity;
 
 
 public class NavigationEXEMActivity extends Activity {

@@ -9,9 +9,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Activity.CustomViewActivity">
+    tools:context=".CircleProgressBar.CircleProgressBarActivity">
 
-    <com.esigelec.zengyuhao.materialdesignpractice.CustomView.CircleProgressBar.CircleProgressBarView
+    <com.esigelec.zengyuhao.materialdesignpractice.CircleProgressBar.CircleProgressBarView
         android:id="@+id/progressbar"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -24,7 +24,7 @@
         />
 
 
-    <com.esigelec.zengyuhao.materialdesignpractice.CustomView.CircleProgressBar.CircleProgressBar
+    <com.esigelec.zengyuhao.materialdesignpractice.CircleProgressBar.CircleProgressBar
         android:id="@+id/progressbar1"
         android:layout_width="220dp"
         android:layout_height="220dp"

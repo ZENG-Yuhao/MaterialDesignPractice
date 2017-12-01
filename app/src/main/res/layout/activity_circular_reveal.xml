@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Activity.CircularRevealActivity">
+    tools:context=".CircularReveal.CircularRevealActivity">
 
     <LinearLayout
         android:id="@+id/my_linear_layout"

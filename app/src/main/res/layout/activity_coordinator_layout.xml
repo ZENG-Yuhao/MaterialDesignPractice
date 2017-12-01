@@ -6,7 +6,7 @@
     android:id="@+id/coordinate_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.esigelec.zengyuhao.materialdesignpractice.Activity.CoordinatorLayoutActivity">
+    tools:context=".CoordinatorLayout.CoordinatorLayoutActivity">
 
 
     <android.support.v7.widget.RecyclerView

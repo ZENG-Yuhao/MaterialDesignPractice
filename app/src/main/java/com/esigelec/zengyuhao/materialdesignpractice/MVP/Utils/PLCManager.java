@@ -4,7 +4,6 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
-import android.os.Debug;
 
 /**
  * Presenter Loader Callbacks Manager.

@@ -1,6 +1,5 @@
 package com.esigelec.zengyuhao.materialdesignpractice.MVP.Presenter;
 
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IView;
 import com.esigelec.zengyuhao.materialdesignpractice.MVP.View.ILoginView;
 
 /**

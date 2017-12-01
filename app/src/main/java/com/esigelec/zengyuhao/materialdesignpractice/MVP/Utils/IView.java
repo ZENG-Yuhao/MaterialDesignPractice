@@ -1,7 +1,5 @@
 package com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils;
 
-import com.esigelec.zengyuhao.materialdesignpractice.MVP.Utils.IPresenter;
-
 /**
  * Basic interface of Views in pattern MVP
  * Created by Enzo(ZENG Yuhao) on 16/5/26.

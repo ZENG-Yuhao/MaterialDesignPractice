@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.esigelec.zengyuhao.materialdesignpractice.CustomView.StickyLabelListView;
 import com.esigelec.zengyuhao.materialdesignpractice.R;
 
 public class StickyLabelListViewActivity extends Activity {
